@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Final Project</string>
+    <string name="sign_up">Đăng kí miễn phí</string>
+    <string name="log_in">Hoặc đăng nhập</string>
+    <string name="policy_string">Với việc đăng kí tài khoản, tôi chấp nhận\n các <b>chính sách bảo mật</b> và <b>điều khoản dịch vụ</b> của 3T</string>
+</resources>
