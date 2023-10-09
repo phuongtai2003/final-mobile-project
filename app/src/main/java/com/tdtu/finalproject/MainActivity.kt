@@ -1,9 +1,11 @@
 package com.tdtu.finalproject
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.tdtu.finalproject.adapter.IntroAdapter
@@ -19,6 +21,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        initPageViewer()
+
+        binding.loginBtn.setOnClickListener{
+            val loginIntent: Intent = Intent(this, LoginActivity::class.java)
+            startActivity(loginIntent)
+        }
+        binding.registerBtn.setOnClickListener{
+            val registerIntent: Intent = Intent(this, RegisterActivity::class.java)
+            startActivity(registerIntent)
+        }
+    }
+
+    private fun initPageViewer(){
         handler = Handler(Looper.myLooper()!!)
         introList = ArrayList()
         introList.add(PageViewItem(R.drawable.intro_image, "Intro 1"))
@@ -33,6 +48,7 @@ class MainActivity : AppCompatActivity() {
         binding.introViewPager.clipToPadding = false
         binding.introViewPager.clipChildren = false
         binding.introViewPager.getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
+
         binding.introViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
             override fun onPageScrolled(
                 position: Int,
@@ -51,8 +67,8 @@ class MainActivity : AppCompatActivity() {
                 super.onPageScrollStateChanged(state)
                 changeColor()
             }
-
         })
+
     }
 
     private fun changeColor(){

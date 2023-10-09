@@ -3,5 +3,14 @@
     <string name="app_name">Final Project</string>
     <string name="sign_up">Đăng kí miễn phí</string>
     <string name="log_in">Hoặc đăng nhập</string>
+    <string name="login_with_username">Đăng nhập bằng tên người dùng</string>
+    <string name="username">Tên người dùng</string>
+    <string name="password">Mật khẩu</string>
+    <string name="login">Đăng nhập</string>
+    <string name="forget_password">Quên <b><font color="#FF03DAC5">mật khẩu</font></b>?</string>
+    <string name="signup">Đăng kí</string>
+    <string name="confirmed_password">Xác nhận mật khẩu</string>
+    <string name="signup_with_username">Đăng kí bằng tên người dùng</string>
+    <string name="remember_me">Ghi nhớ đăng nhập</string>
     <string name="policy_string">Với việc đăng kí tài khoản, tôi chấp nhận\n các <b>chính sách bảo mật</b> và <b>điều khoản dịch vụ</b> của 3T</string>
 </resources>

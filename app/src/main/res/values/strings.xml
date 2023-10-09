@@ -2,5 +2,14 @@
     <string name="app_name">Final Project</string>
     <string name="sign_up">Sign up for free</string>
     <string name="log_in">Or Login</string>
+    <string name="login_with_username">Login With Username</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="forget_password">Forget <b><font color="#FF03DAC5">password</font></b>?</string>
+    <string name="signup">Sign Up</string>
+    <string name="confirmed_password">Confirmed Password</string>
+    <string name="signup_with_username">Sign Up With Username</string>
+    <string name="remember_me">Remember Me</string>
     <string name="policy_string">By signing up, i accept 3T’\n <b>Terms of service</b> and <b>Privacy policy</b></string>
 </resources>
