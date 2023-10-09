@@ -101,7 +101,6 @@ class MainActivity : AppCompatActivity() {
                 binding.indicator2.setImageResource((R.color.primary_color))
                 binding.indicator3.setImageResource((R.color.primary_color))
                 binding.indicator4.setImageResource((R.color.white))
-
             }
 
         }
