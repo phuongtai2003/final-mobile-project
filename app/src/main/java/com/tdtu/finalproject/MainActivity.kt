@@ -36,10 +36,10 @@ class MainActivity : AppCompatActivity() {
     private fun initPageViewer(){
         handler = Handler(Looper.myLooper()!!)
         introList = ArrayList()
-        introList.add(PageViewItem(R.drawable.intro_image, "Intro 1"))
-        introList.add(PageViewItem(R.drawable.intro_image1, "Intro 2"))
-        introList.add(PageViewItem(R.drawable.intro_image2, "Intro 3"))
-        introList.add(PageViewItem(R.drawable.intro_image3, "Intro 4"))
+        introList.add(PageViewItem(R.drawable.intro_image, "Quizlet is a web tool and a mobile app that boosts students learning through several study tools that include flashcards and game-based quizzes"))
+        introList.add(PageViewItem(R.drawable.intro_image1, "Quizlet is a web tool and a mobile app that boosts students learning through several study tools that include flashcards and game-based quizzes"))
+        introList.add(PageViewItem(R.drawable.intro_image2, "Quizlet is a web tool and a mobile app that boosts students learning through several study tools that include flashcards and game-based quizzes"))
+        introList.add(PageViewItem(R.drawable.intro_image3, "Quizlet is a web tool and a mobile app that boosts students learning through several study tools that include flashcards and game-based quizzes"))
 
         adapter = IntroAdapter(this, R.layout.page_view_item, introList)
 
@@ -69,6 +69,11 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout)
     }
 
     private fun changeColor(){

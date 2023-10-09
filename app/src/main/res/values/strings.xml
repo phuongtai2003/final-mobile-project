@@ -11,5 +11,6 @@
     <string name="confirmed_password">Confirmed Password</string>
     <string name="signup_with_username">Sign Up With Username</string>
     <string name="remember_me">Remember Me</string>
+    <string name="alma_mater">Alma Mater</string>
     <string name="policy_string">By signing up, i accept 3T’\n <b>Terms of service</b> and <b>Privacy policy</b></string>
 </resources>

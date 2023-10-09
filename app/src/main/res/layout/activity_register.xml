@@ -79,6 +79,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:textColor="@color/grey"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="@string/alma_mater"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <Spinner
+            android:background="@drawable/spinner_background"
+            android:layout_marginTop="10dp"
+            android:id="@+id/almaMaterSpin"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:textAlignment="center"
+            android:spinnerMode="dropdown"
+            />
+
         <TextView
             android:textSize="18sp"
             android:textColor="@color/white"
