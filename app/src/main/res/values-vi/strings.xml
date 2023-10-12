@@ -13,5 +13,11 @@
     <string name="signup_with_username">Đăng kí bằng tên người dùng</string>
     <string name="remember_me">Ghi nhớ đăng nhập</string>
     <string name="alma_mater">Trường học</string>
+    <string name="home">Trang chủ</string>
     <string name="policy_string">Với việc đăng kí tài khoản, tôi chấp nhận\n các <b>chính sách bảo mật</b> và <b>điều khoản dịch vụ</b> của 3T</string>
+    <string name="profile">Hồ sơ</string>
+    <string name="hello">Xin Chào</string>
+    <string name="collection">Bộ sưu tập</string>
+    <string name="study">Học tập</string>
+    <string name="learn_today">Hôm nay bạn muốn học gì ?</string>
 </resources>

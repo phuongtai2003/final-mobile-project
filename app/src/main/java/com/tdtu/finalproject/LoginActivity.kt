@@ -1,5 +1,6 @@
 package com.tdtu.finalproject
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.tdtu.finalproject.databinding.ActivityLoginBinding
@@ -14,6 +15,11 @@ class LoginActivity : AppCompatActivity() {
 
         binding.returnBtn.setOnClickListener{
             finish()
+        }
+
+        binding.loginButton.setOnClickListener{
+            val homePage: Intent = Intent(this, HomeActivity::class.java)
+            startActivity(homePage)
         }
     }
 }

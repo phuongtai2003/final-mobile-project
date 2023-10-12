@@ -13,7 +13,7 @@ import com.tdtu.finalproject.model.PageViewItem
 class IntroAdapter(private var mContext:Context, private var layout: Int, private var introList:ArrayList<PageViewItem>) :
     RecyclerView.Adapter<IntroAdapter.IntroHolder>() {
 
-    class IntroHolder(var itemView: View): RecyclerView.ViewHolder(itemView) {
+    class IntroHolder(private var itemView: View): RecyclerView.ViewHolder(itemView) {
         val image:ImageView = itemView.findViewById<ImageView>(R.id.introImg)
         val description: TextView = itemView.findViewById<TextView>(R.id.descriptionTxt)
     }

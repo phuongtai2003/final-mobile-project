@@ -13,4 +13,10 @@
     <string name="remember_me">Remember Me</string>
     <string name="alma_mater">Alma Mater</string>
     <string name="policy_string">By signing up, i accept 3T’\n <b>Terms of service</b> and <b>Privacy policy</b></string>
+    <string name="home">Home</string>
+    <string name="profile">Profile</string>
+    <string name="hello">Hello</string>
+    <string name="collection">Collection</string>
+    <string name="study">Study</string>
+    <string name="learn_today">What would you like to learn for today ?</string>
 </resources>

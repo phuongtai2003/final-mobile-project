@@ -7,7 +7,6 @@
     android:paddingVertical="10dp"
     android:layout_height="match_parent"
     android:background="#2A344D"
-    android:weightSum="10"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -80,32 +79,30 @@
 
     </LinearLayout>
     <TextView
-        android:textSize="20sp"
+        android:layout_marginTop="10dp"
+        android:textSize="18sp"
         android:text="@string/policy_string"
         android:textColor="@color/white"
         android:textAlignment="center"
-        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>
     <Button
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:id="@+id/registerBtn"
         android:background="@drawable/register_btn"
-        android:layout_weight="1"
         android:textSize="18sp"
         android:textColor="@color/white"
         android:text="@string/sign_up"
         android:layout_width="match_parent"
-        android:layout_height="0dp"/>
+        android:layout_height="wrap_content"/>
     <Button
         android:id="@+id/loginBtn"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:background="@drawable/login_btn"
-        android:layout_weight="1"
         android:textSize="18sp"
         android:textColor="@color/white"
         android:text="@string/log_in"
         android:layout_width="match_parent"
-        android:layout_height="0dp"/>
+        android:layout_height="wrap_content"/>
 </LinearLayout>
