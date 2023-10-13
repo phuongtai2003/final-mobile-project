@@ -3,14 +3,17 @@ package com.tdtu.finalproject
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.tdtu.finalproject.adapter.MenuGridViewAdapter
 import com.tdtu.finalproject.databinding.FragmentHomePageBinding
 import com.tdtu.finalproject.model.MenuItem
 import com.tdtu.finalproject.utils.OnBottomNavigationChangeListener
+import com.tdtu.finalproject.utils.OnDrawerNavigationPressedListener
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -28,6 +31,7 @@ class HomePageFragment : Fragment() {
     private var param2: String? = null
     private var _binding: FragmentHomePageBinding? = null
     private var onBottomNavigationChangeListener: OnBottomNavigationChangeListener? = null
+    private var onDrawerNavigationPressedListener: OnDrawerNavigationPressedListener? = null
     private var menuItemAdapter : MenuGridViewAdapter? = null
     private var menuItemList : ArrayList<MenuItem>? = null
     private var sharedPreferences : SharedPreferences? = null
@@ -36,8 +40,9 @@ class HomePageFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnBottomNavigationChangeListener) {
+        if (context is OnBottomNavigationChangeListener && context is OnDrawerNavigationPressedListener) {
             onBottomNavigationChangeListener = context
+            onDrawerNavigationPressedListener = context
         } else {
             throw RuntimeException("$context must implement OnBottomNavigationChangeListener")
         }
@@ -46,6 +51,7 @@ class HomePageFragment : Fragment() {
     override fun onDetach() {
         super.onDetach()
         onBottomNavigationChangeListener = null
+        onDrawerNavigationPressedListener = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,6 +60,10 @@ class HomePageFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
     }
 
     override fun onCreateView(
@@ -67,9 +77,13 @@ class HomePageFragment : Fragment() {
             onBottomNavigationChangeListener?.changeBottomNavigationItem(R.id.profileFragment)
         }))
         menuItemList?.add(MenuItem(R.drawable.collection, getString(R.string.collection), View.OnClickListener {  }))
+        menuItemList?.add(MenuItem(R.drawable.trophy, getString(R.string.competition), View.OnClickListener {  }))
         menuItemAdapter = context?.let { MenuGridViewAdapter(it, R.layout.home_menu_item,
             menuItemList as ArrayList<MenuItem>
-        ) }
+        )}
+        binding.openDrawerBtn.setOnClickListener{
+            onDrawerNavigationPressedListener?.openDrawerFromFragment()
+        }
         binding.homeGridView.adapter = menuItemAdapter
         return binding.root
     }

@@ -17,6 +17,8 @@
     <string name="profile">Profile</string>
     <string name="hello">Hello</string>
     <string name="collection">Collection</string>
+    <string name="competition">Competition</string>
+    <string name="logout">Logout</string>
     <string name="study">Study</string>
     <string name="learn_today">What would you like to learn for today ?</string>
 </resources>

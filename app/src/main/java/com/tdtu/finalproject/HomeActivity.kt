@@ -2,12 +2,13 @@ package com.tdtu.finalproject
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import com.tdtu.finalproject.databinding.ActivityHomeBinding
 import com.tdtu.finalproject.utils.OnBottomNavigationChangeListener
+import com.tdtu.finalproject.utils.OnDrawerNavigationPressedListener
 
-class HomeActivity : AppCompatActivity(), OnBottomNavigationChangeListener {
+class HomeActivity : AppCompatActivity(), OnBottomNavigationChangeListener, OnDrawerNavigationPressedListener {
     private lateinit var binding: ActivityHomeBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +32,18 @@ class HomeActivity : AppCompatActivity(), OnBottomNavigationChangeListener {
             }
         }
 
+        binding.drawerNavigation.setNavigationItemSelectedListener{
+            when(it.itemId){
+                R.id.logoutBtn ->{
+                    finish()
+                    true
+                }
+                else -> {
+                    false
+                }
+            }
+        }
+
     }
     private fun loadFragment(fragment: Fragment){
         val transaction = supportFragmentManager.beginTransaction()
@@ -44,6 +57,9 @@ class HomeActivity : AppCompatActivity(), OnBottomNavigationChangeListener {
             R.id.profileFragment -> R.id.profileActionItem
             else -> R.id.homeActionItem
         }
+    }
 
+    override fun openDrawerFromFragment() {
+        binding.homeDrawerLayout.openDrawer(GravityCompat.START)
     }
 }

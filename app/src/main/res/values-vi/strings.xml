@@ -18,6 +18,8 @@
     <string name="profile">Hồ sơ</string>
     <string name="hello">Xin Chào</string>
     <string name="collection">Bộ sưu tập</string>
+    <string name="competition">Thi đấu</string>
+    <string name="logout">Đăng xuất</string>
     <string name="study">Học tập</string>
     <string name="learn_today">Hôm nay bạn muốn học gì ?</string>
 </resources>
