@@ -1,5 +1,8 @@
 package com.tdtu.finalproject
 
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.view.GravityCompat
@@ -10,10 +13,12 @@ import com.tdtu.finalproject.utils.OnDrawerNavigationPressedListener
 
 class HomeActivity : AppCompatActivity(), OnBottomNavigationChangeListener, OnDrawerNavigationPressedListener {
     private lateinit var binding: ActivityHomeBinding
+    private lateinit var sharedPref : SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        sharedPref = getSharedPreferences(getString(R.string.shared_preferences_key), Context.MODE_PRIVATE)
         loadFragment(HomePageFragment())
         binding.bottomNavbar.setOnItemSelectedListener {
             when (it.itemId) {
@@ -35,7 +40,13 @@ class HomeActivity : AppCompatActivity(), OnBottomNavigationChangeListener, OnDr
         binding.drawerNavigation.setNavigationItemSelectedListener{
             when(it.itemId){
                 R.id.logoutBtn ->{
-                    finish()
+                    with(sharedPref.edit()){
+                        remove(getString(R.string.user_data_key))
+                        apply()
+                    }
+                    val intro = Intent(this, MainActivity::class.java)
+                    intro.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intro)
                     true
                 }
                 else -> {

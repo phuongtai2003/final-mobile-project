@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="user_data_key">USERDATA</string>
+    <string name="shared_preferences_key">SHAREDPREFKEY</string>
     <string name="app_name">Final Project</string>
     <string name="sign_up">Đăng kí miễn phí</string>
     <string name="log_in">Hoặc đăng nhập</string>
@@ -19,7 +21,10 @@
     <string name="hello">Xin Chào</string>
     <string name="collection">Bộ sưu tập</string>
     <string name="competition">Thi đấu</string>
+    <string name="register_success">Đăng kí thành công</string>
     <string name="logout">Đăng xuất</string>
     <string name="study">Học tập</string>
+    <string name="password_not_match">Mật khẩu không khớp</string>
+    <string name="please_fill">Vui lòng điền tất cả các thông tin</string>
     <string name="learn_today">Hôm nay bạn muốn học gì ?</string>
 </resources>
