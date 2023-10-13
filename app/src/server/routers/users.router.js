@@ -5,6 +5,7 @@ require('dotenv').config();
 const {Users} = require('../models');
 const {uploadImg} = require('../middlewares/upload/uploadImage');
 const {isCreated, isExistId, validateInput, isExistEmail, isCreatedUsername} = require('../middlewares/validation/validation');
+const {authentication} = require('../middlewares/authentication/authenticate');
 const { createUser,
         login,
         updatePremium,
@@ -15,23 +16,23 @@ const { createUser,
         getAllUsers,
         getUserById } = require('../controllers/users.controller');
 
-// create Account 
+// create Account (tested)
 usersRouter.post('/register', validateInput(['email', 'password', 'username', 'almaMater']), isCreated(Users), isCreatedUsername(Users), createUser);
-// login
+// login (tested)
 usersRouter.post('/login', validateInput(['username', 'password']), login);
-// password recovery
-usersRouter.post('/recover-password', validateInput(['email']), isExistEmail(Users), passwordRecovery);
-// update to premium
-usersRouter.put('/profiles/update-premium/:id', isExistId(Users), updatePremium);
-// change password
-usersRouter.put('/profiles/password/:id', validateInput(['password', 'newPassword']), isExistId(Users), changePassword);
-// update user
-usersRouter.put('/profiles/:id', isExistId(Users), isCreated(Users), updateUser);
-// upload profile image
-usersRouter.put('/profiles/change-profile-image/:id', uploadImg.single('avatars'), uploadImage);
-// get all users
+// password recovery (tested)
+usersRouter.post('/recover-password', authentication, validateInput(['email']), isExistEmail(Users), passwordRecovery);
+// update to premium (tested)
+usersRouter.put('/profiles/update-premium/:id', authentication, isExistId(Users), updatePremium);
+// change password (tested)
+usersRouter.put('/profiles/password/:id', authentication, isExistId(Users), validateInput(['password', 'newPassword']), isExistId(Users), changePassword);
+// update user (tested)
+usersRouter.put('/profiles/:id', authentication, isExistId(Users), isCreated(Users), updateUser);
+// upload profile image (tested)
+usersRouter.put('/profiles/change-profile-image/:id', authentication, isExistId(Users), uploadImg.single('profile-image'), uploadImage);
+// get all users (tested)
 usersRouter.get("/", getAllUsers);
-// get user by id
+// get user by id (tested)
 usersRouter.get("/:id", isExistId(Users), getUserById);
 
 module.exports = usersRouter;

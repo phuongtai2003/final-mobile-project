@@ -20,12 +20,12 @@ const isExistId = (Model) => async (req, res, next) => {
     try {
         const model = await Model.findById(id);
         if (!model) {
-            return res.status(404).json({ message: `${Model.name} does not exist with id: ${id}` });
+            return res.status(404).json({ error: `${Model.name} does not exist with id: ${id}` });
         } else {
             next();
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ error: error.message });
     }
 }
 

@@ -65,11 +65,13 @@ class DataRepository() {
         call.enqueue(object : Callback<LoginResponse>{
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 if(response.code() == 200){
+                    Log.d("Res status", "onResponse: " + response.body()?.user?.username)
                     future.complete(response.body()?.user)
                 }
                 else{
-                    error = response.body()?.error
-                    future.completeExceptionally(Exception(error))
+                    val errorBody = response.errorBody()?.string()
+                    Log.d("Res status", "onResponse: $errorBody")
+                    future.completeExceptionally(Exception(errorBody))
                 }
             }
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {

@@ -15,6 +15,6 @@ const UserSchema = new Schema({
     topicId : [{ type: Schema.Types.ObjectId, ref: 'Topic' }]
 });
 
-const Users = mongoose.model('User', UserSchema);
+const User = mongoose.model('User', UserSchema);
 
-module.exports = Users;
+module.exports = User;
