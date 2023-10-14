@@ -58,7 +58,7 @@ const deleteTopic = async (req, res) => {
     }
 }
 
-const addVocabularyToTopic = async (req, res) => {
+const createVocabularyInTopic = async (req, res) => {
     const topicId = req.params.id || req.query.id;
     const { englishWord, vietnameseWord, englishMeaning, vietnameseMeaning } = req.body;
     try {
@@ -166,7 +166,7 @@ module.exports = {
     createTopic,
     updateTopic,
     deleteTopic,
-    addVocabularyToTopic,
+    createVocabularyInTopic,
     deleteVocabularyInTopic,
     upVoteCount,
     downVoteCount,

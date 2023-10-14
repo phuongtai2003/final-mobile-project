@@ -50,11 +50,11 @@ const createUser = async (req, res) => {
 };
 
 const login = async (req, res) => {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
     try {
-        const user = await Users.findOne({ username, password }).select('-password');
+        const user = await Users.findOne({ email, password }).select('-password');
         if (!user) {
-            res.status(401).json({ error: 'username or password is incorrect' });
+            res.status(401).json({ error: 'email or password is incorrect' });
             return;
         }
         const token = jwt.sign({ data: user }, TOKEN_SECRET_KEY, { expiresIn: TOKEN_TIME });
@@ -91,7 +91,8 @@ const changePassword = async (req, res) => {
         }
         user.password = newPassword;
         await user.save();
-        res.status(200).json({ error: "Change password successfully" });
+        user.password = undefined;
+        res.status(200).json({ message: "Change password successfully" , user});
     } catch (error) {
         res.status(500).json({ error });
     }
@@ -99,14 +100,10 @@ const changePassword = async (req, res) => {
 
 const updateUser = async (req, res) => {
     const id = req.params.id || req.query.id;
-    const { almaMater, email } = req.body;
+    const { almaMater, username } = req.body;
     try {
-        const user = await Users.findByIdAndUpdate(id, { almaMater, email });
-        if (!user) {
-            res.status(404).json({ error: 'User not found' });
-            return;
-        }
-        res.status(200).json({ message: "Update user successfully" });
+        const user = await Users.findByIdAndUpdate(id, { almaMater, username }, { new: true }).select('-password');
+        res.status(200).json({ message: "Update user successfully", user });
     } catch (error) {
         res.status(500).json({ error });
     }
@@ -117,12 +114,12 @@ const uploadImage = async (req, res) => {
     const urlImg = file?.path;
     const id = req.params.id || req.query.id;
     try {
-        const user = await Users.findByIdAndUpdate(id, { profileImage: urlImg });
+        const user = await Users.findByIdAndUpdate(id, { profileImage: urlImg }, { new: true }).select('-password');
         if (!user) {
             res.status(404).json({ error: 'User not found' });
             return;
         }
-        res.status(200).json({ message: "Change profile image successfully" });
+        res.status(200).json({ message: "Change profile image successfully", user });
     } catch (error) {
         res.status(500).json({ error });
     }
@@ -155,10 +152,6 @@ const getUserById = async (req, res) =>{
     const id = req.params.id || req.query.id;
     try {
         const user = await Users.findById(id).select("-password");
-        if(!user){
-            res.status(404).send({error: "user not found"});
-            return;
-        }
         res.status(200).json({user});
     } catch (error) {
         res.status(500).json({ error });
