@@ -6,7 +6,7 @@ const VocabularySchema = new Schema({
     vietnameseWord: { type: String, required: true },
     englishMeaning: { type: String, required: true },
     vietnameseMeaning: { type: String, required: true },
-    topicId : { type: Schema.Types.ObjectId, ref: 'Topic', require: true },
+    topicId : { type: Schema.Types.ObjectId, ref: 'Topic', required: true },
     vocabularyStatisticId : [{ type: Schema.Types.ObjectId, ref: 'VocabularyStatistic' }],
     bookmarkVocabularyId : [{ type: Schema.Types.ObjectId, ref: 'BookmarkVocabulary' }],
 });

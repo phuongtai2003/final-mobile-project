@@ -45,7 +45,7 @@ const createUser = async (req, res) => {
         user.password = undefined;
         res.status(200).json({ user });
     } catch (error) {
-        res.status(500).json({ error });
+        res.status(500).json({ error: error.message });
     }
 };
 
@@ -60,7 +60,7 @@ const login = async (req, res) => {
         const token = jwt.sign({ data: user }, TOKEN_SECRET_KEY, { expiresIn: TOKEN_TIME });
         res.status(200).json({ user , token});
     } catch (error) {
-        res.status(500).json({ error });
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -76,7 +76,7 @@ const updatePremium = async (req, res) => {
         await user.save();
         res.status(200).json({ user });
     } catch (error) {
-        res.status(500).json({ error });
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -94,7 +94,7 @@ const changePassword = async (req, res) => {
         user.password = undefined;
         res.status(200).json({ message: "Change password successfully" , user});
     } catch (error) {
-        res.status(500).json({ error });
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -113,7 +113,7 @@ const updateUser = async (req, res) => {
         const user = await Users.findByIdAndUpdate(id, { almaMater, username }, { new: true }).select('-password');
         res.status(200).json({ message: "Update user successfully", user });
     } catch (error) {
-        res.status(500).json({ error });
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -129,7 +129,7 @@ const uploadImage = async (req, res) => {
         }
         res.status(200).json({ message: "Change profile image successfully", user });
     } catch (error) {
-        res.status(500).json({ error });
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -139,7 +139,7 @@ const passwordRecovery = async (req, res) => {
         const user = await Users.findOne({email});
         sendEmail(email, user.password, res);
     } catch (error) {
-        res.status(500).json({ error });
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -152,7 +152,7 @@ const getAllUsers = async (req, res) => {
         }
         res.status(200).json({users});
     } catch (error) {
-        res.status(500).json({ error });
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -162,7 +162,7 @@ const getUserById = async (req, res) =>{
         const user = await Users.findById(id).select("-password");
         res.status(200).json({user});
     } catch (error) {
-        res.status(500).json({ error });
+        res.status(500).json({ error: error.message });
     }
 }
 

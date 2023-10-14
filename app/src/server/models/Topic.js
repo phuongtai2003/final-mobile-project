@@ -10,7 +10,7 @@ const TopicSchema = new Schema({
     downVoteCount : { type : Number, default: 0 },
     descriptionEnglish: { type: String, required: true },
     descriptionVietnamese: { type: String, required: true },
-    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true},
+    userId: { type: Schema.Types.ObjectId, ref: 'User'},
     learningStatisticsId: [{ type: Schema.Types.ObjectId, ref: 'LearningStatistics'}],
     topicInFolderId: [{ type: Schema.Types.ObjectId, ref: 'TopicInFolder' }],
     vocabularyId: [{ type: Schema.Types.ObjectId, ref: 'Vocabulary' }],

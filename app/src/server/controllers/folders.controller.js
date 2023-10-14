@@ -1,29 +1,71 @@
-const {Folder} = require('../models');
+const {Folder, Topic, TopicInFolder} = require('../models');
 
 const createFolder = async (req, res) => {
     const {folderNameEnglish, folderNameVietnamese} = req.body;
     const user = req.user;
     try {
-        const folder = await Folder.create({folderNameEnglish, folderNameVietnamese});
+        const folder = await Folder.create({folderNameEnglish, folderNameVietnamese, userId : user.data._id});
         res.status(200).json({folder});
     }catch (error) {
-        res.status(500).json({error});
+        res.status(500).json({ error: error.message });
     }
 }
 
-const createTopicInFolder = async (req, res) => {
-    const folderId = req.params.id || req.query.id;
-    const {topicNameEnglish, topicNameVietnamese, descriptionEnglish, descriptionVietnamese, isPublic} = req.body;
-    const user = req.user;
+const updateFolder = async (req, res) => {
+    const id = req.params.id || req.query.id;
+    const {folderNameEnglish, folderNameVietnamese} = req.body;
     try {
-        const folder = await Folder.create({folderNameEnglish, folderNameVietNamese});
-        res.status(200).json({folder});
-    }catch (error) {
-        res.status(500).json({error});
+        const folder = await Folder.findByIdAndUpdate(id, {folderNameEnglish, folderNameVietnamese}, {new: true});
+        res.status(200).json({message: "update folder successfully", folder});
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+const deleteFolder = async (req, res) => {
+    const id = req.params.id || req.query.id;
+    try {
+        await TopicInFolder.deleteMany({folderId: id});
+        await Folder.findByIdAndDelete(id);
+        res.status(200).json({message: "delete folder successfully"});
+    }
+    catch (error) {
+        res.status(500).json({ error: error.message });
     }
 }
 
 const addTopicToFolder = async (req, res) => {
+    const folderId = req.params.id || req.query.id;
+    const topicId = req.params.topicId || req.query.topicId;
+    try {
+        const check = await TopicInFolder.findOne({folderId, topicId});
+        if(check){
+            res.status(409).json({error: "Topic already exists in folder"});
+            return;
+        }
+        const folder = await Folder.findByIdAndUpdate(folderId, {$inc: {topicCount : 1}}, {new: true});
+        const topicInFolder = await TopicInFolder.create({folderId, topicId});
+        res.status(200).json({folder, topicInFolder});
+    }catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+const deleteTopicInFolder = async (req, res) => {
+    const folderId = req.params.id || req.query.id;
+    const topicId = req.params.topicId || req.query.topicId;
+    try {
+        const topicInFolder = await TopicInFolder.findOne({folderId, topicId});
+        if(!topicInFolder){
+            res.status(404).json({error: "Topic does not exist in folder"});
+            return;
+        }
+        await TopicInFolder.findByIdAndDelete(topicInFolder._id);
+        const folder = await Folder.findByIdAndUpdate(folderId, {$inc: {topicCount : -1}}, {new: true});
+        res.status(200).json({folder});
+    }catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 }
 
 const getFolderById = async (req, res) => {
@@ -32,7 +74,7 @@ const getFolderById = async (req, res) => {
         const folder = await Folder.findById(id);
         res.status(200).json({folder});
     } catch (error) {
-        res.status(500).json({ error });
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -45,12 +87,16 @@ const getAllFolders = async (req, res) => {
         }
         res.status(200).json({folders});
     } catch (error) {
-        res.status(500).json({ error });
+        res.status(500).json({ error: error.message });
     }
 }
 
 module.exports = {
-    createTopicInFolder,
     getFolderById,
-    getAllFolders
+    getAllFolders,
+    createFolder,
+    addTopicToFolder,
+    updateFolder,
+    deleteFolder,
+    deleteTopicInFolder
 }
