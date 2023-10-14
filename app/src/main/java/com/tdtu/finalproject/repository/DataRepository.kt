@@ -46,7 +46,7 @@ class DataRepository() {
                 if(response.code() == 200){
                     future.complete(response.body()?.user)
                 } else{
-                    error = response.body()?.error.toString()
+                    error = Gson().fromJson(response.errorBody()?.string(),ErrorModel::class.java).error
                     future.completeExceptionally(Exception(error))
                 }
             }
