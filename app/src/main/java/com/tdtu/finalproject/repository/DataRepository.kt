@@ -4,6 +4,7 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.google.gson.Gson
+import com.tdtu.finalproject.model.ErrorModel
 import com.tdtu.finalproject.model.LoginRequest
 import com.tdtu.finalproject.model.LoginResponse
 import com.tdtu.finalproject.model.RegisterRequest
@@ -68,7 +69,7 @@ class DataRepository() {
                     future.complete(response.body()?.user)
                 }
                 else{
-                    error = response.body()?.error
+                    error = Gson().fromJson(response.errorBody()?.string(),ErrorModel::class.java).error
                     future.completeExceptionally(Exception(error))
                 }
             }
