@@ -1,21 +1,15 @@
 package com.tdtu.finalproject.repository
 
-import android.content.Context
-import android.content.SharedPreferences
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import com.google.gson.Gson
 import com.tdtu.finalproject.model.ErrorModel
 import com.tdtu.finalproject.model.LoginRequest
 import com.tdtu.finalproject.model.LoginResponse
-import com.tdtu.finalproject.model.MessageResponse
+import com.tdtu.finalproject.model.UpdateUserResponse
 import com.tdtu.finalproject.model.RegisterRequest
 import com.tdtu.finalproject.model.RegisterResponse
 import com.tdtu.finalproject.model.UpdateUserInfoRequest
-import com.tdtu.finalproject.model.User
 import com.tdtu.finalproject.model.UserInfo
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -85,13 +79,13 @@ class DataRepository() {
         return future
     }
 
-    fun updateUser(email: String, almaMater: String, id: String, token: String) : CompletableFuture<MessageResponse>{
-        var future: CompletableFuture<MessageResponse> = CompletableFuture()
-        val updateRequest = UpdateUserInfoRequest(email, almaMater)
+    fun updateUser(username: String, almaMater: String, id: String, token: String) : CompletableFuture<UpdateUserResponse>{
+        var future: CompletableFuture<UpdateUserResponse> = CompletableFuture()
+        val updateRequest = UpdateUserInfoRequest(username, almaMater)
         val call = api.updateUser(updateRequest, id, token)
         var error: String? = null
-        call.enqueue(object : Callback<MessageResponse>{
-            override fun onResponse(call: Call<MessageResponse>, response: Response<MessageResponse>) {
+        call.enqueue(object : Callback<UpdateUserResponse>{
+            override fun onResponse(call: Call<UpdateUserResponse>, response: Response<UpdateUserResponse>) {
                 if(response.code() == 200){
                     future.complete(response.body())
                 }
@@ -100,7 +94,7 @@ class DataRepository() {
                     future.completeExceptionally(Exception(error))
                 }
             }
-            override fun onFailure(call: Call<MessageResponse>, t: Throwable) {
+            override fun onFailure(call: Call<UpdateUserResponse>, t: Throwable) {
                 future.completeExceptionally(t)
             }
         })

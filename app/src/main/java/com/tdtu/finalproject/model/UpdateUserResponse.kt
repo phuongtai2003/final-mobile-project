@@ -2,7 +2,8 @@ package com.tdtu.finalproject.model
 
 import com.google.gson.annotations.SerializedName
 
-data class MessageResponse (
+data class UpdateUserResponse (
     @SerializedName("message")
-    val message: String
+    val message: String,
+    val user: User
 )

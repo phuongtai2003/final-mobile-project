@@ -79,21 +79,21 @@ class ProfileFragment : Fragment() {
         val adapter: ArrayAdapter<String> =
             ArrayAdapter<String>(requireContext(), R.layout.drop_down_item, schoolList)
         binding.profileAlmaMater.adapter = adapter
-        binding.profileEmailEdt.setText(userViewModel.user?.email)
+        binding.profileEmailEdt.setText(userViewModel.user?.username)
         binding.profileAlmaMater.setSelection(schoolList.indexOf(userViewModel.user?.almaMater))
 
         binding.saveProfileBtn.setOnClickListener {
-            val email = binding.profileEmailEdt.text.toString()
+            val username = binding.profileEmailEdt.text.toString()
             val almaMater = binding.profileAlmaMater.selectedItem.toString()
-            if(email.isEmpty() || almaMater.isEmpty()){
+            if(username.isEmpty() || almaMater.isEmpty()){
                 Toast.makeText(requireContext(), R.string.please_fill, Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             val token : String? = sharedPref.getString(getString(R.string.token_key), null)
-            Log.e("USER TAG", "onCreateView: $token")
-            Log.e("USER TAG", "onCreateView: ${userViewModel.user?.id}")
-            dataRepo.updateUser(email = email, almaMater = almaMater, id = userViewModel.user?.id!!, token = token!!).thenAcceptAsync{
+            dataRepo.updateUser(username = username, almaMater = almaMater, id = userViewModel.user?.id!!, token = token!!).thenAcceptAsync{
+                Log.e("USER TAG", "onCreateView: before ${it.message}")
                 Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                Log.e("USER TAG", "onCreateView: after ${it.message}", )
             }.exceptionally{
                 e -> Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
                 null
