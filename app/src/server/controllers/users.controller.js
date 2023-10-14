@@ -1,7 +1,6 @@
 const gravatar = require('gravatar');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
-const bcrypt = require("bcryptjs");
 const { Users } = require('../models');
 
 const {TOKEN_TIME, TOKEN_SECRET_KEY} = process.env;
@@ -40,7 +39,7 @@ const createUser = async (req, res) => {
     try {
         email = email.toLowerCase();
         if (!profileImage) {
-            profileImage = gravatar.url(email, { s: avatarSize, r: 'x', d: 'retro' });
+            profileImage = gravatar.url(email, { s: avatarSize, r: 'x', d: 'retro', protocol: 'https' });
         }
         const user = await Users.create({ email, password, username, almaMater, profileImage });
         user.password = undefined;
