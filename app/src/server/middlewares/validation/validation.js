@@ -29,6 +29,20 @@ const isExistId = (Model) => async (req, res, next) => {
     }
 }
 
+const checkId = (Model, nameId) => async (req, res, next) => {
+    const id = req.params[nameId] || req.body[nameId] || req.query[nameId];
+    try {
+        const model = await Model.findById(id);
+        if (!model) {
+            return res.status(404).json({ error: `${Model.name} does not exist with id: ${id}` });
+        } else {
+            next();
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
 const isCreated = (Model) => async (req, res, next) => {
     const email = req.body.email || req.query.email || req.params.email;
     try {
@@ -77,5 +91,6 @@ module.exports = {
     isExistId,
     isCreated,
     isExistEmail,
-    isCreatedUsername
+    isCreatedUsername,
+    checkId
 };

@@ -19,7 +19,22 @@ const getVocabularyById = async (req, res) => {
     }
 }
 
+const getVocabularyByTopicId = async (req, res) => {
+    const topicId = req.params.topicId || req.query.topicId;
+    try {
+        const vocabularies = await Vocabulary.find({topicId});
+        if(vocabularies.length === 0){
+            res.status(404).json({error: "Vocabularies not found"});
+            return;
+        }
+        res.status(200).json({vocabularies});
+    } catch (error) {
+        res.status(500).json({ error : error.message });
+    }
+}
+
 module.exports = {
     getVocabularies,
-    getVocabularyById
+    getVocabularyById,
+    getVocabularyByTopicId
 }

@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { Topic, Vocabulary } = require('../models');
+const { Topic, Vocabulary, TopicInFolder} = require('../models');
 
 const getTopicById = async (req, res) => {
     const id = req.params.id || req.query.id;
@@ -15,6 +15,20 @@ const getTopicById = async (req, res) => {
 const getAllTopics = async (req, res) => {
     try {
         const topics = await Topic.find().populate('vocabularyId');
+        if(topics.length === 0){
+            res.status(404).json({error: "Topics not found"});
+            return;
+        }
+        res.status(200).json({topics});
+    } catch (error) {
+        res.status(500).json({ error : error.message });
+    }
+}
+
+const getTopicsByUserId = async (req, res) => {
+    const userId = req.params.id || req.query.id;
+    try {
+        const topics = await Topic.find({ userId }).populate('vocabularyId');
         if(topics.length === 0){
             res.status(404).json({error: "Topics not found"});
             return;
@@ -51,6 +65,7 @@ const updateTopic = async (req, res) => {
 const deleteTopic = async (req, res) => {
     const id = req.params.id || req.query.id;
     try {
+        await Vocabulary.deleteMany({ topicId: id });
         await Topic.findByIdAndDelete(id);
         res.status(200).json({ message: 'Delete topic successfully'});
     } catch (error) {
@@ -62,15 +77,11 @@ const createVocabularyInTopic = async (req, res) => {
     const topicId = req.params.id || req.query.id;
     const { englishWord, vietnameseWord, englishMeaning, vietnameseMeaning } = req.body;
     try {
-        const vocabulary = await Vocabulary.create({ englishWord, vietnameseWord, englishMeaning, vietnameseMeaning });
-        let topic = await Topic.findById(topicId);
-        topic.vocabularyId.push(vocabulary._id);
-        topic.vocabularyCount += 1;
-        await topic.save();
-        res.status(200).json({ message: 'Vocabulary added to topic successfully', topic});
+        let topic = await Topic.findByIdAndUpdate(topicId, {$inc: { vocabularyCount: 1 } }, { new: true });
+        const vocabulary = await Vocabulary.create({ englishWord, vietnameseWord, englishMeaning, vietnameseMeaning, topicId });
+        res.status(200).json({ message: 'Vocabulary added to topic successfully', topic, vocabulary});
     } catch (error) {
         res.status(500).json({ error : error.message });
-        
     }
 }
 
@@ -78,8 +89,13 @@ const deleteVocabularyInTopic = async (req, res) => {
     const topicId = req.params.id || req.query.id;
     const vocabularyId = req.params.vocabularyId;
     try {
-        await Topic.findByIdAndUpdate(topicId, { $pull: { vocabularyId: vocabularyId }, $inc: { vocabularyCount: -1 } });
-        res.status(200).json({ message: 'Vocabulary deleted from topic successfully' });
+        const vocab = await Vocabulary.findOne({ _id: vocabularyId, topicId });
+        if (!vocab) {
+            return res.status(404).json({ error: 'Vocabulary does not exist in topic' });
+        }
+        const topic = await Topic.findByIdAndUpdate(topicId, { $inc: { vocabularyCount: -1 } }, { new: true });
+        await Vocabulary.findByIdAndDelete(vocabularyId);
+        res.status(200).json({ message: 'Vocabulary deleted successfully', topic});
     } catch (error) {
         res.status(500).json({ error : error.message });
         
@@ -159,6 +175,22 @@ const exportCSV = async (req, res) => {
     }
 }
 
+const getTopicsByFolderId = async (req, res) => {
+    const folderId = req.params.folderId || req.query.folderId;
+    try {
+        const topicsInFolder = await TopicInFolder.find({folderId});
+        const topicIds = topicsInFolder.map(topicInFolder => topicInFolder.topicId);
+        const topics = await Topic.find({_id: {$in: topicIds}});
+        if(topics.length === 0){
+            res.status(404).json({error: "Topics not found"});
+            return;
+        }
+        res.status(200).json({topics});
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
 
 module.exports = {
     getTopicById,
@@ -172,5 +204,7 @@ module.exports = {
     downVoteCount,
     editVocabularyInTopic,
     importCSV,
-    exportCSV
+    exportCSV,
+    getTopicsByUserId,
+    getTopicsByFolderId
 }

@@ -29,7 +29,7 @@ usersRouter.put('/profiles/password/:id', authentication, validateInput(['passwo
 // update user (tested)
 usersRouter.put('/profiles/:id', authentication, isExistId(Users), updateUser);
 // upload profile image (tested)
-usersRouter.put('/profiles/change-profile-image/:id', authentication, isExistId(Users), uploadImg.single('profile-image'), uploadImage);
+usersRouter.put('/profiles/change-profile-image/:id', authentication, isExistId(Users), uploadImg.single('profile_image'), uploadImage);
 // get all users (tested)
 usersRouter.get("/", getAllUsers);
 // get user by id (tested)
