@@ -1,4 +1,4 @@
-const Users = require('./Users');
+const Users = require('./User');
 const BookmarkVocabulary = require('./BookmarkVocabulary');
 const Folder = require('./Folder');
 const LearningStatistics = require('./LearningStatistics');
