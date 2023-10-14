@@ -1,6 +1,7 @@
 package com.tdtu.finalproject.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.google.gson.annotations.SerializedName
 
 data class LoginResponse(
     val user: User,
@@ -9,7 +10,7 @@ data class LoginResponse(
 )
 
 data class User(
-    @JsonProperty("_id")
+    @SerializedName("_id")
     val id: String,
     val email: String,
     val username: String,
@@ -21,6 +22,6 @@ data class User(
     val folderId: List<Any?>,
     val learningStatisticsId: List<Any?>,
     val topicId: List<Any?>,
-    @JsonProperty("__v")
+    @SerializedName("__v")
     val v: Long,
 )

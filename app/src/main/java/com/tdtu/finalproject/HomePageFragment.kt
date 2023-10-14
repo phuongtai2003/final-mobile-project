@@ -9,11 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.tdtu.finalproject.adapter.MenuGridViewAdapter
 import com.tdtu.finalproject.databinding.FragmentHomePageBinding
 import com.tdtu.finalproject.model.MenuItem
 import com.tdtu.finalproject.utils.OnBottomNavigationChangeListener
 import com.tdtu.finalproject.utils.OnDrawerNavigationPressedListener
+import com.tdtu.finalproject.viewmodel.UserViewModel
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,7 +36,7 @@ class HomePageFragment : Fragment() {
     private var onDrawerNavigationPressedListener: OnDrawerNavigationPressedListener? = null
     private var menuItemAdapter : MenuGridViewAdapter? = null
     private var menuItemList : ArrayList<MenuItem>? = null
-    private var sharedPreferences : SharedPreferences? = null
+    private lateinit var userViewModel :UserViewModel
 
     private val binding get() = _binding!!
 
@@ -62,15 +64,18 @@ class HomePageFragment : Fragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentHomePageBinding.inflate(inflater, container, false)
+        initHomePageMenu()
+        userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
+        binding.helloText.text= "${getString(R.string.hello)}, ${userViewModel.user?.username}"
+        return binding.root
+    }
+
+    private fun initHomePageMenu(){
         menuItemList = ArrayList()
         menuItemList?.add(MenuItem(R.drawable.mortarboard, getString(R.string.study), View.OnClickListener {  }))
         menuItemList?.add(MenuItem(R.drawable.boy, getString(R.string.profile), View.OnClickListener {
@@ -85,7 +90,6 @@ class HomePageFragment : Fragment() {
             onDrawerNavigationPressedListener?.openDrawerFromFragment()
         }
         binding.homeGridView.adapter = menuItemAdapter
-        return binding.root
     }
 
     override fun onDestroyView() {

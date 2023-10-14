@@ -1,17 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:id="@+id/profileFragment"
-    android:layout_height="match_parent"
-    tools:context=".ProfileFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
+<ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:background="@color/primary_color"
+        android:id="@+id/profileFragment"
+        android:paddingVertical="15dp"
+        android:paddingHorizontal="20dp"
+        tools:context=".ProfileFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <LinearLayout
         android:layout_height="wrap_content"
-        android:text="@string/profile"
-        android:layout_gravity="center"/>
+        android:layout_width="match_parent"
+        android:orientation="vertical">
+    <FrameLayout
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            >
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/profileImage"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/boy"
+                app:shapeAppearanceOverlay="@style/circle"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/black"
+                android:layout_width="150dp"
+                android:layout_height="150dp"/>
+            <ImageButton
+                android:layout_gravity="end|bottom"
+                android:background="@android:color/transparent"
+                android:src="@drawable/baseline_camera_enhance_24"
+                android:layout_width="30dp"
+                android:layout_height="30dp"/>
+        </FrameLayout>
 
-</LinearLayout>
+        <EditText
+            android:id="@+id/profileEmailEdt"
+            android:layout_marginTop="10dp"
+            android:hint="Email"
+            android:backgroundTint="@color/white"
+            android:textColorHint="@color/grey"
+            android:textColor="@color/white"
+            android:text="Email"
+            android:textSize="20sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:text="@string/alma_mater"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <Spinner
+            android:background="@drawable/spinner_background"
+            android:layout_marginTop="10dp"
+            android:id="@+id/profileAlmaMater"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:textAlignment="center"
+            android:spinnerMode="dropdown"
+            />
+
+        <Button
+            android:id="@+id/saveProfileBtn"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:text="@string/save_key"
+            android:background="@drawable/custom_ripple_button"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</ScrollView>

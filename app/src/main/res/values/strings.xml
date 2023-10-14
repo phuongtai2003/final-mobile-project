@@ -1,6 +1,7 @@
 <resources>
     <string name="user_data_key">USERDATA</string>
     <string name="shared_preferences_key">SHAREDPREFKEY</string>
+    <string name="token_key">TOKENKEY</string>
     <string name="app_name">Final Project</string>
     <string name="sign_up">Sign up for free</string>
     <string name="log_in">Or Login</string>
@@ -19,6 +20,7 @@
     <string name="profile">Profile</string>
     <string name="hello">Hello</string>
     <string name="collection">Collection</string>
+    <string name="save_key">Save</string>
     <string name="competition">Competition</string>
     <string name="logout">Logout</string>
     <string name="register_success">Register successfully</string>

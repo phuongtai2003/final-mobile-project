@@ -2,6 +2,7 @@
 <resources>
     <string name="user_data_key">USERDATA</string>
     <string name="shared_preferences_key">SHAREDPREFKEY</string>
+    <string name="token_key">TOKENKEY</string>
     <string name="app_name">Final Project</string>
     <string name="sign_up">Đăng kí miễn phí</string>
     <string name="log_in">Hoặc đăng nhập</string>
@@ -16,6 +17,7 @@
     <string name="remember_me">Ghi nhớ đăng nhập</string>
     <string name="alma_mater">Trường học</string>
     <string name="home">Trang chủ</string>
+    <string name="save_key">Lưu</string>
     <string name="policy_string">Với việc đăng kí tài khoản, tôi chấp nhận\n các <b>chính sách bảo mật</b> và <b>điều khoản dịch vụ</b> của 3T</string>
     <string name="profile">Hồ sơ</string>
     <string name="hello">Xin Chào</string>

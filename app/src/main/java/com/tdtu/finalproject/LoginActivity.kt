@@ -40,9 +40,11 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
             dataRepo.login(username, password).thenAcceptAsync{
-                val userJson :String =  Gson().toJson(it)
+                val userJson :String =  Gson().toJson(it.user)
+                val token: String = it.token
                 with(sharedPref.edit()){
                     putString(getString(R.string.user_data_key), userJson)
+                    putString(getString(R.string.token_key), token)
                     apply()
                 }
                 val home = Intent(this, HomeActivity::class.java)
