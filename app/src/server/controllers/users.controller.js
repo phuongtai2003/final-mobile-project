@@ -102,6 +102,14 @@ const updateUser = async (req, res) => {
     const id = req.params.id || req.query.id;
     const { almaMater, username } = req.body;
     try {
+        const check = await Users.findById(id);
+        if(check.username !== username){
+            const user = await Users.findOne({username});
+            if(user){
+                res.status(409).json({ error: `Username: ${username} already exists` });
+                return;
+            }
+        }
         const user = await Users.findByIdAndUpdate(id, { almaMater, username }, { new: true }).select('-password');
         res.status(200).json({ message: "Update user successfully", user });
     } catch (error) {

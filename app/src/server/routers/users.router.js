@@ -27,7 +27,7 @@ usersRouter.put('/profiles/update-premium/:id', authentication, isExistId(Users)
 // change password (tested)
 usersRouter.put('/profiles/password/:id', authentication, validateInput(['password', 'newPassword']), isExistId(Users), changePassword);
 // update user (tested)
-usersRouter.put('/profiles/:id', authentication, isExistId(Users), isCreatedUsername(Users), updateUser);
+usersRouter.put('/profiles/:id', authentication, isExistId(Users), updateUser);
 // upload profile image (tested)
 usersRouter.put('/profiles/change-profile-image/:id', authentication, isExistId(Users), uploadImg.single('profile-image'), uploadImage);
 // get all users (tested)
