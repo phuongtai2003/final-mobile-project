@@ -19,15 +19,15 @@ const { createUser,
 // create Account (tested)
 usersRouter.post('/register', validateInput(['email', 'password', 'username', 'almaMater']), isCreated(Users), isCreatedUsername(Users), createUser);
 // login (tested)
-usersRouter.post('/login', validateInput(['username', 'password']), login);
+usersRouter.post('/login', validateInput(['email', 'password']), login);
 // password recovery (tested)
 usersRouter.post('/recover-password', authentication, validateInput(['email']), isExistEmail(Users), passwordRecovery);
 // update to premium (tested)
 usersRouter.put('/profiles/update-premium/:id', authentication, isExistId(Users), updatePremium);
 // change password (tested)
-usersRouter.put('/profiles/password/:id', authentication, isExistId(Users), validateInput(['password', 'newPassword']), isExistId(Users), changePassword);
+usersRouter.put('/profiles/password/:id', authentication, validateInput(['password', 'newPassword']), isExistId(Users), changePassword);
 // update user (tested)
-usersRouter.put('/profiles/:id', authentication, isExistId(Users), isCreated(Users), updateUser);
+usersRouter.put('/profiles/:id', authentication, isExistId(Users), isCreatedUsername(Users), updateUser);
 // upload profile image (tested)
 usersRouter.put('/profiles/change-profile-image/:id', authentication, isExistId(Users), uploadImg.single('profile-image'), uploadImage);
 // get all users (tested)

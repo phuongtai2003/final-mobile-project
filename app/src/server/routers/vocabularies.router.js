@@ -1,10 +1,10 @@
 const express = require('express');
 const vocabulariesRouter = express.Router();
 
-const {createVocabulary} = require('../controllers/vocabularies.controller');
+const {getVocabularies, getVocabularyById} = require('../controllers/vocabularies.controller');
 
-vocabulariesRouter.get("/");
+vocabulariesRouter.get("/", getVocabularies);
+vocabulariesRouter.get("/:id", getVocabularyById);
 
-vocabulariesRouter.post("/", createVocabulary);
 
 module.exports = vocabulariesRouter;

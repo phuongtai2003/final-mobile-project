@@ -1,16 +1,25 @@
-const {Vocabulary} = require('../models');
+const {Vocabulary, Topic} = require('../models');
 
-const createVocabulary = async (req, res) => {
-    const {englishWord, vietnameseWord, englishMeaning, vietnameseMeaning} = req.body;
+const getVocabularies = async (req, res) => {
     try {
-        console.log(req.body.user);
-        const vocabulary = await Vocabulary.create({englishWord, vietnameseWord, englishMeaning, vietnameseMeaning});
+        const vocabularies = await Vocabulary.find();
+        res.status(200).json({vocabularies, size: vocabularies.length});
+    } catch (error) {
+        res.status(500).json({ error : error.message });
+    }
+}
+
+const getVocabularyById = async (req, res) => {
+    const id = req.params.id || req.query.id;
+    try {
+        const vocabulary = await Vocabulary.findById(id);
         res.status(200).json({vocabulary});
-    }catch (error) {
-        res.status(500).json({error});
+    } catch (error) {
+        res.status(500).json({ error : error.message });
     }
 }
 
 module.exports = {
-    createVocabulary
+    getVocabularies,
+    getVocabularyById
 }

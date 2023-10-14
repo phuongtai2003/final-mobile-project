@@ -1,13 +1,29 @@
 const {Folder} = require('../models');
 
 const createFolder = async (req, res) => {
-    const {folderNameEnglish, folderNameVietNamese} = req.body;
+    const {folderNameEnglish, folderNameVietnamese} = req.body;
+    const user = req.user;
+    try {
+        const folder = await Folder.create({folderNameEnglish, folderNameVietnamese});
+        res.status(200).json({folder});
+    }catch (error) {
+        res.status(500).json({error});
+    }
+}
+
+const createTopicInFolder = async (req, res) => {
+    const folderId = req.params.id || req.query.id;
+    const {topicNameEnglish, topicNameVietnamese, descriptionEnglish, descriptionVietnamese, isPublic} = req.body;
+    const user = req.user;
     try {
         const folder = await Folder.create({folderNameEnglish, folderNameVietNamese});
         res.status(200).json({folder});
     }catch (error) {
         res.status(500).json({error});
     }
+}
+
+const addTopicToFolder = async (req, res) => {
 }
 
 const getFolderById = async (req, res) => {
@@ -34,7 +50,7 @@ const getAllFolders = async (req, res) => {
 }
 
 module.exports = {
-    createFolder,
+    createTopicInFolder,
     getFolderById,
     getAllFolders
 }
