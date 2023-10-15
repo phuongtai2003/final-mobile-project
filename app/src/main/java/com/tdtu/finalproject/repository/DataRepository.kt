@@ -1,5 +1,6 @@
 package com.tdtu.finalproject.repository
 
+import android.net.Uri
 import android.util.Log
 import com.google.gson.Gson
 import com.tdtu.finalproject.model.ErrorModel
@@ -10,6 +11,7 @@ import com.tdtu.finalproject.model.RegisterRequest
 import com.tdtu.finalproject.model.RegisterResponse
 import com.tdtu.finalproject.model.UpdateUserInfoRequest
 import com.tdtu.finalproject.model.UserInfo
+import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -102,20 +104,26 @@ class DataRepository() {
         return future
     }
 
-    fun uploadImage(image: File, id: String, token: String) : CompletableFuture<UpdateUserResponse>{
+    fun uploadImage(image: MultipartBody.Part, id: String, token: String) : CompletableFuture<UpdateUserResponse>{
         var future: CompletableFuture<UpdateUserResponse> = CompletableFuture()
         val call = api.uploadImage(image, id, token)
         var error: String? = null
-        call.enqueue(object : Callback<UpdateUserResponse>{
-            override fun onResponse(call: Call<UpdateUserResponse>, response: Response<UpdateUserResponse>) {
-                if(response.code() == 200){
+        call.enqueue(object : Callback<UpdateUserResponse> {
+            override fun onResponse(
+                call: Call<UpdateUserResponse>,
+                response: Response<UpdateUserResponse>
+            ) {
+                if (response.code() == 200) {
                     future.complete(response.body())
-                }
-                else{
-                    error = Gson().fromJson(response.errorBody()?.string(),ErrorModel::class.java).error
+                } else {
+                    error = Gson().fromJson(
+                        response.errorBody()?.string(),
+                        ErrorModel::class.java
+                    ).error
                     future.completeExceptionally(Exception(error))
                 }
             }
+
             override fun onFailure(call: Call<UpdateUserResponse>, t: Throwable) {
                 future.completeExceptionally(t)
             }

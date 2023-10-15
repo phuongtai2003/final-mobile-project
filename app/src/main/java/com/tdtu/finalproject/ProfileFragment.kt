@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,15 +14,18 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
-import com.squareup.picasso.Picasso
 import com.tdtu.finalproject.constants.Constant
 import com.tdtu.finalproject.databinding.FragmentProfileBinding
 import com.tdtu.finalproject.repository.DataRepository
 import com.tdtu.finalproject.utils.OnDrawerNavigationPressedListener
 import com.tdtu.finalproject.utils.UpdateUserModelListener
 import com.tdtu.finalproject.viewmodel.UserViewModel
-import kotlinx.coroutines.awaitAll
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -164,29 +166,29 @@ class ProfileFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == PICK_IMAGE_INTENT && resultCode == Activity.RESULT_OK && data!= null){
-            binding.profileImage.setImageURI(data.data!!)
-            val file : File = File(data.data!!.path)
+            val selectedImageUri = data.data!!
+            binding.profileImage.setImageURI(selectedImageUri)
+            val file = File(context?.cacheDir, "uploaded_image.jpg")
             val token : String? = sharedPref.getString(getString(R.string.token_key), null)
             binding.updateProfileProgress.visibility = View.VISIBLE
-            dataRepo.uploadImage(image = file, id = userViewModel.user?.id!!, token = token!!).thenAcceptAsync {
+            val requestBody = file.asRequestBody("image/*".toMediaTypeOrNull())
+            val multipartBody = MultipartBody.Part.createFormData("image", "file.jpg", requestBody)
+            dataRepo.uploadImage(image = multipartBody, id = userViewModel.user?.id!!, token = token!!).thenAcceptAsync {
                 with(sharedPref.edit()) {
-                    val newUserJson = Gson().toJson(it.user)
-                    with(sharedPref.edit()) {
-                        putString(getString(R.string.user_data_key), newUserJson)
-                        apply()
-                    }
-                    updateUserModelListener?.updateUserModel(it.user)
+                    putString(getString(R.string.user_data_key), Gson().toJson(it.user))
+                    apply()
                 }
+                updateUserModelListener?.updateUserModel(it.user)
                 requireActivity().runOnUiThread {
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
-                }
-            }.exceptionally {
-                e -> Toast.makeText(requireActivity(), e.message, Toast.LENGTH_SHORT).show()
-                null
-            }.whenCompleteAsync{
-                _,_ -> requireActivity().runOnUiThread {
                     binding.updateProfileProgress.visibility = View.GONE
                 }
+            }.exceptionally {
+                    e -> requireActivity().runOnUiThread {
+                Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
+                binding.updateProfileProgress.visibility = View.GONE
+            }
+                null
             }
         }
     }
