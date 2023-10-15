@@ -6,7 +6,6 @@ const { authentication } = require('../middlewares/authentication/authenticate')
 const {isExistId, validateInput, checkId} = require('../middlewares/validation/validation');
 const {getTopicById,
     getAllTopics,
-    createTopic,
     updateTopic,
     deleteTopic,
     createVocabularyInTopic,
@@ -29,7 +28,7 @@ topicsRouter.get("/users/:id", authentication, isExistId(Users), getTopicsByUser
 topicsRouter.get("/folders/:folderId", getTopicsByFolderId);
 // create topic (tested)
 topicsRouter.post("/", authentication, 
-validateInput(['topicNameEnglish', 'topicNameVietnamese', 'descriptionEnglish', 'descriptionVietnamese', 'isPublic']), createTopic);
+validateInput(['topicNameEnglish', 'topicNameVietnamese', 'descriptionEnglish', 'descriptionVietnamese']), importCSV);
 // update topic (tested)
 topicsRouter.put("/:id", authentication, isExistId(Topic), updateTopic);
 // delete topic (tested)
@@ -45,7 +44,7 @@ topicsRouter.put("/upvote/:id", authentication, isExistId(Topic), upVoteCount);
 // down vote topic (tested)
 topicsRouter.put("/downvote/:id", authentication, isExistId(Topic), downVoteCount);
 // import csv
-topicsRouter.post("/import-csv/:id",authentication, isExistId(Topic), importCSV);
+topicsRouter.post("/import-csv", authentication, validateInput(['topicNameEnglish', 'topicNameVietnamese', 'descriptionEnglish', 'descriptionVietnamese', 'vocabularyList']), importCSV);
 // export csv
 topicsRouter.get("/export-csv/:id",authentication, isExistId(Topic), exportCSV);
 

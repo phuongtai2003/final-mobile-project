@@ -39,18 +39,6 @@ const getTopicsByUserId = async (req, res) => {
     }
 }
 
-const createTopic = async (req, res) => {
-    const {topicNameEnglish, topicNameVietnamese, descriptionEnglish, descriptionVietnamese, isPublic} = req.body;
-    const user = req.user;
-    try {
-        const topic = await Topic.create({topicNameEnglish, topicNameVietnamese, descriptionEnglish, descriptionVietnamese,
-            isPublic, userId : user.data._id});
-        res.status(200).json({topic});
-    }catch(error){
-        res.status(500).json({error : error.message});
-    }
-}
-
 const updateTopic = async (req, res) => {
     const id = req.params.id || req.query.id;
     const {topicNameEnglish, topicNameVietnamese, descriptionEnglish, descriptionVietNamese} = req.body;
@@ -139,22 +127,25 @@ const downVoteCount = async (req, res) => {
 }
 
 const importCSV = async (req, res) => {
-    const topicId = req.params.id || req.query.id;
-    const jsonArray = req.body;
+    const { topicNameEnglish, topicNameVietnamese, descriptionEnglish, descriptionVietnamese, vocabularyList } = req.body;
     try {
-        let topic = await Topic.findById(topicId);
-        for (let i = 0; i < jsonArray.length; i++) {
-            const { englishWord, vietnameseWord, englishMeaning, vietnameseMeaning } = jsonArray[i];
-            const vocabulary = await Vocabulary.create({ englishWord, vietnameseWord, englishMeaning, vietnameseMeaning });
-            topic.vocabularyId.push(vocabulary._id);
-            topic.vocabularyCount += 1;
+        let topic = await Topic.create({
+            topicNameEnglish,
+            topicNameVietnamese,
+            descriptionEnglish,
+            descriptionVietnamese,
+            vocabularyCount: vocabularyList.length
+        });
+        for (let i = 0; i < vocabularyList.length; i++) {
+            const { englishWord, vietnameseWord, englishMeaning, vietnameseMeaning } = vocabularyList[i];
+            await Vocabulary.create({ englishWord, vietnameseWord, englishMeaning, vietnameseMeaning, topicId : topic._id });
         }
-        await topic.save();
         res.status(200).json({ message: 'Import data successfully', topic});
     } catch (error) {
         res.status(500).json({ error : error.message });
     }
 }
+
 
 const exportCSV = async (req, res) => {
     const topicId = req.params.id || req.query.id;
@@ -195,7 +186,6 @@ const getTopicsByFolderId = async (req, res) => {
 module.exports = {
     getTopicById,
     getAllTopics,
-    createTopic,
     updateTopic,
     deleteTopic,
     createVocabularyInTopic,
