@@ -13,9 +13,10 @@ import com.tdtu.finalproject.databinding.ActivityHomeBinding
 import com.tdtu.finalproject.model.User
 import com.tdtu.finalproject.utils.OnBottomNavigationChangeListener
 import com.tdtu.finalproject.utils.OnDrawerNavigationPressedListener
+import com.tdtu.finalproject.utils.UpdateUserModelListener
 import com.tdtu.finalproject.viewmodel.UserViewModel
 
-class HomeActivity : AppCompatActivity(), OnBottomNavigationChangeListener, OnDrawerNavigationPressedListener {
+class HomeActivity : AppCompatActivity(), OnBottomNavigationChangeListener, OnDrawerNavigationPressedListener, UpdateUserModelListener {
     private lateinit var binding: ActivityHomeBinding
     private lateinit var sharedPref : SharedPreferences
     private lateinit var userViewModel: UserViewModel
@@ -89,6 +90,10 @@ class HomeActivity : AppCompatActivity(), OnBottomNavigationChangeListener, OnDr
             R.id.profileFragment -> R.id.profileActionItem
             else -> R.id.homeActionItem
         }
+    }
+
+    override fun updateUserModel(user: User) {
+        userViewModel.user = user
     }
 
     override fun openDrawerFromFragment() {

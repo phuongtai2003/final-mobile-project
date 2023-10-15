@@ -9,9 +9,12 @@ import com.tdtu.finalproject.model.UpdateUserInfoRequest
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Header
+import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
+import java.io.File
 
 interface API {
     @POST("users/register")
@@ -22,4 +25,8 @@ interface API {
 
     @PUT("users/profiles/{id}")
     fun updateUser(@Body request: UpdateUserInfoRequest, @Path("id") value: String, @Header("token") token: String): Call<UpdateUserResponse>
+
+    @Multipart
+    @PUT("users/profiles/change-profile-image/{id}")
+    fun uploadImage(@Part("profile_image") image: File,@Path("id") value: String , @Header("token") token: String) : Call<UpdateUserResponse>
 }

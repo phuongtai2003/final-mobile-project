@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
+import com.tdtu.finalproject.constants.Constant
 import com.tdtu.finalproject.databinding.ActivityRegisterBinding
 import com.tdtu.finalproject.model.RegisterRequest
 import com.tdtu.finalproject.repository.DataRepository
@@ -29,9 +30,7 @@ class RegisterActivity : AppCompatActivity() {
 
         schoolList = ArrayList();
 
-        schoolList.add("TDTU")
-        schoolList.add("HCMUS")
-        schoolList.add("BKU")
+        schoolList.addAll(Constant.schollList)
 
         val adapter: ArrayAdapter<String> =
             ArrayAdapter<String>(this, R.layout.drop_down_item, schoolList)
@@ -52,7 +51,9 @@ class RegisterActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
             dataRepo.register(email = email, username = username, password = password, almaMater = almaMater).thenAcceptAsync{
-                Toast.makeText(this,R.string.register_success, Toast.LENGTH_SHORT).show()
+                runOnUiThread{
+                    Toast.makeText(this,R.string.register_success, Toast.LENGTH_SHORT).show()
+                }
                 finish()
             }.exceptionally {
                 e -> Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()

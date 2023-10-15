@@ -32,14 +32,14 @@ class LoginActivity : AppCompatActivity() {
 
         binding.loginButton.setOnClickListener{
             binding.loginLoadingIndicator.visibility = View.VISIBLE
-            val username = binding.loginUsernameTxt.text.toString()
+            val email = binding.loginUsernameTxt.text.toString()
             val password = binding.loginPasswordTxt.text.toString()
-            if(username.isEmpty() || password.isEmpty()){
+            if(email.isEmpty() || password.isEmpty()){
                 Toast.makeText(this, R.string.please_fill, Toast.LENGTH_SHORT).show()
                 binding.loginLoadingIndicator.visibility = View.GONE
                 return@setOnClickListener
             }
-            dataRepo.login(username, password).thenAcceptAsync{
+            dataRepo.login(email, password).thenAcceptAsync{
                 val userJson :String =  Gson().toJson(it.user)
                 val token: String = it.token
                 with(sharedPref.edit()){

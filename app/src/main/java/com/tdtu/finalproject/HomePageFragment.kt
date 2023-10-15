@@ -56,6 +56,18 @@ class HomePageFragment : Fragment() {
         onDrawerNavigationPressedListener = null
     }
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if(!hidden){
+            getUserVM()
+        }
+    }
+
+    private fun getUserVM(){
+        userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
+        binding.helloText.text= "${getString(R.string.hello)}, ${userViewModel.user?.username}"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -63,15 +75,13 @@ class HomePageFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
     }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentHomePageBinding.inflate(inflater, container, false)
         initHomePageMenu()
-        userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
-        binding.helloText.text= "${getString(R.string.hello)}, ${userViewModel.user?.username}"
+        getUserVM()
         return binding.root
     }
 

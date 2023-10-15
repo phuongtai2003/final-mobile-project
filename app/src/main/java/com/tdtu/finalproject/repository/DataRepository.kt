@@ -15,6 +15,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
 import java.lang.Exception
 import java.util.concurrent.CompletableFuture
 
@@ -57,9 +58,9 @@ class DataRepository() {
         return future
     }
 
-    fun login(username: String, password: String) : CompletableFuture<LoginResponse>{
+    fun login(email: String, password: String) : CompletableFuture<LoginResponse>{
         var future: CompletableFuture<LoginResponse> = CompletableFuture()
-        val loginRequest = LoginRequest(username, password)
+        val loginRequest = LoginRequest(email, password)
         val call = api.login(loginRequest)
         var error: String? = null
         call.enqueue(object : Callback<LoginResponse>{
@@ -101,4 +102,24 @@ class DataRepository() {
         return future
     }
 
+    fun uploadImage(image: File, id: String, token: String) : CompletableFuture<UpdateUserResponse>{
+        var future: CompletableFuture<UpdateUserResponse> = CompletableFuture()
+        val call = api.uploadImage(image, id, token)
+        var error: String? = null
+        call.enqueue(object : Callback<UpdateUserResponse>{
+            override fun onResponse(call: Call<UpdateUserResponse>, response: Response<UpdateUserResponse>) {
+                if(response.code() == 200){
+                    future.complete(response.body())
+                }
+                else{
+                    error = Gson().fromJson(response.errorBody()?.string(),ErrorModel::class.java).error
+                    future.completeExceptionally(Exception(error))
+                }
+            }
+            override fun onFailure(call: Call<UpdateUserResponse>, t: Throwable) {
+                future.completeExceptionally(t)
+            }
+        })
+        return future
+    }
 }
