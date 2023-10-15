@@ -11,4 +11,7 @@
     <color name="primary_color">#2A344D</color>
     <color name="secondary_color">#4156FF</color>
     <color name="tertiary_color">#7E98DA</color>
+    <color name="stroke_color">#5F5E80</color>
+    <color name="quaternary_color">#DDE3FD</color>
+    <color name="quinary_color">#DBE4EB</color>
 </resources>

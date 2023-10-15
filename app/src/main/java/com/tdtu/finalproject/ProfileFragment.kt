@@ -1,26 +1,37 @@
 package com.tdtu.finalproject
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
 import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
+import com.squareup.picasso.Picasso
 import com.tdtu.finalproject.constants.Constant
 import com.tdtu.finalproject.databinding.FragmentProfileBinding
+import com.tdtu.finalproject.model.User
 import com.tdtu.finalproject.repository.DataRepository
 import com.tdtu.finalproject.utils.OnDrawerNavigationPressedListener
 import com.tdtu.finalproject.utils.UpdateUserModelListener
+import com.tdtu.finalproject.utils.Utils
 import com.tdtu.finalproject.viewmodel.UserViewModel
 import java.io.File
 import java.io.FileOutputStream
@@ -42,11 +53,8 @@ class ProfileFragment : Fragment() {
     private var param2: String? = null
     private lateinit var userViewModel : UserViewModel
     private var _binding : FragmentProfileBinding? = null
-    private lateinit var schoolList : ArrayList<String>
-    private val dataRepo: DataRepository = DataRepository.getInstance()
+    private val UPDATE_USER_REQUEST : Int = 555
     private var updateUserModelListener : UpdateUserModelListener? = null
-    private lateinit var sharedPref : SharedPreferences
-    private val PICK_IMAGE_INTENT = 1
     private var onDrawerNavigationPressedListener: OnDrawerNavigationPressedListener? = null
     private val binding get() = _binding!!
 
@@ -65,8 +73,6 @@ class ProfileFragment : Fragment() {
     }
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString("currentAlma", binding.profileAlmaMater.selectedItem.toString())
-        outState.putString("currentEmail", binding.profileEmailEdt.text.toString())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,14 +80,6 @@ class ProfileFragment : Fragment() {
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
-        }
-        val currentAlma = savedInstanceState?.getString("currentAlma")
-        val currentEmail = savedInstanceState?.getString("currentEmail")
-        if(currentEmail != null){
-            binding.profileEmailEdt.setText(currentEmail)
-        }
-        if(currentAlma != null){
-            binding.profileAlmaMater.setSelection(schoolList.indexOf(currentAlma))
         }
     }
 
@@ -101,100 +99,37 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
+
         userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
-//        Picasso.get().load(Uri.parse(userViewModel.user?.profileImage)).into(binding.profileImage)
-        schoolList = ArrayList()
-        schoolList.addAll(Constant.schollList)
 
-        sharedPref = requireActivity().getSharedPreferences(getString(R.string.shared_preferences_key), Context.MODE_PRIVATE)
-        val adapter: ArrayAdapter<String> =
-            ArrayAdapter<String>(requireContext(), R.layout.drop_down_item, schoolList)
-        binding.profileAlmaMater.adapter = adapter
-        binding.profileEmailEdt.setText(userViewModel.user?.username)
-        binding.profileAlmaMater.setSelection(schoolList.indexOf(userViewModel.user?.almaMater))
-
-        binding.pickImageButton.setOnClickListener{
-            val pickingImage = Intent(Intent.ACTION_PICK)
-            pickingImage.type = "image/*"
-            pickingImage.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
-            startActivityForResult(pickingImage, PICK_IMAGE_INTENT)
-        }
+        Picasso.get().load(Uri.parse(userViewModel.user?.profileImage)).into(binding.profileImage)
+        binding.profileUsername.text = userViewModel.user?.username
 
         binding.drawerNavigateButton.setOnClickListener{
             onDrawerNavigationPressedListener?.openDrawerFromFragment()
         }
 
-        binding.saveProfileBtn.setOnClickListener {
-            val username = binding.profileEmailEdt.text.toString()
-            val almaMater = binding.profileAlmaMater.selectedItem.toString()
-            if(username.isEmpty() || almaMater.isEmpty()){
-                Toast.makeText(requireActivity(), R.string.please_fill, Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            binding.updateProfileProgress.visibility = View.VISIBLE
-            binding.profileContent.visibility = View.INVISIBLE
-            val token : String? = sharedPref.getString(getString(R.string.token_key), null)
-            dataRepo.updateUser(username = username, almaMater = almaMater, id = userViewModel.user?.id!!, token = token!!).thenAcceptAsync{
-                with(sharedPref.edit()){
-                    val newUserJson = Gson().toJson(it.user)
-                    with(sharedPref.edit()){
-                        putString(getString(R.string.user_data_key), newUserJson)
-                        apply()
-                    }
-                    updateUserModelListener?.updateUserModel(it.user)
-                }
-                requireActivity().runOnUiThread{
-                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
-                }
-            }.exceptionally{
-                e -> requireActivity().runOnUiThread{
-                    Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
-                }
-                null
-            }.whenCompleteAsync{
-                _,_ ->
-                requireActivity().runOnUiThread {
-                    binding.profileContent.visibility = View.VISIBLE
-                    binding.updateProfileProgress.visibility = View.GONE
-                }
-            }
+        binding.myAccountBtn.setOnClickListener {
+            val goToAccount = Intent(requireActivity(), AccountActivity::class.java)
+            goToAccount.putExtra(getString(R.string.user_data_key), userViewModel.user)
+            startActivityForResult(goToAccount, UPDATE_USER_REQUEST)
         }
+
         return binding.root
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == PICK_IMAGE_INTENT && resultCode == Activity.RESULT_OK && data!= null){
-            binding.profileImage.setImageURI(data.data!!)
-            val selectedImageUri = data.data!!
-            val inputStream = requireContext().contentResolver.openInputStream(selectedImageUri)
-            val file : File = File(requireContext().cacheDir, "upload_image.jpg")
-            val outputStream = FileOutputStream(file)
-            inputStream?.copyTo(outputStream)
-            val token : String? = sharedPref.getString(getString(R.string.token_key), null)
-            binding.updateProfileProgress.visibility = View.VISIBLE
-            dataRepo.uploadImage(image = file, id = userViewModel.user?.id!!, token = token!!).thenAcceptAsync {
-                with(sharedPref.edit()) {
-                    val newUserJson = Gson().toJson(it.user)
-                    with(sharedPref.edit()) {
-                        putString(getString(R.string.user_data_key), newUserJson)
-                        apply()
-                    }
-                    updateUserModelListener?.updateUserModel(it.user)
-                }
-                requireActivity().runOnUiThread {
-                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
-                }
-            }.exceptionally {
-                e -> Toast.makeText(requireActivity(), e.message, Toast.LENGTH_SHORT).show()
-                null
-            }.whenCompleteAsync{
-                _,_ -> requireActivity().runOnUiThread {
-                    binding.updateProfileProgress.visibility = View.GONE
-                }
+        if(requestCode == UPDATE_USER_REQUEST && resultCode == Activity.RESULT_OK && data != null){
+            val temp : User? = data.getParcelableExtra(getString(R.string.user_data_key))
+            if(temp != null){
+                updateUserModelListener?.updateUserModel(temp)
+                binding.profileUsername.text = userViewModel.user?.username
+                Picasso.get().load(Uri.parse(userViewModel.user?.profileImage)).into(binding.profileImage)
             }
         }
     }
+
 
     companion object {
         /**

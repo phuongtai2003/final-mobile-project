@@ -7,6 +7,7 @@
     <string name="sign_up">Đăng kí miễn phí</string>
     <string name="log_in">Hoặc đăng nhập</string>
     <string name="login_with_username">Đăng nhập bằng tên người dùng</string>
+    <string name="login_with_email">Đăng nhập bằng email</string>
     <string name="username">Tên người dùng</string>
     <string name="password">Mật khẩu</string>
     <string name="login">Đăng nhập</string>
@@ -23,10 +24,14 @@
     <string name="hello">Xin Chào</string>
     <string name="collection">Bộ sưu tập</string>
     <string name="competition">Thi đấu</string>
+    <string name="close">Đóng</string>
     <string name="register_success">Đăng kí thành công</string>
+    <string name="bookmark_topic">Chủ đề đánh dấu</string>
+    <string name="my_account">Tài khoản của tôi</string>
     <string name="logout">Đăng xuất</string>
     <string name="study">Học tập</string>
     <string name="password_not_match">Mật khẩu không khớp</string>
     <string name="please_fill">Vui lòng điền tất cả các thông tin</string>
     <string name="learn_today">Hôm nay bạn muốn học gì ?</string>
+    <string name="notification">Thông báo</string>
 </resources>

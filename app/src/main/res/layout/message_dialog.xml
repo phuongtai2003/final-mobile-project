@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:padding="10dp"
+    android:background="@drawable/message_dialog_bg"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/alertTitle"
+        android:textAlignment="center"
+        android:textSize="25sp"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:text="@string/notification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/alertBody"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:layout_marginTop="20dp"
+        android:textAlignment="center"
+        android:text="@string/policy_string"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/alertMainButton"
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:text="@string/close"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/custom_ripple_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

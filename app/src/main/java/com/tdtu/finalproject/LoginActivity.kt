@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -12,6 +13,7 @@ import com.google.gson.Gson
 import com.tdtu.finalproject.databinding.ActivityLoginBinding
 import com.tdtu.finalproject.model.User
 import com.tdtu.finalproject.repository.DataRepository
+import com.tdtu.finalproject.utils.Utils
 import java.util.concurrent.CompletableFuture
 
 class LoginActivity : AppCompatActivity() {
@@ -35,7 +37,7 @@ class LoginActivity : AppCompatActivity() {
             val email = binding.loginUsernameTxt.text.toString()
             val password = binding.loginPasswordTxt.text.toString()
             if(email.isEmpty() || password.isEmpty()){
-                Toast.makeText(this, R.string.please_fill, Toast.LENGTH_SHORT).show()
+                Utils.showSnackBar(binding.root, getString(R.string.please_fill))
                 binding.loginLoadingIndicator.visibility = View.GONE
                 return@setOnClickListener
             }
@@ -51,10 +53,10 @@ class LoginActivity : AppCompatActivity() {
                 home.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(home)
             }.exceptionally {
-                e -> Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
+                e ->
+                binding.loginLoadingIndicator.visibility = View.GONE
+                Utils.showSnackBar(binding.root, e.message!!)
                 null
-            }.whenCompleteAsync{
-                _,_ -> binding.loginLoadingIndicator.visibility = View.GONE
             }
         }
     }

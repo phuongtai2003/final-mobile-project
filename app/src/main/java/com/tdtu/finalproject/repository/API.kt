@@ -1,5 +1,6 @@
 package com.tdtu.finalproject.repository
 
+import android.net.Uri
 import com.tdtu.finalproject.model.LoginRequest
 import com.tdtu.finalproject.model.LoginResponse
 import com.tdtu.finalproject.model.UpdateUserResponse

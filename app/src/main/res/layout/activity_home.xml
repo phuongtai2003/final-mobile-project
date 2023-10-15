@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:id="@+id/bottomNavbar"
             android:layout_height="50dp"
-            android:background="@color/white"
+            android:background="@color/primary_color"
             app:menu="@menu/bottom_navbar_menu"
             android:scrollIndicators="left"
             app:itemIconTint="@color/color_selector"
@@ -39,6 +39,7 @@
         android:id="@+id/drawerNavigation"
         app:itemIconTint="@color/primary_color"
         app:itemTextColor="@color/primary_color"
+        android:background="@color/white"
         android:layout_gravity="start"
         android:layout_height="match_parent"/>
 

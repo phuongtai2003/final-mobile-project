@@ -13,6 +13,7 @@ import com.tdtu.finalproject.constants.Constant
 import com.tdtu.finalproject.databinding.ActivityRegisterBinding
 import com.tdtu.finalproject.model.RegisterRequest
 import com.tdtu.finalproject.repository.DataRepository
+import com.tdtu.finalproject.utils.Utils
 
 
 class RegisterActivity : AppCompatActivity() {
@@ -43,11 +44,11 @@ class RegisterActivity : AppCompatActivity() {
             val confirmPassword = binding.registerConfirmedPasswordEdt.text.toString()
             val almaMater = binding.almaMaterSpin.selectedItem as String
             if(email.isEmpty() || username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()){
-                Toast.makeText(this, R.string.please_fill, Toast.LENGTH_SHORT).show()
+                Utils.showSnackBar(binding.root, getString(R.string.please_fill))
                 return@setOnClickListener
             }
             else if(password != confirmPassword){
-                Toast.makeText(this, R.string.password_not_match, Toast.LENGTH_SHORT).show()
+                Utils.showSnackBar(binding.root, getString(R.string.password_not_match))
                 return@setOnClickListener
             }
             dataRepo.register(email = email, username = username, password = password, almaMater = almaMater).thenAcceptAsync{
@@ -56,7 +57,8 @@ class RegisterActivity : AppCompatActivity() {
                 }
                 finish()
             }.exceptionally {
-                e -> Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
+                e ->
+                e.message?.let { it1 -> Utils.showSnackBar(binding.root, it1) }
                 null
             }
         }

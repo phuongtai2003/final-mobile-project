@@ -1,6 +1,5 @@
 package com.tdtu.finalproject.repository
 
-import android.util.Log
 import com.google.gson.Gson
 import com.tdtu.finalproject.model.ErrorModel
 import com.tdtu.finalproject.model.LoginRequest
@@ -11,14 +10,15 @@ import com.tdtu.finalproject.model.RegisterResponse
 import com.tdtu.finalproject.model.UpdateUserInfoRequest
 import com.tdtu.finalproject.model.UserInfo
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Multipart
 import java.io.File
 import java.lang.Exception
 import java.util.concurrent.CompletableFuture
@@ -108,7 +108,8 @@ class DataRepository() {
 
     fun uploadImage(image: File, id: String, token: String) : CompletableFuture<UpdateUserResponse>{
         var future: CompletableFuture<UpdateUserResponse> = CompletableFuture()
-        val requestFile: RequestBody = RequestBody.create(MediaType.parse("image/*"), image)
+        val mediaType = "image/*".toMediaType()
+        val requestFile: RequestBody = image.asRequestBody(mediaType)
         val file : MultipartBody.Part = MultipartBody.Part.createFormData("image", image.name ,requestFile)
         val call = api.uploadImage(file, id, token)
         var error: String? = null

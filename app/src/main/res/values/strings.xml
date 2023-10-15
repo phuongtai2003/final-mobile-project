@@ -6,6 +6,7 @@
     <string name="sign_up">Sign up for free</string>
     <string name="log_in">Or Login</string>
     <string name="login_with_username">Login With Username</string>
+    <string name="login_with_email">Login With Email</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
@@ -19,7 +20,10 @@
     <string name="home">Home</string>
     <string name="profile">Profile</string>
     <string name="hello">Hello</string>
+    <string name="bookmark_topic">Bookmark Topic</string>
+    <string name="my_account">My Account</string>
     <string name="collection">Collection</string>
+    <string name="close">Close</string>
     <string name="save_key">Save</string>
     <string name="competition">Competition</string>
     <string name="logout">Logout</string>
@@ -28,4 +32,5 @@
     <string name="password_not_match">Password are not matched</string>
     <string name="please_fill">Please fill all information</string>
     <string name="learn_today">What would you like to learn for today ?</string>
+    <string name="notification">Notification</string>
 </resources>

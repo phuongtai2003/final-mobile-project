@@ -26,7 +26,7 @@
             <TextView
                 android:textAllCaps="true"
                 android:layout_marginTop="20dp"
-                android:text="@string/login_with_username"
+                android:text="@string/login_with_email"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -41,7 +41,8 @@
                 android:id="@+id/loginUsernameTxt"
                 android:textColor="@color/white"
                 android:textSize="20sp"
-                android:hint="@string/username"
+                android:inputType="text"
+                android:hint="Email"
                 android:backgroundTint="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -67,8 +68,6 @@
                 android:layout_height="wrap_content"/>
 
         </LinearLayout>
-
-
         <Button
             android:layout_marginTop="10dp"
             android:id="@+id/loginButton"
