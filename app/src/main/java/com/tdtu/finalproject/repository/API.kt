@@ -6,6 +6,7 @@ import com.tdtu.finalproject.model.UpdateUserResponse
 import com.tdtu.finalproject.model.RegisterRequest
 import com.tdtu.finalproject.model.RegisterResponse
 import com.tdtu.finalproject.model.UpdateUserInfoRequest
+import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Header
@@ -28,5 +29,5 @@ interface API {
 
     @Multipart
     @PUT("users/profiles/change-profile-image/{id}")
-    fun uploadImage(@Part("profile_image") image: File,@Path("id") value: String , @Header("token") token: String) : Call<UpdateUserResponse>
+    fun uploadImage(@Part image: MultipartBody.Part,@Path("id") value: String , @Header("token") token: String) : Call<UpdateUserResponse>
 }

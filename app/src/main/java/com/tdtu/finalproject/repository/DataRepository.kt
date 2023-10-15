@@ -10,11 +10,15 @@ import com.tdtu.finalproject.model.RegisterRequest
 import com.tdtu.finalproject.model.RegisterResponse
 import com.tdtu.finalproject.model.UpdateUserInfoRequest
 import com.tdtu.finalproject.model.UserInfo
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Multipart
 import java.io.File
 import java.lang.Exception
 import java.util.concurrent.CompletableFuture
@@ -104,7 +108,9 @@ class DataRepository() {
 
     fun uploadImage(image: File, id: String, token: String) : CompletableFuture<UpdateUserResponse>{
         var future: CompletableFuture<UpdateUserResponse> = CompletableFuture()
-        val call = api.uploadImage(image, id, token)
+        val requestFile: RequestBody = RequestBody.create(MediaType.parse("image/*"), image)
+        val file : MultipartBody.Part = MultipartBody.Part.createFormData("image", image.name ,requestFile)
+        val call = api.uploadImage(file, id, token)
         var error: String? = null
         call.enqueue(object : Callback<UpdateUserResponse>{
             override fun onResponse(call: Call<UpdateUserResponse>, response: Response<UpdateUserResponse>) {
