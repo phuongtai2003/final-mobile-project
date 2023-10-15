@@ -21,7 +21,7 @@ const {getTopicById,
 // get all topics (tested)
 topicsRouter.get("/", getAllTopics);
 // get topic by id (tested)
-topicsRouter.get("/:id", isExistId(Topic), getTopicById);
+topicsRouter.get("/:id", authentication ,isExistId(Topic), getTopicById);
 // get topics by user id (tested)
 topicsRouter.get("/users/:id", authentication, isExistId(Users), getTopicsByUserId);
 // get topics by folder id (tested)

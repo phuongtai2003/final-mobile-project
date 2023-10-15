@@ -1,14 +1,33 @@
 require('dotenv').config();
-const { Topic, Vocabulary, TopicInFolder} = require('../models');
+const { Topic, Vocabulary, TopicInFolder, BookmarkVocabulary, VocabularyStatistic} = require('../models');
 
 const getTopicById = async (req, res) => {
-    const id = req.params.id || req.query.id;
-    try {
-        const topic = await Topic.findById(id).populate('vocabularyId');
-        res.status(200).json(topic);
-    } catch (error) {
-        res.status(500).json({ error : error.message });
+    // const id = req.params.id || req.query.id;
+    // try {
+    //     const topic = await Topic.findById(id).populate('vocabularyId');
+    //     res.status(200).json(topic);
+    // } catch (error) {
+    //     res.status(500).json({ error : error.message });
         
+    // }
+    const userId = req.user.data._id;
+    const topicId = req.params.id || req.query.id;
+
+    try {
+        const vocabularies = await Vocabulary.find({ topicId: topicId });
+
+        for (let i = 0; i < vocabularies.length; i++) {
+            const vocabStat = await VocabularyStatistic.findOne({ userId, vocabularyId: vocabularies[i]._id });
+            const bookmarkVocab = await BookmarkVocabulary.findOne({ userId, vocabularyId: vocabularies[i]._id });
+
+            vocabularies[i] = vocabularies[i].toObject(); // Convert the Mongoose document to a plain JavaScript object
+            vocabularies[i].vocabStat = vocabStat;
+            vocabularies[i].bookmarkVocab = bookmarkVocab;
+        }
+
+        res.status(200).json({ vocabularies });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -95,11 +114,10 @@ const editVocabularyInTopic = async (req, res) => {
     const vocabularyId = req.params.vocabularyId;
     const { englishWord, vietnameseWord, englishMeaning, vietnameseMeaning } = req.body;
     try {
-        let topic = await Topic.findById(topicId);
-        if (!topic.vocabularyId.includes(vocabularyId)) {
-            return res.status(404).json({ error: 'Vocabulary does not exist in this topic' });
+        const vocabulary = await Vocabulary.findOneAndUpdate({_id: vocabularyId, topicId}, { englishWord, vietnameseWord, englishMeaning, vietnameseMeaning }, { new: true });
+        if(!vocabulary){
+            return res.status(404).json({ error: 'Vocabulary does not exist in topic' });
         }
-        const vocabulary = await Vocabulary.findByIdAndUpdate(vocabularyId, { englishWord, vietnameseWord, englishMeaning, vietnameseMeaning }, { new: true });
         res.status(200).json({ message: 'Vocabulary edited successfully', vocabulary});
     } catch (error) {
         res.status(500).json({ error : error.message });
