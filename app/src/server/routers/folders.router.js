@@ -10,12 +10,15 @@ const {getFolderById,
     updateFolder,
     deleteFolder,
     addTopicToFolder,
-    deleteTopicInFolder} = require('../controllers/folders.controller');
+    deleteTopicInFolder,
+    getFodersByUserId} = require('../controllers/folders.controller');
 
 // get all folders (tested)
 foldersRouter.get("/", getAllFolders);
 // get folder by id (tested)
 foldersRouter.get("/:id", isExistId(Folder), getFolderById);
+// get folder by user id
+foldersRouter.get("/users/:id", authentication, getFodersByUserId);
 // create topic 
 foldersRouter.post("/", authentication, validateInput(["folderNameEnglish", "folderNameVietnamese"]), createFolder);
 // add topic to folder (tested)

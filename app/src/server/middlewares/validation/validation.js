@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+
 const validateInput = (requiredFields) => (req, res, next) => {
     for (const field of requiredFields) {
         if (!req.body[field]) {
@@ -17,6 +19,9 @@ const validateInput = (requiredFields) => (req, res, next) => {
 
 const isExistId = (Model) => async (req, res, next) => {
     const id = req.params.id || req.body.id || req.query.id;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ error: `${Model.name} does not exist with id: ${id}` });
+    }
     try {
         const model = await Model.findById(id);
         if (!model) {
@@ -31,6 +36,9 @@ const isExistId = (Model) => async (req, res, next) => {
 
 const checkId = (Model, nameId) => async (req, res, next) => {
     const id = req.params[nameId] || req.body[nameId] || req.query[nameId];
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ error: `${Model.name} does not exist with id: ${id}` });
+    }
     try {
         const model = await Model.findById(id);
         if (!model) {

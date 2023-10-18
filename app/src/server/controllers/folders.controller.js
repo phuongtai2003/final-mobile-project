@@ -45,7 +45,7 @@ const addTopicToFolder = async (req, res) => {
         }
         const folder = await Folder.findByIdAndUpdate(folderId, {$inc: {topicCount : 1}}, {new: true});
         const topicInFolder = await TopicInFolder.create({folderId, topicId});
-        res.status(200).json({folder, topicInFolder});
+        res.status(200).json({message: "add topic to folder successfully", folder, dateTimeAdded: topicInFolder.dateTimeAdded});
     }catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -91,6 +91,20 @@ const getAllFolders = async (req, res) => {
     }
 }
 
+const getFodersByUserId = async (req, res) => {
+    const userId = req.params.id || req.query.id;
+    try {
+        const folders = await Folder.find({userId});
+        if(folders.length === 0){
+            res.status(404).json({error: "Folders not found"});
+            return;
+        }
+        res.status(200).json({folders});
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
 module.exports = {
     getFolderById,
     getAllFolders,
@@ -98,5 +112,6 @@ module.exports = {
     addTopicToFolder,
     updateFolder,
     deleteFolder,
-    deleteTopicInFolder
+    deleteTopicInFolder,
+    getFodersByUserId
 }

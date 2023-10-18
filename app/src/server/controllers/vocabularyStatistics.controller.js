@@ -37,19 +37,54 @@ const create_updateVocabularyStatistic = async (req, res) => {
 }
 
 
-const getVocabularyStatisticById = async (req, res) => {
-
-}
-
 const getVocabularyStatisticByTopicId = async (req, res) => {
+    const userId = req.user.data._id;
+    const topicId = req.params.id || req.query.id;
+    try {
+        const vocabularies = await Vocabulary.find({ topicId: topicId });
+        const vocabStats = [];
+
+        for (let vocab of vocabularies) {
+            const stat = await VocabularyStatistic.findOne({ userId, vocabularyId: vocab._id });
+            vocabStats.push({
+                vocabulary: vocab,
+                statistic: stat
+            });
+        }
+
+        res.status(200).json({ vocabStats });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 }
 
 const getVocabularyStatisticByUserId = async (req, res) => {
+    const userId = req.user.data._id;
+    try {
+        const stats = await VocabularyStatistic.find({ userId: userId }).populate('vocabularyId');
+        res.status(200).json({ stats });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+const getVocabularyStatisticByVocabularyId = async (req, res) => {
+    const userId = req.user.data._id;
+    const vocabularyId = req.params.id || req.query.id;
+    try {
+        const stat = await VocabularyStatistic.findOne({ userId, vocabularyId }).populate('vocabularyId');
+        if (!stat) {
+            return res.status(404).json({ error: 'No statistic found for this vocabulary' });
+        }
+        res.status(200).json({ stat });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 }
 
 module.exports = {
     create_updateVocabularyStatistic,
-    getVocabularyStatisticById,
+    getVocabularyStatisticByVocabularyId,
     getVocabularyStatisticByTopicId,
     getVocabularyStatisticByUserId
 }

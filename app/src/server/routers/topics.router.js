@@ -16,7 +16,8 @@ const {getTopicById,
     importCSV,
     exportCSV,
     getTopicsByUserId,
-    getTopicsByFolderId} = require('../controllers/topics.controller');
+    getTopicsByFolderId,
+    viewTopicIsPublic} = require('../controllers/topics.controller');
 
 // get all topics (tested)
 topicsRouter.get("/", getAllTopics);
@@ -26,6 +27,8 @@ topicsRouter.get("/:id", authentication ,isExistId(Topic), getTopicById);
 topicsRouter.get("/users/:id", authentication, isExistId(Users), getTopicsByUserId);
 // get topics by folder id (tested)
 topicsRouter.get("/folders/:folderId", getTopicsByFolderId);
+// view topic is public (tested)
+topicsRouter.get("/public/users/:userId", authentication, checkId(Users, "userId"), viewTopicIsPublic);
 // create topic (tested)
 topicsRouter.post("/", authentication, 
 validateInput(['topicNameEnglish', 'topicNameVietnamese', 'descriptionEnglish', 'descriptionVietnamese']), importCSV);
@@ -35,17 +38,17 @@ topicsRouter.put("/:id", authentication, isExistId(Topic), updateTopic);
 topicsRouter.delete("/:id", authentication, isExistId(Topic), deleteTopic)
 // create vocab in topic (tested)
 topicsRouter.post("/:id/vocabularies", authentication, isExistId(Topic), validateInput(["englishWord", "vietnameseWord", "englishMeaning", "vietnameseMeaning"]), createVocabularyInTopic);
-// delete a vocab from topic
+// delete a vocab from topic (tested)
 topicsRouter.delete("/:id/vocabularies/:vocabularyId", authentication, isExistId(Topic), checkId(Vocabulary, "vocabularyId"), deleteVocabularyInTopic);
-// edit vocab from topic
+// edit vocab from topic (tested)
 topicsRouter.put("/:id/vocabularies/:vocabularyId", authentication, isExistId(Topic), checkId(Vocabulary, "vocabularyId"), editVocabularyInTopic);
 // up vote topic (tested)
 topicsRouter.put("/upvote/:id", authentication, isExistId(Topic), upVoteCount);
 // down vote topic (tested)
 topicsRouter.put("/downvote/:id", authentication, isExistId(Topic), downVoteCount);
-// import csv
+// import csv (tested)
 topicsRouter.post("/import-csv", authentication, validateInput(['topicNameEnglish', 'topicNameVietnamese', 'descriptionEnglish', 'descriptionVietnamese', 'vocabularyList']), importCSV);
-// export csv
+// export csv (tested)
 topicsRouter.get("/export-csv/:id",authentication, isExistId(Topic), exportCSV);
 
 module.exports = topicsRouter;

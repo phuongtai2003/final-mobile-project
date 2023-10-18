@@ -67,13 +67,7 @@ const login = async (req, res) => {
 const updatePremium = async (req, res) => {
     const id = req.params.id || req.query.id;
     try {
-        const user = await Users.findById(id).select('-password');
-        if (!user) {
-            res.status(404).json({ error: 'User not found' });
-            return;
-        }
-        user.isPremiumAccount = true;
-        await user.save();
+        const user = await Users.findByIdAndUpdate(id, {isPremiumAccount: true}, {new: true}).select('-password');
         res.status(200).json({ user });
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -85,8 +79,8 @@ const changePassword = async (req, res) => {
     const { password, newPassword } = req.body;
     try {
         const user = await Users.findOne({ _id: id, password});
-        if (!user) {
-            res.status(404).json({ error: 'Invalid password' });
+        if(!user){
+            res.status(401).json({ error: 'password is incorrect' });
             return;
         }
         user.password = newPassword;
