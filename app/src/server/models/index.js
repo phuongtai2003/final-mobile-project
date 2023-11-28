@@ -1,5 +1,5 @@
 const Users = require('./User');
-const BookmarkVocabulary = require('./BookmarkVocabulary');
+const BookmarkTopics = require('./BookmarkTopics');
 const Folder = require('./Folder');
 const LearningStatistics = require('./LearningStatistics');
 const Topic = require('./Topic');
@@ -9,7 +9,7 @@ const VocabularyStatistic = require('./VocabularyStatistic');
 
 module.exports = {
     Users,
-    BookmarkVocabulary,
+    BookmarkTopics,
     Folder,
     LearningStatistics,
     Topic,

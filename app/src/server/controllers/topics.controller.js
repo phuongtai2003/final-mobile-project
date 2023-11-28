@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { Topic, Vocabulary, TopicInFolder, BookmarkVocabulary, VocabularyStatistic, LearningStatistics} = require('../models');
+const { Topic, Vocabulary, TopicInFolder, BookmarkTopics, VocabularyStatistic, LearningStatistics} = require('../models');
 
 const getTopicById = async (req, res) => {
     const id = req.params.id || req.query.id;
@@ -8,27 +8,7 @@ const getTopicById = async (req, res) => {
         res.status(200).json({topic});
     } catch (error) {
         res.status(500).json({ error : error.message });
-        
     }
-    // const userId = req.user.data._id;
-    // const topicId = req.params.id || req.query.id;
-
-    // try {
-    //     const vocabularies = await Vocabulary.find({ topicId: topicId });
-
-    //     for (let i = 0; i < vocabularies.length; i++) {
-    //         const vocabStat = await VocabularyStatistic.findOne({ userId, vocabularyId: vocabularies[i]._id });
-    //         const bookmarkVocab = await BookmarkVocabulary.findOne({ userId, vocabularyId: vocabularies[i]._id });
-
-    //         vocabularies[i] = vocabularies[i].toObject(); // Convert the Mongoose document to a plain JavaScript object
-    //         vocabularies[i].vocabStat = vocabStat;
-    //         vocabularies[i].bookmarkVocab = bookmarkVocab;
-    //     }
-
-    //     res.status(200).json({ vocabularies });
-    // } catch (error) {
-    //     res.status(500).json({ error: error.message });
-    // }
 }
 
 const getAllTopics = async (req, res) => {
@@ -74,7 +54,7 @@ const deleteTopic = async (req, res) => {
     try {
         await TopicInFolder.deleteMany({ topicId: id });
         await VocabularyStatistic.deleteMany({ topicId: id });
-        await BookmarkVocabulary.deleteMany({ topicId: id });
+        await BookmarkTopics.deleteMany({ topicId: id });
         await LearningStatistics.deleteMany({ topicId: id });
         await Vocabulary.deleteMany({ topicId: id });
         await Topic.findByIdAndDelete(id);
@@ -105,7 +85,7 @@ const deleteVocabularyInTopic = async (req, res) => {
             return res.status(404).json({ error: 'Vocabulary does not exist in topic' });
         }
         const topic = await Topic.findByIdAndUpdate(topicId, { $inc: { vocabularyCount: -1 } }, { new: true });
-        await BookmarkVocabulary.findOneAndDelete({vocabularyId});
+        await BookmarkTopics.findOneAndDelete({vocabularyId});
         await VocabularyStatistic.findOneAndDelete({vocabularyId});
         await Vocabulary.findByIdAndDelete(vocabularyId);
         res.status(200).json({ message: 'Vocabulary deleted successfully', topic});
@@ -173,7 +153,6 @@ const importCSV = async (req, res) => {
     }
 }
 
-
 const exportCSV = async (req, res) => {
     const topicId = req.params.id || req.query.id;
     try {
@@ -218,10 +197,8 @@ const viewTopicIsPublic = async (req, res) => {
         res.status(200).json({topicIsPublic});
     } catch (error) {
         res.status(500).json({ error: error.message });
-        
     }
 }
-
 
 module.exports = {
     getTopicById,

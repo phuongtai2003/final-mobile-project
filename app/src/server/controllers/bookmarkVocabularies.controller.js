@@ -1,6 +1,6 @@
-const {BookmarkVocabulary, Vocabulary} = require('../models');
+const {BookmarkTopics, Vocabulary} = require('../models');
 
-const createBookmarkVocabulary = async (req, res) => {
+const createBookmarkTopics = async (req, res) => {
     const userId = req.user.data._id;
     const vocabularies = req.body;
 
@@ -13,12 +13,12 @@ const createBookmarkVocabulary = async (req, res) => {
                 return res.status(404).json({ error: 'Vocabulary does not exist' });
             }
 
-            const bookmarkVocab = await BookmarkVocabulary.findOne({userId, vocabularyId});
+            const bookmarkVocab = await BookmarkTopics.findOne({userId, vocabularyId});
             if(bookmarkVocab){
                 return res.status(400).json({error: 'Vocabulary is already bookmarked'});
             }
 
-            const newBookmarkVocab = new BookmarkVocabulary({
+            const newBookmarkVocab = new BookmarkTopics({
                 userId,
                 vocabularyId
             });
@@ -31,12 +31,12 @@ const createBookmarkVocabulary = async (req, res) => {
     }
 }
 
-const deleteBookmarkVocabulary = async (req, res) => {
+const deleteBookmarkTopics = async (req, res) => {
     const userId = req.user.data._id;
     const vocabularyId = req.params.id || req.query.id;
 
     try {
-        const bookmarkVocab = await BookmarkVocabulary.findOne({userId, vocabularyId});
+        const bookmarkVocab = await BookmarkTopics.findOne({userId, vocabularyId});
         if(!bookmarkVocab){
             return res.status(404).json({error: 'Bookmark vocabulary not found'});
         }
@@ -50,6 +50,6 @@ const deleteBookmarkVocabulary = async (req, res) => {
 }
 
 module.exports = {
-    createBookmarkVocabulary,
-    deleteBookmarkVocabulary
+    createBookmarkTopics,
+    deleteBookmarkTopics
 }
