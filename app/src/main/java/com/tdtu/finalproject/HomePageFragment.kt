@@ -1,21 +1,16 @@
 package com.tdtu.finalproject
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.tdtu.finalproject.adapter.MenuGridViewAdapter
 import com.tdtu.finalproject.databinding.FragmentHomePageBinding
-import com.tdtu.finalproject.model.MenuItem
 import com.tdtu.finalproject.utils.OnBottomNavigationChangeListener
 import com.tdtu.finalproject.utils.OnDrawerNavigationPressedListener
-import com.tdtu.finalproject.viewmodel.UserViewModel
+import com.tdtu.finalproject.viewmodel.HomeDataViewModel
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,9 +29,7 @@ class HomePageFragment : Fragment() {
     private var _binding: FragmentHomePageBinding? = null
     private var onBottomNavigationChangeListener: OnBottomNavigationChangeListener? = null
     private var onDrawerNavigationPressedListener: OnDrawerNavigationPressedListener? = null
-    private var menuItemAdapter : MenuGridViewAdapter? = null
-    private var menuItemList : ArrayList<MenuItem>? = null
-    private lateinit var userViewModel :UserViewModel
+    private lateinit var userViewModel :HomeDataViewModel
 
     private val binding get() = _binding!!
 
@@ -64,8 +57,10 @@ class HomePageFragment : Fragment() {
     }
 
     private fun getUserVM(){
-        userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
-        binding.helloText.text= "${getString(R.string.hello)}, ${userViewModel.user?.username}"
+        userViewModel = ViewModelProvider(requireActivity())[HomeDataViewModel::class.java]
+        userViewModel.getUser()?.observe(viewLifecycleOwner) {
+            binding.helloText.text = "${getString(R.string.hello)}, ${it.username}"
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,26 +75,11 @@ class HomePageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentHomePageBinding.inflate(inflater, container, false)
-        initHomePageMenu()
         getUserVM()
-        return binding.root
-    }
-
-    private fun initHomePageMenu(){
-        menuItemList = ArrayList()
-        menuItemList?.add(MenuItem(R.drawable.mortarboard, getString(R.string.study), View.OnClickListener {  }))
-        menuItemList?.add(MenuItem(R.drawable.boy, getString(R.string.profile), View.OnClickListener {
-            onBottomNavigationChangeListener?.changeBottomNavigationItem(R.id.profileFragment)
-        }))
-        menuItemList?.add(MenuItem(R.drawable.collection, getString(R.string.collection), View.OnClickListener {  }))
-        menuItemList?.add(MenuItem(R.drawable.trophy, getString(R.string.competition), View.OnClickListener {  }))
-        menuItemAdapter = context?.let { MenuGridViewAdapter(it, R.layout.home_menu_item,
-            menuItemList as ArrayList<MenuItem>
-        )}
-        binding.openDrawerBtn.setOnClickListener{
+        binding.openDrawerBtn.setOnClickListener {
             onDrawerNavigationPressedListener?.openDrawerFromFragment()
         }
-        binding.homeGridView.adapter = menuItemAdapter
+        return binding.root
     }
 
     override fun onDestroyView() {

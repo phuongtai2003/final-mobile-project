@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@android:color/transparent"/>
-    <corners android:radius="10dp"/>
-    <stroke android:width="1dp" android:color="@color/white"/>
-</shape>
+<ripple android:color="@color/tertiary_color"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/mask">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/primary_color"/>
+            <corners android:radius="10dp"/>
+        </shape>
+    </item>
+
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="10dp"/>
+            <stroke android:color="@color/white" android:width="1dp"/>
+        </shape>
+    </item>
+</ripple>

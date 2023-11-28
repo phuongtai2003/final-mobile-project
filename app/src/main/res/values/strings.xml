@@ -10,13 +10,14 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
-    <string name="forget_password">Forget <b><font color="#FF03DAC5">password</font></b>?</string>
+    <string name="forget_password">Forget <b><font color="#4156FF">password</font></b>?</string>
     <string name="signup">Sign Up</string>
     <string name="confirmed_password">Confirmed Password</string>
     <string name="signup_with_username">Sign Up With Username</string>
     <string name="remember_me">Remember Me</string>
     <string name="alma_mater">Alma Mater</string>
-    <string name="policy_string">By signing up, i accept 3T’\n <b>Terms of service</b> and <b>Privacy policy</b></string>
+    <string name="policy_string">By signing up, i accept 3T’s\n <font color="#4156FF">Terms of service</font> and <font color="#4156FF">Privacy policy</font></string>
+    <string name="login_policy">By logging in, i accept 3T’s\n<font color="#4156FF">Terms of service</font> and <font color="#4156FF">Privacy policy</font></string>
     <string name="home">Home</string>
     <string name="profile">Profile</string>
     <string name="hello">Hello</string>
@@ -33,4 +34,33 @@
     <string name="please_fill">Please fill all information</string>
     <string name="learn_today">What would you like to learn for today ?</string>
     <string name="notification">Notification</string>
+    <string name="upgrade">Upgrade</string>
+    <string name="wrong_credentials">Wrong credentials</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="email_or_username">Email or Username</string>
+    <string name="topic">Topics</string>
+    <string name="see_all">See all</string>
+    <string name="folder">Folder</string>
+    <string name="classes">Classes</string>
+    <string name="no_topics">No Topics</string>
+    <string name="no_folders">No Folders</string>
+    <string name="no_classes">No Classes</string>
+    <string name="topic_folder_classes">Topic, Folder, Classes</string>
+    <string name="library">Library</string>
+    <string name="search">Search</string>
+    <string name="add_topic">Add Topic</string>
+    <string name="add_class">Add Class</string>
+    <string name="add_folder">Add Folder</string>
+    <string name="add_vocabulary">Add Vocabulary</string>
+    <string name="remove_all_vocabulary">Remove All Vocabularies</string>
+    <string name="english_word">English Word</string>
+    <string name="vietnamese_word">Vietnamese Word</string>
+    <string name="english_meaning">English Terminology</string>
+    <string name="vietnamese_meaning">Vietnamese Terminology</string>
+    <string name="topic_title_english">English Topic Title</string>
+    <string name="topic_title_vietnamese">Vietnamese Topic Title</string>
+    <string name="topic_description">Topic Description</string>
+    <string name="import_document">Import Document</string>
+    <string name="topic_description_english">English Topic Description</string>
+    <string name="topic_description_vietnamese">Vietnamese Topic Description</string>
 </resources>

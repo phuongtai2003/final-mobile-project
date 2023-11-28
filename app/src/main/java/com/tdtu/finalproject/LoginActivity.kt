@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.widget.Toast
 import com.google.gson.Gson
@@ -14,6 +15,7 @@ import com.tdtu.finalproject.databinding.ActivityLoginBinding
 import com.tdtu.finalproject.model.User
 import com.tdtu.finalproject.repository.DataRepository
 import com.tdtu.finalproject.utils.Utils
+import com.tdtu.finalproject.utils.WrongCredentialsException
 import java.util.concurrent.CompletableFuture
 
 class LoginActivity : AppCompatActivity() {
@@ -55,7 +57,12 @@ class LoginActivity : AppCompatActivity() {
             }.exceptionally {
                 e ->
                 binding.loginLoadingIndicator.visibility = View.GONE
-                Utils.showSnackBar(binding.root, e.message!!)
+                if(e is WrongCredentialsException){
+                    Utils.showDialog(Gravity.CENTER, getString(R.string.wrong_credentials), this)
+                }
+                else{
+                    Utils.showDialog(Gravity.CENTER, getString(R.string.something_went_wrong), this)
+                }
                 null
             }
         }

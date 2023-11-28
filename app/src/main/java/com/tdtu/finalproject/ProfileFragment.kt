@@ -1,40 +1,22 @@
 package com.tdtu.finalproject
 
 import android.app.Activity
-import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
-import android.view.WindowManager
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
-import com.tdtu.finalproject.constants.Constant
 import com.tdtu.finalproject.databinding.FragmentProfileBinding
 import com.tdtu.finalproject.model.User
-import com.tdtu.finalproject.repository.DataRepository
 import com.tdtu.finalproject.utils.OnDrawerNavigationPressedListener
-import com.tdtu.finalproject.utils.UpdateUserModelListener
-import com.tdtu.finalproject.utils.Utils
-import com.tdtu.finalproject.viewmodel.UserViewModel
-import java.io.File
-import java.io.FileOutputStream
+import com.tdtu.finalproject.viewmodel.HomeDataViewModel
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -51,24 +33,22 @@ class ProfileFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    private lateinit var userViewModel : UserViewModel
+    private lateinit var homeDataViewModel : HomeDataViewModel
     private var _binding : FragmentProfileBinding? = null
     private val UPDATE_USER_REQUEST : Int = 555
-    private var updateUserModelListener : UpdateUserModelListener? = null
     private var onDrawerNavigationPressedListener: OnDrawerNavigationPressedListener? = null
+    private lateinit var sharedPref : SharedPreferences
     private val binding get() = _binding!!
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if(context is UpdateUserModelListener && context is OnDrawerNavigationPressedListener){
-            updateUserModelListener = context
+        if(context is OnDrawerNavigationPressedListener){
             onDrawerNavigationPressedListener = context
         }
     }
 
     override fun onDetach() {
         super.onDetach()
-        updateUserModelListener = null
         onDrawerNavigationPressedListener = null
     }
     override fun onSaveInstanceState(outState: Bundle) {
@@ -84,7 +64,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun getUserVM(){
-        userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
+        homeDataViewModel = ViewModelProvider(requireActivity())[HomeDataViewModel::class.java]
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
@@ -100,19 +80,35 @@ class ProfileFragment : Fragment() {
     ): View? {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
 
-        userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
+        homeDataViewModel = ViewModelProvider(requireActivity())[HomeDataViewModel::class.java]
+        sharedPref = requireActivity().getSharedPreferences(getString(R.string.shared_preferences_key), Context.MODE_PRIVATE);
 
-        Picasso.get().load(Uri.parse(userViewModel.user?.profileImage)).into(binding.profileImage)
-        binding.profileUsername.text = userViewModel.user?.username
-
-        binding.drawerNavigateButton.setOnClickListener{
-            onDrawerNavigationPressedListener?.openDrawerFromFragment()
+        homeDataViewModel.getUser()?.observe(viewLifecycleOwner) {
+            if (it != null) {
+                binding.profileUsername.text = it.username
+                Picasso.get().load(Uri.parse(it.profileImage)).into(binding.profileImage)
+            }
         }
 
         binding.myAccountBtn.setOnClickListener {
             val goToAccount = Intent(requireActivity(), AccountActivity::class.java)
-            goToAccount.putExtra(getString(R.string.user_data_key), userViewModel.user)
+            goToAccount.putExtra(getString(R.string.user_data_key), homeDataViewModel.getUser()?.value)
             startActivityForResult(goToAccount, UPDATE_USER_REQUEST)
+        }
+
+        binding.logoutBtn.setOnClickListener {
+            with(sharedPref.edit()){
+                remove(getString(R.string.user_data_key))
+                remove(getString(R.string.token_key))
+                apply()
+            }
+            val intro = Intent(activity, MainActivity::class.java)
+            intro.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intro)
+        }
+
+        binding.openDrawerBtn.setOnClickListener {
+            onDrawerNavigationPressedListener?.openDrawerFromFragment()
         }
 
         return binding.root
@@ -123,9 +119,10 @@ class ProfileFragment : Fragment() {
         if(requestCode == UPDATE_USER_REQUEST && resultCode == Activity.RESULT_OK && data != null){
             val temp : User? = data.getParcelableExtra(getString(R.string.user_data_key))
             if(temp != null){
-                updateUserModelListener?.updateUserModel(temp)
-                binding.profileUsername.text = userViewModel.user?.username
-                Picasso.get().load(Uri.parse(userViewModel.user?.profileImage)).into(binding.profileImage)
+                homeDataViewModel.setUser(temp)
+                binding.profileUsername.text = homeDataViewModel.getUser()?.value?.username
+                sharedPref.edit().putString(getString(R.string.user_data_key), Gson().toJson(homeDataViewModel.getUser()?.value)).apply()
+                Picasso.get().load(Uri.parse(homeDataViewModel.getUser()?.value?.profileImage)).into(binding.profileImage)
             }
         }
     }

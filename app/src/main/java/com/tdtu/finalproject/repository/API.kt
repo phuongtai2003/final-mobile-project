@@ -1,6 +1,8 @@
 package com.tdtu.finalproject.repository
 
 import android.net.Uri
+import com.tdtu.finalproject.model.CreateTopicRequest
+import com.tdtu.finalproject.model.CreateTopicResponse
 import com.tdtu.finalproject.model.LoginRequest
 import com.tdtu.finalproject.model.LoginResponse
 import com.tdtu.finalproject.model.UpdateUserResponse
@@ -31,4 +33,7 @@ interface API {
     @Multipart
     @PUT("users/profiles/change-profile-image/{id}")
     fun uploadImage(@Part image: MultipartBody.Part,@Path("id") value: String , @Header("token") token: String) : Call<UpdateUserResponse>
+
+    @POST("topics/")
+    fun createNewTopic(@Body request: CreateTopicRequest, @Header("token") token: String): Call<CreateTopicResponse>
 }

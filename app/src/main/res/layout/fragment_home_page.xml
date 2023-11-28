@@ -9,8 +9,10 @@
     tools:context=".HomePageFragment">
 
     <LinearLayout
-        android:paddingVertical="15dp"
-        android:paddingHorizontal="20dp"
+        android:background="@drawable/top_container"
+        android:paddingBottom="30dp"
+        android:paddingTop="15dp"
+        android:paddingHorizontal="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -50,20 +52,177 @@
             android:text="@string/learn_today"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+
+        <EditText
+            android:gravity="center_vertical"
+            android:inputType="text"
+            android:hint="@string/topic_folder_classes"
+            android:layout_marginTop="10dp"
+            android:textSize="18sp"
+            android:id="@+id/searchAllEdt"
+            android:drawablePadding="10dp"
+            android:paddingVertical="5dp"
+            android:drawableStart="@drawable/baseline_search_24"
+            android:paddingHorizontal="15dp"
+            android:background="@drawable/search_view_bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
-    <GridView
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:padding="20dp"
+    <ScrollView
         android:layout_weight="1"
-        android:background="@drawable/bottom_container"
-        android:columnWidth="20dp"
-        android:horizontalSpacing="20dp"
-        android:verticalSpacing="20dp"
-        android:numColumns="2"
-        android:id="@+id/homeGridView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"/>
+        android:layout_height="0dp">
+        <LinearLayout
+            android:layout_marginTop="25dp"
+            android:orientation="vertical"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent">
+
+            <RelativeLayout
+                android:layout_marginHorizontal="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_alignParentStart="true"
+                    android:textAllCaps="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/topic"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/bevietnampro_bold"
+                    android:letterSpacing="0.05"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <Button
+                    android:textSize="18sp"
+                    android:textColor="@color/tertiary_color"
+                    android:text="@string/see_all"
+                    android:fontFamily="@font/bevietnampro_extrabold"
+                    android:background="@android:color/transparent"
+                    android:padding="0dp"
+                    android:id="@+id/seeAllTopicBtn"
+                    android:layout_margin="0dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
+                <TextView
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center"
+                    android:id="@+id/noTopicText"
+                    android:textAlignment="center"
+                    android:text="@string/no_topics"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/topicRecyclerView"
+                    />
+            </FrameLayout>
+
+            <RelativeLayout
+                android:layout_marginHorizontal="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_alignParentStart="true"
+                    android:textAllCaps="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/folder"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/bevietnampro_bold"
+                    android:letterSpacing="0.05"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <Button
+                    android:textSize="18sp"
+                    android:textColor="@color/tertiary_color"
+                    android:text="@string/see_all"
+                    android:fontFamily="@font/bevietnampro_extrabold"
+                    android:background="@android:color/transparent"
+                    android:padding="0dp"
+                    android:id="@+id/seeAllFoldersBtn"
+                    android:layout_margin="0dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
+                <TextView
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center"
+                    android:id="@+id/noFolderText"
+                    android:textAlignment="center"
+                    android:text="@string/no_folders"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/folderRecyclerView"
+                    />
+            </FrameLayout>
+
+            <RelativeLayout
+                android:layout_marginHorizontal="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_alignParentStart="true"
+                    android:textAllCaps="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/classes"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/bevietnampro_bold"
+                    android:letterSpacing="0.05"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <Button
+                    android:textSize="18sp"
+                    android:textColor="@color/tertiary_color"
+                    android:text="@string/see_all"
+                    android:fontFamily="@font/bevietnampro_extrabold"
+                    android:background="@android:color/transparent"
+                    android:padding="0dp"
+                    android:id="@+id/seeAllClassesBtn"
+                    android:layout_margin="0dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
+                <TextView
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center"
+                    android:id="@+id/noClassesText"
+                    android:textAlignment="center"
+                    android:text="@string/no_classes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/classRecyclerView"
+                    />
+            </FrameLayout>
+        </LinearLayout>
+    </ScrollView>
+
 
 </LinearLayout>

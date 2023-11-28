@@ -114,6 +114,7 @@
     </LinearLayout>
     <ProgressBar
         android:visibility="gone"
+        android:indeterminateTint="@color/secondary_color"
         android:id="@+id/updateProfileProgress"
         android:layout_gravity="center"
         android:layout_width="50dp"

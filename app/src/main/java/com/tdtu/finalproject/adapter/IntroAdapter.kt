@@ -24,7 +24,7 @@ class IntroAdapter(private var mContext:Context, private var layout: Int, privat
     }
 
     override fun onBindViewHolder(holder: IntroHolder, position: Int) {
-        val item: PageViewItem = introList[position]
+        val item: PageViewItem = introList[holder.adapterPosition]
         holder.image.setImageResource(item.getImage())
         holder.description.text = item.getDescription()
     }

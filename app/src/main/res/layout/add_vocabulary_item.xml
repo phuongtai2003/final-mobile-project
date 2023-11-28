@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:paddingVertical="20dp"
+    android:layout_marginVertical="10dp"
+    android:paddingHorizontal="15dp"
+    android:background="@drawable/add_vocabulary_item_bg"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:textAllCaps="true"
+            android:text="@string/english_word"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.05"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"/>
+
+        <ImageButton android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/removeVocabularyBtn"
+            android:background="@android:color/transparent"
+            android:src="@drawable/baseline_delete_24"/>
+    </LinearLayout>
+    <EditText
+        android:textColor="@color/white"
+        android:layout_marginTop="10dp"
+        android:id="@+id/englishWordTxt"
+        android:backgroundTint="@color/quaternary_color"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:textAllCaps="true"
+        android:text="@string/english_meaning"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.05"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:textColor="@color/white"
+        android:layout_marginTop="10dp"
+        android:id="@+id/englishMeaningTxt"
+        android:backgroundTint="@color/quaternary_color"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:textAllCaps="true"
+        android:text="@string/vietnamese_word"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.05"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:textColor="@color/white"
+        android:layout_marginTop="10dp"
+        android:id="@+id/vietnameseWordTxt"
+        android:backgroundTint="@color/quaternary_color"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+    <TextView
+        android:textAllCaps="true"
+        android:text="@string/vietnamese_meaning"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.05"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:textColor="@color/white"
+        android:layout_marginTop="10dp"
+        android:id="@+id/vietnameseMeaningTxt"
+        android:backgroundTint="@color/quaternary_color"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/homeActionItem" android:title="@string/home" android:icon="@drawable/active_baseline_home_24"/>
+    <item android:id="@+id/searchActionItem" android:title="@string/search" android:icon="@drawable/baseline_search_24"/>
+    <item android:id="@+id/placeholder" android:title=""/>
+    <item android:id="@+id/libraryActionItem" android:title="@string/library" android:icon="@drawable/baseline_folder_open_24"/>
     <item android:id="@+id/profileActionItem" android:title="@string/profile" android:icon="@drawable/active_baseline_person_pin_24"/>
 </menu>

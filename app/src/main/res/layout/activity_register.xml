@@ -16,100 +16,156 @@
         android:layout_width="30dp"
         android:layout_height="30dp"/>
 
-    <LinearLayout
+    <ScrollView
         android:layout_weight="9"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp">
-        <TextView
-            android:letterSpacing="0.05"
-            android:textAllCaps="true"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:text="@string/signup_with_username"
-            android:layout_marginTop="20dp"
+
+        <LinearLayout
+            android:layout_weight="9"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <EditText
-            android:layout_marginTop="10dp"
-            android:textColorHint="@color/grey"
-            android:paddingHorizontal="0dp"
-            android:id="@+id/registerUsernameEdt"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:hint="@string/username"
-            android:backgroundTint="@color/white"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <EditText
-            android:layout_marginTop="10dp"
-            android:textColorHint="@color/grey"
-            android:paddingHorizontal="0dp"
-            android:id="@+id/registerEmailEdt"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:hint="Email"
-            android:inputType="textEmailAddress"
-            android:backgroundTint="@color/white"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <EditText
-            android:layout_marginTop="10dp"
-            android:textColorHint="@color/grey"
-            android:paddingHorizontal="0dp"
-            android:id="@+id/registerPasswordEdt"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:inputType="textPassword"
-            android:hint="@string/password"
-            android:backgroundTint="@color/white"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <EditText
-            android:layout_marginTop="10dp"
-            android:textColorHint="@color/grey"
-            android:paddingHorizontal="0dp"
-            android:id="@+id/registerConfirmedPasswordEdt"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:inputType="textPassword"
-            android:hint="@string/confirmed_password"
-            android:backgroundTint="@color/white"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="0dp">
+            <TextView
+                android:letterSpacing="0.05"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:text="@string/signup_with_username"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:textAllCaps="true"
+                android:layout_marginTop="25dp"
+                android:text="@string/username"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
 
-        <TextView
-            android:layout_marginTop="10dp"
-            android:textColor="@color/grey"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:text="@string/alma_mater"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <Spinner
-            android:background="@drawable/spinner_background"
-            android:layout_marginTop="10dp"
-            android:id="@+id/almaMaterSpin"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:textAlignment="center"
-            android:spinnerMode="dropdown"
-            />
+            <EditText
+                android:layout_marginTop="10dp"
+                android:textColorHint="@color/grey"
+                android:paddingHorizontal="0dp"
+                android:id="@+id/registerUsernameEdt"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:hint="@string/username"
+                android:backgroundTint="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-        <TextView
-            android:textSize="18sp"
-            android:textColor="@color/white"
-            android:layout_marginTop="10dp"
-            android:textAlignment="center"
-            android:text="@string/policy_string"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            <TextView
+                android:textAllCaps="true"
+                android:layout_marginTop="15dp"
+                android:text="Email"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-    </LinearLayout>
+            <EditText
+                android:layout_marginTop="10dp"
+                android:textColorHint="@color/grey"
+                android:paddingHorizontal="0dp"
+                android:id="@+id/registerEmailEdt"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:backgroundTint="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:textAllCaps="true"
+                android:layout_marginTop="15dp"
+                android:text="@string/password"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <EditText
+                android:layout_marginTop="10dp"
+                android:textColorHint="@color/grey"
+                android:paddingHorizontal="0dp"
+                android:id="@+id/registerPasswordEdt"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:inputType="textPassword"
+                android:hint="@string/password"
+                android:backgroundTint="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:textAllCaps="true"
+                android:layout_marginTop="15dp"
+                android:text="@string/confirmed_password"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <EditText
+                android:layout_marginTop="10dp"
+                android:textColorHint="@color/grey"
+                android:paddingHorizontal="0dp"
+                android:id="@+id/registerConfirmedPasswordEdt"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:inputType="textPassword"
+                android:hint="@string/confirmed_password"
+                android:backgroundTint="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+
+            <TextView
+                android:textAllCaps="true"
+                android:layout_marginTop="15dp"
+                android:text="@string/alma_mater"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <Spinner
+                android:background="@drawable/spinner_background"
+                android:layout_marginTop="10dp"
+                android:id="@+id/almaMaterSpin"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:textAlignment="center"
+                android:spinnerMode="dropdown"
+                />
+
+            <TextView
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:layout_marginTop="25dp"
+                android:textAlignment="center"
+                android:text="@string/policy_string"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </ScrollView>
 
     <Button
+        app:backgroundTint="@null"
         android:background="@drawable/login_btn"
         android:text="@string/signup"
         android:textColor="@color/white"
