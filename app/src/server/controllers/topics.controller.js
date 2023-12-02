@@ -50,19 +50,34 @@ const updateTopic = async (req, res) => {
 }
 
 const deleteTopic = async (req, res) => {
-    const id = req.params.id || req.query.id;
+    const topicId = req.params.id || req.query.id;
+    const userId = req.user.data._id;
     try {
-        await TopicInFolder.deleteMany({ topicId: id });
-        await VocabularyStatistic.deleteMany({ topicId: id });
-        await BookmarkTopics.deleteMany({ topicId: id });
-        await LearningStatistics.deleteMany({ topicId: id });
-        await Vocabulary.deleteMany({ topicId: id });
-        await Topic.findByIdAndDelete(id);
+        const topic = await Topic.findById(topicId);
+        if (!topic) {
+            return res.status(404).json({ message: 'Topic not found' });
+        }
+        if (topic.ownerId !== userId) {
+            // Xóa topic khỏi danh sách của người dùng hiện tại
+            await User.findByIdAndUpdate(userId, { $pull: { topicId: topicId } });
+            return res.status(200).json({ message: 'Topic removed from user successfully'});
+        }
+
+        // Người dùng là chủ sở hữu của topic, xóa topic và tất cả các tham chiếu liên quan
+        await TopicInFolder.deleteMany({ topicId: topicId });
+        await VocabularyStatistic.deleteMany({ topicId: topicId });
+        await BookmarkTopics.deleteMany({ topicId: topicId });
+        await LearningStatistics.deleteMany({ topicId: topicId });
+        await Vocabulary.deleteMany({ topicId: topicId });
+        await User.updateMany({}, { $pull: { topicId: topicId } }); // Xóa topic khỏi tất cả người dùng
+        await Topic.findByIdAndDelete(topicId);
+
         res.status(200).json({ message: 'Delete topic successfully'});
     } catch (error) {
-        res.status(500).json({ error : error.message });
+        res.status(500).json({ error: error.message });
     }
-}
+};
+
 
 const createVocabularyInTopic = async (req, res) => {
     const topicId = req.params.id || req.query.id;
@@ -141,7 +156,7 @@ const importCSV = async (req, res) => {
             descriptionVietnamese,
             vocabularyCount: vocabularyList.length,
             isPublic,
-            userId
+            ownerId :userId
         });
         for (let i = 0; i < vocabularyList.length; i++) {
             const { englishWord, vietnameseWord, englishMeaning, vietnameseMeaning } = vocabularyList[i];
@@ -200,6 +215,25 @@ const viewTopicIsPublic = async (req, res) => {
     }
 }
 
+const userLearnPublicTopic = async (req, res) => {
+    const topicId = req.params.id || req.query.id;
+    const userId = req.user.data._id;
+    try {
+        const topic = await Topic.findById(topicId);
+        if (!topic.isPublic) {
+            return res.status(403).json({ message: 'Topic is not public' });
+        }
+
+        // Thêm topic vào danh sách của người dùng
+        await User.findByIdAndUpdate(userId, { $addToSet: { topicId: topicId } });
+
+        res.status(200).json({ message: 'Topic added to user successfully'});
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+
 module.exports = {
     getTopicById,
     getAllTopics,
@@ -214,5 +248,6 @@ module.exports = {
     exportCSV,
     getTopicsByUserId,
     getTopicsByFolderId,
-    viewTopicIsPublic
+    viewTopicIsPublic,
+    userLearnPublicTopic
 }

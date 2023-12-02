@@ -17,7 +17,8 @@ const {getTopicById,
     exportCSV,
     getTopicsByUserId,
     getTopicsByFolderId,
-    viewTopicIsPublic} = require('../controllers/topics.controller');
+    viewTopicIsPublic,
+    userLearnPublicTopic} = require('../controllers/topics.controller');
 
 // get all topics (tested)
 topicsRouter.get("/", getAllTopics);
@@ -29,6 +30,8 @@ topicsRouter.get("/users/:id", authentication, isExistId(Users), getTopicsByUser
 topicsRouter.get("/folders/:folderId", getTopicsByFolderId);
 // view topic is public (tested)
 topicsRouter.get("/public/users/:userId", authentication, checkId(Users, "userId"), viewTopicIsPublic);
+// learn public topic (tested)
+topicsRouter.get("/public/learnTopic/:id", authentication, isExistId(Topic), userLearnPublicTopic);
 // create topic (tested)
 topicsRouter.post("/", authentication, 
 validateInput(['topicNameEnglish', 'topicNameVietnamese', 'descriptionEnglish', 'descriptionVietnamese']), importCSV);
