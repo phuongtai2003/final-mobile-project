@@ -22,7 +22,7 @@ foldersRouter.get("/users/:id", authentication, getFodersByUserId);
 // create topic 
 foldersRouter.post("/", authentication, validateInput(["folderNameEnglish", "folderNameVietnamese"]), createFolder);
 // add topic to folder (tested)
-foldersRouter.put("/:id/topics/:topicId", authentication, isExistId(Folder), checkId(Topic, "topicId"), addTopicToFolder);
+foldersRouter.post("/:id/topics/:topicId", authentication, isExistId(Folder), checkId(Topic, "topicId"), addTopicToFolder);
 // edit folder (tested)
 foldersRouter.put("/:id", authentication, isExistId(Folder), updateFolder);
 // delete folder (tested)

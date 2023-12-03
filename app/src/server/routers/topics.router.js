@@ -28,7 +28,7 @@ topicsRouter.get("/:id", authentication ,isExistId(Topic), getTopicById);
 topicsRouter.get("/users/:id", authentication, isExistId(Users), getTopicsByUserId);
 // get topics by folder id (tested)
 topicsRouter.get("/folders/:folderId", getTopicsByFolderId);
-// view topic is public (tested)
+// view topic is public of user (tested)
 topicsRouter.get("/public/users/:userId", authentication, checkId(Users, "userId"), viewTopicIsPublic);
 // learn public topic (tested)
 topicsRouter.get("/public/learnTopic/:id", authentication, isExistId(Topic), userLearnPublicTopic);

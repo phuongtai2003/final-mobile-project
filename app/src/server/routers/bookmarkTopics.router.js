@@ -5,7 +5,7 @@ const { BookmarkTopics } = require('../models');
 const { authentication } = require('../middlewares/authentication/authenticate');
 const { isExistId, validateInput, checkId } = require('../middlewares/validation/validation');
 const { createBookmarkTopics,
-    deleteBookmarkTopics } = require('../controllers/bookmarkVocabularies.controller');
+    deleteBookmarkTopics } = require('../controllers/bookmarkTopics.controller');
 
 bookmarkVocabulariesRouter.post("/", authentication, createBookmarkTopics);
 
