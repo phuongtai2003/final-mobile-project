@@ -1,17 +1,13 @@
 package com.tdtu.finalproject
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.gson.Gson
 import com.tdtu.finalproject.constants.Constant
 import com.tdtu.finalproject.databinding.ActivityRegisterBinding
-import com.tdtu.finalproject.model.RegisterRequest
 import com.tdtu.finalproject.repository.DataRepository
 import com.tdtu.finalproject.utils.Utils
 

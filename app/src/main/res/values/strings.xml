@@ -63,4 +63,11 @@
     <string name="import_document">Import Document</string>
     <string name="topic_description_english">English Topic Description</string>
     <string name="topic_description_vietnamese">Vietnamese Topic Description</string>
+    <string name="topic_vocabulary">Topic Vocabularies</string>
+    <string name="publish_to_all">Published To Everyone</string>
+    <string name="create_topic_success">Create Topic Successfully</string>
+    <string name="vocabulary">Vocabulary</string>
+    <string name="internet_permission_denied">Internet Permission Denied</string>
+    <string name="no_internet_connection">No Internet Connection</string>
+    <string name="create_topic_text">Take the first step\n towards better grades.\n Create a study topic.</string>
 </resources>

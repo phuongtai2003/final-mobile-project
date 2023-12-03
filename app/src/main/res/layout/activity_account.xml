@@ -102,6 +102,7 @@
             />
 
         <Button
+            app:backgroundTint="@null"
             android:id="@+id/saveProfileBtn"
             android:textColor="@color/white"
             android:textStyle="bold"

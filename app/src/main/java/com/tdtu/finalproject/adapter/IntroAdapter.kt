@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.tdtu.finalproject.R
-import com.tdtu.finalproject.model.PageViewItem
+import com.tdtu.finalproject.model.common.PageViewItem
 
 class IntroAdapter(private var mContext:Context, private var layout: Int, private var introList:ArrayList<PageViewItem>) :
     RecyclerView.Adapter<IntroAdapter.IntroHolder>() {

@@ -1,8 +1,7 @@
-package com.tdtu.finalproject.model
+package com.tdtu.finalproject.model.user
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.google.gson.annotations.SerializedName
 
 data class LoginResponse(

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/primary_color"
+    android:layout_height="match_parent"
+    tools:context=".TopicFragment">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/noTopicLayout"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/book"/>
+        <TextView
+            android:layout_marginTop="20dp"
+            android:textSize="25sp"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:text="@string/create_topic_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/addTopicBtn"
+            android:layout_marginTop="50dp"
+            app:backgroundTint="@null"
+            android:background="@drawable/register_btn"
+            android:text="@string/add_topic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/topicRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</FrameLayout>

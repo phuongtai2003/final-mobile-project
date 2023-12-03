@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tdtu.finalproject.adapter.VocabularyAdapter
 import com.tdtu.finalproject.databinding.ActivityAddTopicBinding
-import com.tdtu.finalproject.model.Vocabulary
+import com.tdtu.finalproject.model.topic.Vocabulary
 import com.tdtu.finalproject.repository.DataRepository
 import com.tdtu.finalproject.utils.Utils
 
@@ -63,8 +63,7 @@ class AddTopicActivity : AppCompatActivity() {
         }
         binding.importDocumentBtn.setOnClickListener {
             val pickFileIntent = Intent(Intent.ACTION_PICK)
-            pickFileIntent.type = "text/plain"
-            pickFileIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+            pickFileIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
             startActivityForResult(pickFileIntent, PICK_FILE_REQUEST_CODE)
         }
 
@@ -76,8 +75,15 @@ class AddTopicActivity : AppCompatActivity() {
             val isPublic = binding.publicTopicSwitch.isChecked
             val vocabularyList = vocabularyAdapter.getVocabularies()
             val token = sharedPref.getString(getString(R.string.token_key), null)
+            if(englishTitle.isEmpty() || vietnameseTitle.isEmpty() || englishDescription.isEmpty() || vietnameseDescription.isEmpty()) {
+                Utils.showDialog(Gravity.CENTER, getString(R.string.please_fill), this)
+                return@setOnClickListener
+            }
             dataRepository.createTopic(englishTitle, vietnameseTitle, englishDescription, vietnameseDescription, vocabularyList, isPublic, token!!).thenAccept {
-                finish()
+                runOnUiThread{
+                    finish()
+                    Utils.showDialog(Gravity.CENTER, getString(R.string.create_topic_success), this)
+                }
             }.exceptionally {
                 it->
                 runOnUiThread{

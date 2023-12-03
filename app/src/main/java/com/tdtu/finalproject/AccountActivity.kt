@@ -11,17 +11,15 @@ import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import com.tdtu.finalproject.constants.Constant
 import com.tdtu.finalproject.databinding.ActivityAccountBinding
-import com.tdtu.finalproject.model.User
+import com.tdtu.finalproject.model.user.User
 import com.tdtu.finalproject.repository.DataRepository
 import com.tdtu.finalproject.utils.Utils
 import java.io.File
 import java.io.FileOutputStream
-import kotlin.math.log
 
 class AccountActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAccountBinding

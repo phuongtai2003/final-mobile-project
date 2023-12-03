@@ -15,5 +15,6 @@
     <color name="quaternary_color">#DDE3FD</color>
     <color name="quinary_color">#DBE4EB</color>
     <color name="senary_color">#EAECF9</color>
+    <color name="dark_color">#262540</color>
     <color name="yellow_color">#FFCF1C</color>
 </resources>

@@ -1,4 +1,4 @@
-package com.tdtu.finalproject.model
+package com.tdtu.finalproject.model.common
 
 class PageViewItem (private var image: Int, private var description: String){
     fun getImage() = image

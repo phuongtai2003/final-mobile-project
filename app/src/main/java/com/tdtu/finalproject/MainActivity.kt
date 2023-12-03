@@ -7,15 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.gson.Gson
 import com.tdtu.finalproject.adapter.IntroAdapter
 import com.tdtu.finalproject.databinding.ActivityMainBinding
-import com.tdtu.finalproject.model.PageViewItem
-import com.tdtu.finalproject.model.UserInfo
+import com.tdtu.finalproject.model.common.PageViewItem
+import com.tdtu.finalproject.model.user.UserInfo
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding : ActivityMainBinding

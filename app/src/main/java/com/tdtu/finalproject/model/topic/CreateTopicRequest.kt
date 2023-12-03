@@ -1,4 +1,4 @@
-package com.tdtu.finalproject.model
+package com.tdtu.finalproject.model.topic
 
 data class CreateTopicRequest (
     val topicNameEnglish: String,

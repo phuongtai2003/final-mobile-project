@@ -9,6 +9,13 @@
     android:background="@color/primary_color"
     tools:context=".AddTopicActivity"
     >
+    <FrameLayout
+        android:paddingHorizontal="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -120,7 +127,7 @@
             android:gravity="top|start"
             android:id="@+id/topicDescriptionEnglishEdt"
             android:textColor="@color/white"
-            android:hint="@string/topic_title_vietnamese"
+            android:hint="@string/topic_description"
             android:textColorHint="@color/tertiary_color"
             android:layout_marginHorizontal="15dp"
             android:backgroundTint="@color/tertiary_color"
@@ -146,7 +153,7 @@
             android:gravity="top|start"
             android:id="@+id/topicDescriptionVietnameseEdt"
             android:textColor="@color/white"
-            android:hint="@string/topic_title_vietnamese"
+            android:hint="@string/topic_description_vietnamese"
             android:textColorHint="@color/tertiary_color"
             android:layout_marginHorizontal="15dp"
             android:backgroundTint="@color/tertiary_color"
@@ -154,71 +161,76 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-
-
         <LinearLayout
             android:orientation="horizontal"
+            android:layout_marginHorizontal="15dp"
             android:layout_width="match_parent"
-            android:paddingHorizontal="15dp"
+            android:gravity="center_vertical"
             android:layout_height="wrap_content">
-            <com.google.android.material.button.MaterialButton
+            <TextView
+                android:textSize="16sp"
+                android:text="@string/publish_to_all"
+                android:textColor="@color/white"
+                android:gravity="center_vertical"
                 android:layout_weight="1"
                 android:layout_width="0dp"
-                android:textAlignment="textStart"
-                app:backgroundTint="@null"
-                android:id="@+id/importDocumentBtn"
-                app:icon="@drawable/baseline_qr_code_24"
-                app:iconSize="25dp"
-                android:text="@string/import_document"
-                android:textColor="@color/tertiary_color"
-                android:textSize="16sp"
-                app:iconTint="@color/tertiary_color"
-                android:background="@android:color/transparent"
                 android:layout_height="wrap_content"/>
             <com.google.android.material.switchmaterial.SwitchMaterial
                 android:layout_width="wrap_content"
                 android:id="@+id/publicTopicSwitch"
+                android:layout_marginHorizontal="15dp"
+                app:switchPadding="10dp"
                 app:thumbTint="@color/secondary_color"
                 app:trackTint="@color/tertiary_color"
                 android:layout_gravity="center_vertical"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
 
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="match_parent"
+            android:textAlignment="textStart"
+            android:layout_marginHorizontal="15dp"
+            app:backgroundTint="@null"
+            android:id="@+id/importDocumentBtn"
+            app:icon="@drawable/baseline_qr_code_24"
+            app:iconSize="25dp"
+            android:text="@string/import_document"
+            android:textColor="@color/tertiary_color"
+            android:textSize="16sp"
+            app:iconTint="@color/tertiary_color"
+            android:background="@android:color/transparent"
+            android:layout_height="wrap_content"/>
+
         <TextView
             android:layout_marginHorizontal="15dp"
             android:textAllCaps="true"
             android:layout_marginTop="15dp"
-            android:text="@string/topic_description"
+            android:text="@string/topic_vocabulary"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
             android:letterSpacing="0.05"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
-
-        <FrameLayout
-            android:paddingHorizontal="10dp"
-            android:layout_marginTop="15dp"
-            android:layout_weight="1"
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            android:id="@+id/vocabularyListView"
             android:layout_width="match_parent"
-            android:layout_height="0dp">
-            <androidx.recyclerview.widget.RecyclerView
-                android:padding="10dp"
-                android:id="@+id/vocabularyListView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+            android:layout_height="350dp" />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:layout_width="wrap_content"
-                android:id="@+id/addVocabularyBtn"
-                android:layout_gravity="bottom|end"
-                android:layout_marginBottom="35dp"
-                android:layout_marginEnd="35dp"
-                app:backgroundTint="@color/secondary_color"
-                android:src="@drawable/baseline_add_24"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/add_topic" />
-        </FrameLayout>
     </LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:id="@+id/addVocabularyBtn"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="35dp"
+        android:layout_marginEnd="35dp"
+        app:backgroundTint="@color/secondary_color"
+        android:src="@drawable/baseline_add_24"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/add_topic" />
+</FrameLayout>
+
 </ScrollView>
 

@@ -64,4 +64,11 @@
     <string name="import_document">Nhập từ file</string>
     <string name="topic_description_english">Mô tả học phần tiếng Anh</string>
     <string name="topic_description_vietnamese">Mô tả học phần tiếng Việt</string>
+    <string name="topic_vocabulary">Từ vựng học phần</string>
+    <string name="publish_to_all">Công khai cho mọi người</string>
+    <string name="create_topic_success">Tạo học phần thành công</string>
+    <string name="vocabulary">Từ vựng</string>
+    <string name="internet_permission_denied">Không có quyền truy cập internet</string>
+    <string name="no_internet_connection">Không có kết nối internet</string>
+    <string name="create_topic_text">Đi những bước đầu tiên\n để cải thiện điểm số.\n Tạo một học phần ngay bây giờ</string>
 </resources>

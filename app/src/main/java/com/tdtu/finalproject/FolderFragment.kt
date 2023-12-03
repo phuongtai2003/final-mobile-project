@@ -5,11 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
-import com.tdtu.finalproject.adapter.LibraryScreenTabAdapter
-import com.tdtu.finalproject.databinding.FragmentLibraryBinding
-import com.tdtu.finalproject.viewmodel.HomeDataViewModel
+import com.tdtu.finalproject.databinding.FragmentFolderBinding
+import com.tdtu.finalproject.databinding.FragmentTopicBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -18,16 +15,14 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [LibraryFragment.newInstance] factory method to
+ * Use the [FolderFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class LibraryFragment : Fragment() {
+class FolderFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    private var _binding : FragmentLibraryBinding? = null
-    private lateinit var libraryScreenTabAdapter: LibraryScreenTabAdapter
-    private lateinit var tabLayout: TabLayout
+    private var _binding : FragmentFolderBinding? = null
 
     private val binding get() = _binding!!
 
@@ -43,16 +38,7 @@ class LibraryFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentLibraryBinding.inflate(inflater, container, false)
-        libraryScreenTabAdapter = LibraryScreenTabAdapter(requireActivity())
-        binding.pagesLayoutList.adapter = libraryScreenTabAdapter
-        tabLayout = binding.tabLayoutList
-        TabLayoutMediator(tabLayout, binding.pagesLayoutList) { tab, position ->
-            when (position) {
-                0 -> tab.text = getString(R.string.topic)
-                1 -> tab.text = getString(R.string.folder)
-            }
-        }.attach()
+        _binding = FragmentFolderBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -63,12 +49,12 @@ class LibraryFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment LibraryFragment.
+         * @return A new instance of fragment FolderFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            LibraryFragment().apply {
+            FolderFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import com.tdtu.finalproject.databinding.FragmentProfileBinding
-import com.tdtu.finalproject.model.User
+import com.tdtu.finalproject.model.user.User
 import com.tdtu.finalproject.utils.OnDrawerNavigationPressedListener
 import com.tdtu.finalproject.viewmodel.HomeDataViewModel
 

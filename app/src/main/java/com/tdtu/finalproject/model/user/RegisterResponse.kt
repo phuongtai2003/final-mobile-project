@@ -1,4 +1,4 @@
-package com.tdtu.finalproject.model
+package com.tdtu.finalproject.model.user
 
 data class RegisterResponse(
     val error: String,

@@ -1,17 +1,20 @@
 package com.tdtu.finalproject.repository
 
+import android.util.Log
 import com.google.gson.Gson
-import com.tdtu.finalproject.model.CreateTopicRequest
-import com.tdtu.finalproject.model.CreateTopicResponse
-import com.tdtu.finalproject.model.ErrorModel
-import com.tdtu.finalproject.model.LoginRequest
-import com.tdtu.finalproject.model.LoginResponse
-import com.tdtu.finalproject.model.UpdateUserResponse
-import com.tdtu.finalproject.model.RegisterRequest
-import com.tdtu.finalproject.model.RegisterResponse
-import com.tdtu.finalproject.model.UpdateUserInfoRequest
-import com.tdtu.finalproject.model.UserInfo
-import com.tdtu.finalproject.model.Vocabulary
+import com.tdtu.finalproject.model.topic.GetTopicsResponse
+import com.tdtu.finalproject.model.topic.CreateTopicRequest
+import com.tdtu.finalproject.model.topic.CreateTopicResponse
+import com.tdtu.finalproject.model.common.ErrorModel
+import com.tdtu.finalproject.model.topic.Topic
+import com.tdtu.finalproject.model.user.LoginRequest
+import com.tdtu.finalproject.model.user.LoginResponse
+import com.tdtu.finalproject.model.user.UpdateUserResponse
+import com.tdtu.finalproject.model.user.RegisterRequest
+import com.tdtu.finalproject.model.user.RegisterResponse
+import com.tdtu.finalproject.model.user.UpdateUserInfoRequest
+import com.tdtu.finalproject.model.user.UserInfo
+import com.tdtu.finalproject.model.topic.Vocabulary
 import com.tdtu.finalproject.utils.WrongCredentialsException
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -29,7 +32,7 @@ import java.util.concurrent.CompletableFuture
 class DataRepository() {
 
     companion object{
-        private const val baseUrl: String = "http://192.168.1.39:3000/android/"
+        private const val baseUrl: String = "http://192.168.1.6:3000/android/"
         private val api = Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(GsonConverterFactory.create()).build().create(API::class.java)
         private var instance: DataRepository? = null
         fun getInstance() : DataRepository{
@@ -41,7 +44,7 @@ class DataRepository() {
     }
 
     fun register(username : String, email: String, almaMater:String, password : String) : CompletableFuture<UserInfo> {
-        var future: CompletableFuture<UserInfo> = CompletableFuture()
+        val future: CompletableFuture<UserInfo> = CompletableFuture()
         val userData = RegisterRequest(email, username, password, almaMater)
         val call = api.register(userData)
         var error : String
@@ -53,7 +56,7 @@ class DataRepository() {
                 if(response.code() == 200){
                     future.complete(response.body()?.user)
                 } else{
-                    error = Gson().fromJson(response.errorBody()?.string(),ErrorModel::class.java).error
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
                     future.completeExceptionally(Exception(error))
                 }
             }
@@ -66,7 +69,7 @@ class DataRepository() {
     }
 
     fun login(email: String, password: String) : CompletableFuture<LoginResponse>{
-        var future: CompletableFuture<LoginResponse> = CompletableFuture()
+        val future: CompletableFuture<LoginResponse> = CompletableFuture()
         val loginRequest = LoginRequest(email, password)
         val call = api.login(loginRequest)
         var error: String? = null
@@ -76,15 +79,16 @@ class DataRepository() {
                     future.complete(response.body())
                 }
                 else if(response.code() == 401){
-                    error = Gson().fromJson(response.errorBody()?.string(),ErrorModel::class.java).error
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
                     future.completeExceptionally(WrongCredentialsException(error!!))
                 }
                 else{
-                    error = Gson().fromJson(response.errorBody()?.string(),ErrorModel::class.java).error
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
                     future.completeExceptionally(Exception(error))
                 }
             }
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                Log.d("USER TAG", "onFailure: " + t.message)
                 future.completeExceptionally(t)
             }
         })
@@ -92,7 +96,7 @@ class DataRepository() {
     }
 
     fun updateUser(username: String, almaMater: String, id: String, token: String) : CompletableFuture<UpdateUserResponse>{
-        var future: CompletableFuture<UpdateUserResponse> = CompletableFuture()
+        val future: CompletableFuture<UpdateUserResponse> = CompletableFuture()
         val updateRequest = UpdateUserInfoRequest(username, almaMater)
         val call = api.updateUser(updateRequest, id, token)
         var error: String? = null
@@ -102,7 +106,7 @@ class DataRepository() {
                     future.complete(response.body())
                 }
                 else{
-                    error = Gson().fromJson(response.errorBody()?.string(),ErrorModel::class.java).error
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
                     future.completeExceptionally(Exception(error))
                 }
             }
@@ -114,7 +118,7 @@ class DataRepository() {
     }
 
     fun uploadImage(image: File, id: String, token: String) : CompletableFuture<UpdateUserResponse>{
-        var future: CompletableFuture<UpdateUserResponse> = CompletableFuture()
+        val future: CompletableFuture<UpdateUserResponse> = CompletableFuture()
         val mediaType = "image/*".toMediaType()
         val requestFile: RequestBody = image.asRequestBody(mediaType)
         val file : MultipartBody.Part = MultipartBody.Part.createFormData("image", image.name ,requestFile)
@@ -126,7 +130,7 @@ class DataRepository() {
                     future.complete(response.body())
                 }
                 else{
-                    error = Gson().fromJson(response.errorBody()?.string(),ErrorModel::class.java).error
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
                     future.completeExceptionally(Exception(error))
                 }
             }
@@ -138,7 +142,7 @@ class DataRepository() {
     }
 
     fun createTopic(topicNameEnglish: String, topicNameVietnamese: String, descriptionEnglish: String, descriptionVietnamese: String, vocabularyList: List<Vocabulary>, isPublic: Boolean, token: String) : CompletableFuture<CreateTopicResponse>{
-        var future: CompletableFuture<CreateTopicResponse> = CompletableFuture()
+        val future: CompletableFuture<CreateTopicResponse> = CompletableFuture()
         val call = api.createNewTopic(CreateTopicRequest(topicNameEnglish, topicNameVietnamese, descriptionEnglish, descriptionVietnamese, vocabularyList, isPublic), token)
         var error: String? = null
         call.enqueue(object : Callback<CreateTopicResponse>{
@@ -147,11 +151,35 @@ class DataRepository() {
                     future.complete(response.body())
                 }
                 else{
-                    error = Gson().fromJson(response.errorBody()?.string(),ErrorModel::class.java).error
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
                     future.completeExceptionally(Exception(error))
                 }
             }
             override fun onFailure(call: Call<CreateTopicResponse>, t: Throwable) {
+                future.completeExceptionally(t)
+            }
+        })
+        return future
+    }
+
+    fun getTopicsByUserId(userId: String, token: String) : CompletableFuture<List<Topic>>{
+        val future: CompletableFuture<List<Topic>> = CompletableFuture()
+        val call = api.getTopicsByUserId(userId, token)
+        var error: String? = null
+        call.enqueue(object : Callback<GetTopicsResponse>{
+            override fun onResponse(call: Call<GetTopicsResponse>, response: Response<GetTopicsResponse>) {
+                if(response.code() == 200){
+                    future.complete(response.body()?.topics)
+                }
+                else if(response.code() == 404){
+                    future.complete(ArrayList<Topic>())
+                }
+                else{
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
+                    future.completeExceptionally(Exception(error))
+                }
+            }
+            override fun onFailure(call: Call<GetTopicsResponse>, t: Throwable) {
                 future.completeExceptionally(t)
             }
         })

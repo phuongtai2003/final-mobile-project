@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.tdtu.finalproject.adapter.TopicAdapter
 import com.tdtu.finalproject.databinding.FragmentHomePageBinding
+import com.tdtu.finalproject.model.topic.Topic
 import com.tdtu.finalproject.utils.OnBottomNavigationChangeListener
 import com.tdtu.finalproject.utils.OnDrawerNavigationPressedListener
 import com.tdtu.finalproject.viewmodel.HomeDataViewModel
@@ -30,6 +32,7 @@ class HomePageFragment : Fragment() {
     private var onBottomNavigationChangeListener: OnBottomNavigationChangeListener? = null
     private var onDrawerNavigationPressedListener: OnDrawerNavigationPressedListener? = null
     private lateinit var userViewModel :HomeDataViewModel
+    private lateinit var topicAdapter: TopicAdapter
 
     private val binding get() = _binding!!
 
@@ -60,6 +63,20 @@ class HomePageFragment : Fragment() {
         userViewModel = ViewModelProvider(requireActivity())[HomeDataViewModel::class.java]
         userViewModel.getUser()?.observe(viewLifecycleOwner) {
             binding.helloText.text = "${getString(R.string.hello)}, ${it.username}"
+        }
+        userViewModel.getTopicsList()?.observe(viewLifecycleOwner){
+            val mutableList: MutableList<Topic> = it.toMutableList()
+            if(mutableList.isEmpty()){
+                binding.topicRecyclerView.visibility = View.GONE
+                binding.noTopicText.visibility = View.VISIBLE
+            } else{
+                binding.topicRecyclerView.visibility = View.VISIBLE
+                binding.noTopicText.visibility = View.GONE
+            }
+            topicAdapter = TopicAdapter(requireContext(), mutableList, R.layout.topic_menu_item, userViewModel.getUser()?.value!!)
+            binding.topicRecyclerView.adapter = topicAdapter
+            binding.topicRecyclerView.clipToPadding = false
+            binding.topicRecyclerView.clipChildren = false
         }
     }
 

@@ -9,7 +9,7 @@ import android.widget.ImageButton
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import com.tdtu.finalproject.R
-import com.tdtu.finalproject.model.Vocabulary
+import com.tdtu.finalproject.model.topic.Vocabulary
 
 class VocabularyAdapter(private var mContext:Context, private var vocabularies: MutableList<Vocabulary>, private var layout: Int): RecyclerView.Adapter<VocabularyAdapter.VocabularyViewHolder>() {
 
@@ -32,7 +32,7 @@ class VocabularyAdapter(private var mContext:Context, private var vocabularies: 
 
     fun addVocabulary(vocabulary: Vocabulary) {
         vocabularies.add(vocabulary)
-        notifyDataSetChanged()
+        notifyItemInserted(vocabularies.size - 1)
     }
 
     fun removeAllVocabulary() {
@@ -45,14 +45,14 @@ class VocabularyAdapter(private var mContext:Context, private var vocabularies: 
     }
 
     override fun onBindViewHolder(holder: VocabularyViewHolder, position: Int) {
-        val vocabulary: Vocabulary = vocabularies[holder.adapterPosition]
+        val vocabulary: Vocabulary = vocabularies[position]
         holder.englishWordTxt.setText(vocabulary.englishWord)
         holder.vietnameseWordTxt.setText(vocabulary.vietnameseWord)
         holder.englishMeaningTxt.setText(vocabulary.englishMeaning)
         holder.vietnameseMeaningTxt.setText(vocabulary.vietnameseMeaning)
         holder.removeVocabularyBtn.setOnClickListener{
             vocabularies.removeAt(holder.adapterPosition)
-            notifyDataSetChanged()
+            notifyItemRemoved(holder.adapterPosition);
         }
 
         holder.englishMeaningTxt.addTextChangedListener {

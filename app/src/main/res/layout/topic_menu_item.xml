@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:paddingHorizontal="20dp"
+    android:paddingVertical="25dp"
+    android:layout_width="match_parent"
+    android:clickable="true"
+    android:background="@drawable/topic_bg"
+    android:layout_marginHorizontal="15dp"
+    android:layout_marginVertical="5dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/topicItemNameTxt"
+        android:text="Topic Name"
+        android:textSize="20sp"
+        android:fontFamily="@font/bevietnampro_semibold"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:layout_marginTop="5dp"
+        android:id="@+id/termsCount"
+        android:text="0 terms"
+        android:textSize="16sp"
+        android:textColor="@color/tertiary_color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginTop="30dp"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.google.android.material.imageview.ShapeableImageView
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/topicOwnerImg"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/boy"
+            app:shapeAppearanceOverlay="@style/circle"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/tertiary_color"
+            android:layout_width="40dp"
+            android:layout_height="40dp"/>
+
+        <TextView
+            android:id="@+id/topicOwnerNameTxt"
+            android:text="Topic Owner"
+            android:textColor="@color/white"
+            android:layout_marginStart="20dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</LinearLayout>

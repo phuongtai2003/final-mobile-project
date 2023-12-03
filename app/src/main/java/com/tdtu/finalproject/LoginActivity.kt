@@ -5,18 +5,13 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
 import android.view.Gravity
 import android.view.View
-import android.widget.Toast
 import com.google.gson.Gson
 import com.tdtu.finalproject.databinding.ActivityLoginBinding
-import com.tdtu.finalproject.model.User
 import com.tdtu.finalproject.repository.DataRepository
 import com.tdtu.finalproject.utils.Utils
 import com.tdtu.finalproject.utils.WrongCredentialsException
-import java.util.concurrent.CompletableFuture
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
