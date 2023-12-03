@@ -3,7 +3,6 @@ const {BookmarkTopics, Vocabulary} = require('../models');
 const createBookmarkTopics = async (req, res) => {
     const userId = req.user.data._id;
     const vocabularies = req.body;
-
     try {
         for(let vocabulary of vocabularies){
             const {vocabularyId} = vocabulary;
