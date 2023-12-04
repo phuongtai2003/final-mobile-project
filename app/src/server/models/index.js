@@ -1,19 +1,21 @@
 const Users = require('./User');
-const BookmarkTopics = require('./BookmarkTopics');
+const BookmarkVocabulary = require('./BookmarkVocabulary');
 const Folder = require('./Folder');
 const LearningStatistics = require('./LearningStatistics');
 const Topic = require('./Topic');
 const TopicInFolder = require('./TopicInFolder');
 const Vocabulary = require('./Vocabulary');
 const VocabularyStatistic = require('./VocabularyStatistic');
+const BookmarkTopic = require('./BookmarkTopic');
 
 module.exports = {
     Users,
-    BookmarkTopics,
+    BookmarkVocabulary,
     Folder,
     LearningStatistics,
     Topic,
     TopicInFolder,
     Vocabulary,
-    VocabularyStatistic
+    VocabularyStatistic,
+    BookmarkTopic
 };

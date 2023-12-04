@@ -1,6 +1,6 @@
-const {BookmarkTopics, Vocabulary} = require('../models');
+const {BookmarkVocabulary, Vocabulary} = require('../models');
 
-const createBookmarkTopics = async (req, res) => {
+const createBookmarkVocabulary = async (req, res) => {
     const userId = req.user.data._id;
     const vocabularies = req.body;
     try {
@@ -12,12 +12,12 @@ const createBookmarkTopics = async (req, res) => {
                 return res.status(404).json({ error: 'Vocabulary does not exist' });
             }
 
-            const bookmarkVocab = await BookmarkTopics.findOne({userId, vocabularyId});
+            const bookmarkVocab = await BookmarkVocabulary.findOne({userId, vocabularyId});
             if(bookmarkVocab){
                 return res.status(400).json({error: 'Vocabulary is already bookmarked'});
             }
 
-            const newBookmarkVocab = new BookmarkTopics({
+            const newBookmarkVocab = new BookmarkVocabulary({
                 userId,
                 vocabularyId
             });
@@ -30,12 +30,12 @@ const createBookmarkTopics = async (req, res) => {
     }
 }
 
-const deleteBookmarkTopics = async (req, res) => {
+const deleteBookmarkVocabulary = async (req, res) => {
     const userId = req.user.data._id;
     const vocabularyId = req.params.id || req.query.id;
 
     try {
-        const bookmarkVocab = await BookmarkTopics.findOne({userId, vocabularyId});
+        const bookmarkVocab = await BookmarkVocabulary.findOne({userId, vocabularyId});
         if(!bookmarkVocab){
             return res.status(404).json({error: 'Bookmark vocabulary not found'});
         }
@@ -48,7 +48,18 @@ const deleteBookmarkTopics = async (req, res) => {
     }
 }
 
+const getAllBookmarkVocabulary = async (req, res) => {
+    const userId = req.user.data._id;
+    try {
+        const bookmarkVocabs = await BookmarkVocabulary.find({userId}).populate('vocabularyId');
+        res.status(200).json({bookmarkVocabs});
+    } catch (error) {
+        res.status(500).json({error: error.message});
+    }
+}
+
 module.exports = {
-    createBookmarkTopics,
-    deleteBookmarkTopics
+    createBookmarkVocabulary,
+    deleteBookmarkVocabulary,
+    getAllBookmarkVocabulary
 }
