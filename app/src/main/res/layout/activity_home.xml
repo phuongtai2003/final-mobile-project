@@ -20,26 +20,30 @@
                 android:layout_width="match_parent"
                 android:layout_gravity="bottom"
                 android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll|enterAlways"
                 app:fabCradleMargin="10dp"
                 app:contentInsetStart="0dp"
                 app:contentInsetEnd="0dp"
+                app:hideOnScroll="true"
+                app:fabAlignmentMode="center"
                 android:id="@+id/bottomAppBar"
                 app:fabCradleRoundedCornerRadius="50dp"
                 app:fabCradleVerticalOffset="0dp">
                 <com.google.android.material.bottomnavigation.BottomNavigationView
                     android:layout_width="match_parent"
                     android:id="@+id/bottomNavbar"
+                    app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
                     android:layout_height="match_parent"
                     android:background="@color/primary_color"
                     app:menu="@menu/bottom_navbar_menu"
                     app:itemIconTint="@color/color_selector"
                     app:itemTextColor="@color/color_selector"
                     />
-
             </com.google.android.material.bottomappbar.BottomAppBar>
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
             app:borderWidth="0dp"
+            app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
             android:backgroundTint="@color/secondary_color"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

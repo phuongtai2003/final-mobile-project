@@ -11,7 +11,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tdtu.finalproject.adapter.TopicAdapter
 import com.tdtu.finalproject.databinding.FragmentTopicBinding
+import com.tdtu.finalproject.model.folder.Folder
 import com.tdtu.finalproject.model.topic.Topic
+import com.tdtu.finalproject.utils.CustomOnItemClickListener
 import com.tdtu.finalproject.viewmodel.HomeDataViewModel
 
 // TODO: Rename parameter arguments, choose names that match
@@ -24,7 +26,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [TopicFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class TopicFragment : Fragment() {
+class TopicFragment : Fragment(), CustomOnItemClickListener {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -56,11 +58,10 @@ class TopicFragment : Fragment() {
             else{
                 binding.noTopicLayout.visibility = View.GONE
                 binding.topicRecyclerView.visibility = View.VISIBLE
-                topicAdapter = TopicAdapter(requireActivity(), mutableList, R.layout.topic_library_item, homeDataViewModel.getUser()!!.value!!)
+                topicAdapter = TopicAdapter(requireActivity(), mutableList, R.layout.topic_library_item, homeDataViewModel.getUser()!!.value!!, this)
                 binding.topicRecyclerView.setHasFixedSize(true)
                 binding.topicRecyclerView.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
-                binding.topicRecyclerView.addItemDecoration(DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL))
-                binding.topicRecyclerView.adapter = topicAdapter
+               binding.topicRecyclerView.adapter = topicAdapter
             }
         }
     }
@@ -92,5 +93,11 @@ class TopicFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun onTopicClick(topic: Topic) {
+    }
+
+    override fun onFolderClick(folder: Folder) {
     }
 }

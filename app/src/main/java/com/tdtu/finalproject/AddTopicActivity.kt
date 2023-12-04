@@ -60,6 +60,7 @@ class AddTopicActivity : AppCompatActivity() {
 
         binding.addVocabularyBtn.setOnClickListener{
             addVocabulary(Vocabulary(null, "", "", "", "", null, null, null))
+            binding.vocabularyListView.scrollToPosition(vocabularyAdapter.itemCount - 1)
         }
         binding.importDocumentBtn.setOnClickListener {
             val pickFileIntent = Intent(Intent.ACTION_PICK)

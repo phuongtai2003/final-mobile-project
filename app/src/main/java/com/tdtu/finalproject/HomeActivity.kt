@@ -9,6 +9,7 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.view.Gravity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.core.view.get
@@ -16,13 +17,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
 import com.tdtu.finalproject.databinding.ActivityHomeBinding
+import com.tdtu.finalproject.model.topic.Topic
 import com.tdtu.finalproject.model.user.User
 import com.tdtu.finalproject.repository.DataRepository
 import com.tdtu.finalproject.utils.OnBottomNavigationChangeListener
+import com.tdtu.finalproject.utils.OnDialogConfirmListener
 import com.tdtu.finalproject.utils.OnDrawerNavigationPressedListener
 import com.tdtu.finalproject.utils.Utils
 import com.tdtu.finalproject.viewmodel.HomeDataViewModel
-class HomeActivity : AppCompatActivity(), OnBottomNavigationChangeListener, OnDrawerNavigationPressedListener {
+class HomeActivity : AppCompatActivity(), OnBottomNavigationChangeListener, OnDrawerNavigationPressedListener, OnDialogConfirmListener {
     private lateinit var binding: ActivityHomeBinding
     private lateinit var sharedPref : SharedPreferences
     private lateinit var userViewModel: HomeDataViewModel
@@ -170,11 +173,18 @@ class HomeActivity : AppCompatActivity(), OnBottomNavigationChangeListener, OnDr
 
     override fun onResume() {
         super.onResume()
-        fetchData()
+        checkInternetConnection()
     }
     private fun fetchData(){
         dataRepository.getTopicsByUserId(userViewModel.getUser()?.value!!.id, sharedPref.getString(getString(R.string.token_key), null)!!).thenAccept {
             userViewModel.setTopicsList(it)
+        }.exceptionally{
+            e ->
+            Utils.showSnackBar(binding.root, e.message!!)
+            null
+        }
+        dataRepository.getFolderByUser(userViewModel.getUser()?.value!!.id, sharedPref.getString(getString(R.string.token_key), null)!!).thenAccept {
+            userViewModel.setFolderList(it)
         }.exceptionally{
             e ->
             Utils.showSnackBar(binding.root, e.message!!)
@@ -193,5 +203,26 @@ class HomeActivity : AppCompatActivity(), OnBottomNavigationChangeListener, OnDr
         } else {
             Utils.showSnackBar(binding.root, getString(R.string.no_internet_connection))
         }
+    }
+
+    override fun onCreateFolderDialogConfirm(
+        folderNameEnglish: String,
+        folderNameVietnamese: String
+    ) {
+        dataRepository.createFolder(folderNameEnglish, folderNameVietnamese, sharedPref.getString(getString(R.string.token_key), null)!!).thenAccept {
+            Utils.showDialog(Gravity.CENTER, getString(R.string.create_folder_success), this)
+            checkInternetConnection()
+        }.exceptionally {
+            Utils.showDialog(Gravity.CENTER, it.message.toString(), this)
+            null
+        }
+    }
+
+    override fun onAddTopicToFolderDialogConfirm() {
+
+    }
+
+    override fun onDeleteFolderDialogConfirm() {
+
     }
 }

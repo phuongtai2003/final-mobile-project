@@ -29,14 +29,34 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <Button
-        app:backgroundTint="@null"
-        android:id="@+id/alertMainButton"
-        android:textSize="16sp"
-        android:textColor="@color/white"
-        android:text="@string/close"
+    <LinearLayout
         android:layout_marginTop="20dp"
-        android:background="@drawable/custom_ripple_button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content">
+        <Button
+            android:layout_marginEnd="5dp"
+            app:backgroundTint="@null"
+            android:id="@+id/dialogCancelBtn"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:text="@string/cancel"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/login_btn"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:layout_marginStart="5dp"
+            app:backgroundTint="@null"
+            android:id="@+id/dialogOkBtn"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:text="@string/ok"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/custom_ripple_button"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 </LinearLayout>

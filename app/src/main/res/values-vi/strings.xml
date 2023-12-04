@@ -65,10 +65,27 @@
     <string name="topic_description_english">Mô tả học phần tiếng Anh</string>
     <string name="topic_description_vietnamese">Mô tả học phần tiếng Việt</string>
     <string name="topic_vocabulary">Từ vựng học phần</string>
+    <string name="edit">Sửa</string>
     <string name="publish_to_all">Công khai cho mọi người</string>
     <string name="create_topic_success">Tạo học phần thành công</string>
     <string name="vocabulary">Từ vựng</string>
     <string name="internet_permission_denied">Không có quyền truy cập internet</string>
     <string name="no_internet_connection">Không có kết nối internet</string>
     <string name="create_topic_text">Đi những bước đầu tiên\n để cải thiện điểm số.\n Tạo một học phần ngay bây giờ</string>
+    <string name="create_folder_text">Đi những bước đầu tiên\n để cải thiện điểm số.\n Tạo một thư mục ngay bây giờ</string>
+    <string name="create_folder">Tạo thư mục</string>
+    <string name="folder_name">Tên thư mục tiếng Anh</string>
+    <string name="folder_name_vietnamese">Tên thư mục tiếng Việt</string>
+    <string name="cancel">Hủy</string>
+    <string name="ok">OK</string>
+    <string name="please_enter_folder_name">Vui lòng nhập tên thư mục</string>
+    <string name="create_folder_success">Tạo thư mục thành công</string>
+    <string name="no_topic_in_folder">Không có học phần trong thư mục này</string>
+    <string name="add_topic_in_folder_to_see">Thêm học phần vào thư mục để xem</string>
+    <string name="remove">Xóa</string>
+    <string name="update_folder_successfully">Cập nhật thư mục thành công</string>
+    <string name="remove_folder_successfully">Xóa thư mục thành công</string>
+    <string name="update_folder_failed">Cập nhật thư mục thất bại</string>
+    <string name="remove_folder_failed">Xóa thư mục thất bại</string>
+    <string name="remove_folder_confirm_message">Bạn có chắc chắn muốn xóa thư mục này ?</string>
 </resources>

@@ -7,7 +7,7 @@ import com.tdtu.finalproject.FolderFragment
 import com.tdtu.finalproject.HomeActivity
 import com.tdtu.finalproject.TopicFragment
 
-class LibraryScreenTabAdapter(private var fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity){
+class LibraryScreenTabAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity){
     override fun getItemCount(): Int {
         return 2
     }

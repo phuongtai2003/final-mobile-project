@@ -1,15 +1,19 @@
 package com.tdtu.finalproject
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.tdtu.finalproject.adapter.FolderAdapter
 import com.tdtu.finalproject.adapter.TopicAdapter
 import com.tdtu.finalproject.databinding.FragmentHomePageBinding
+import com.tdtu.finalproject.model.folder.Folder
 import com.tdtu.finalproject.model.topic.Topic
+import com.tdtu.finalproject.utils.CustomOnItemClickListener
 import com.tdtu.finalproject.utils.OnBottomNavigationChangeListener
 import com.tdtu.finalproject.utils.OnDrawerNavigationPressedListener
 import com.tdtu.finalproject.viewmodel.HomeDataViewModel
@@ -24,7 +28,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [HomePageFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class HomePageFragment : Fragment() {
+class HomePageFragment : Fragment(), CustomOnItemClickListener {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -33,6 +37,7 @@ class HomePageFragment : Fragment() {
     private var onDrawerNavigationPressedListener: OnDrawerNavigationPressedListener? = null
     private lateinit var userViewModel :HomeDataViewModel
     private lateinit var topicAdapter: TopicAdapter
+    private lateinit var folderAdapter: FolderAdapter
 
     private val binding get() = _binding!!
 
@@ -72,11 +77,25 @@ class HomePageFragment : Fragment() {
             } else{
                 binding.topicRecyclerView.visibility = View.VISIBLE
                 binding.noTopicText.visibility = View.GONE
+                topicAdapter = TopicAdapter(requireContext(), mutableList, R.layout.topic_menu_item, userViewModel.getUser()?.value!!, this)
+                binding.topicRecyclerView.adapter = topicAdapter
+                binding.topicRecyclerView.clipToPadding = false
+                binding.topicRecyclerView.clipChildren = false
             }
-            topicAdapter = TopicAdapter(requireContext(), mutableList, R.layout.topic_menu_item, userViewModel.getUser()?.value!!)
-            binding.topicRecyclerView.adapter = topicAdapter
-            binding.topicRecyclerView.clipToPadding = false
-            binding.topicRecyclerView.clipChildren = false
+        }
+        userViewModel.getFolderList()?.observe(viewLifecycleOwner){
+            val mutableList: MutableList<Folder> = it.toMutableList()
+            if(mutableList.isEmpty()){
+                binding.folderRecyclerView.visibility = View.GONE
+                binding.noFolderText.visibility = View.VISIBLE
+            } else{
+                binding.folderRecyclerView.visibility = View.VISIBLE
+                binding.noFolderText.visibility = View.GONE
+                folderAdapter = FolderAdapter(requireContext(), mutableList, R.layout.folder_menu_item, userViewModel.getUser()?.value!!, this)
+                binding.folderRecyclerView.adapter = folderAdapter
+                binding.folderRecyclerView.clipToPadding = false
+                binding.folderRecyclerView.clipChildren = false
+            }
         }
     }
 
@@ -122,5 +141,14 @@ class HomePageFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun onTopicClick(topic: Topic) {
+    }
+
+    override fun onFolderClick(folder: Folder) {
+        val folderDetailIntent : Intent = Intent(requireContext(), FolderDetailActivity::class.java)
+        folderDetailIntent.putExtra("folder", folder)
+        startActivity(folderDetailIntent)
     }
 }

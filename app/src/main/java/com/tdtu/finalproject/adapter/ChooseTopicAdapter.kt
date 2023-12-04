@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
@@ -14,7 +13,7 @@ import com.tdtu.finalproject.model.topic.Topic
 import com.tdtu.finalproject.model.user.User
 import com.tdtu.finalproject.utils.CustomOnItemClickListener
 
-class TopicAdapter(private var mContext: Context, private var topics: MutableList<Topic>, private var layout:Int, private var user: User, private var customOnItemClickListener: CustomOnItemClickListener): RecyclerView.Adapter<TopicAdapter.TopicViewHolder>() {
+class ChooseTopicAdapter(private var mContext: Context, private var topics: MutableList<Topic>, private var layout:Int, private var user: User) : RecyclerView.Adapter<ChooseTopicAdapter.TopicViewHolder>(){
     class TopicViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val topicNameTxt: TextView = itemView.findViewById(R.id.topicItemNameTxt)
         val topicTermsCount: TextView = itemView.findViewById(R.id.termsCount)
@@ -38,8 +37,16 @@ class TopicAdapter(private var mContext: Context, private var topics: MutableLis
     override fun onBindViewHolder(holder: TopicViewHolder, position: Int) {
         val topic: Topic = topics[position]
         holder.itemView.setOnClickListener{
-            customOnItemClickListener.onTopicClick(topic)
+            topic.chosen = !topic.chosen
+            if(topic.chosen){
+                holder.itemView.background = mContext.getDrawable(R.drawable.chosen_topic_library_bg)
+            }
+            else{
+                holder.itemView.background = mContext.getDrawable(R.drawable.topic_library_bg)
+            }
         }
+        holder.itemView.background = if (topic.chosen) mContext.getDrawable(R.drawable.chosen_topic_library_bg) else mContext.getDrawable(R.drawable.topic_library_bg)
+
         holder.topicNameTxt.text = topic.topicNameEnglish
         holder.topicTermsCount.text = topic.vocabularyCount.toString() + " " + mContext.getString(R.string.vocabulary)
         holder.topicOwnerNameTxt.text = user.username

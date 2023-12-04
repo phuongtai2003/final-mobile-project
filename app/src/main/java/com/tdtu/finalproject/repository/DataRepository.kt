@@ -6,6 +6,16 @@ import com.tdtu.finalproject.model.topic.GetTopicsResponse
 import com.tdtu.finalproject.model.topic.CreateTopicRequest
 import com.tdtu.finalproject.model.topic.CreateTopicResponse
 import com.tdtu.finalproject.model.common.ErrorModel
+import com.tdtu.finalproject.model.common.Message
+import com.tdtu.finalproject.model.folder.AddTopicToFolderResponse
+import com.tdtu.finalproject.model.folder.CreateFolderRequest
+import com.tdtu.finalproject.model.folder.CreateFolderResponse
+import com.tdtu.finalproject.model.folder.Folder
+import com.tdtu.finalproject.model.folder.GetFolderByUserResponse
+import com.tdtu.finalproject.model.folder.UpdateFolderRequest
+import com.tdtu.finalproject.model.folder.UpdateFolderResponse
+import com.tdtu.finalproject.model.topic.GetTopicByFolderResponse
+import com.tdtu.finalproject.model.topic.GetTopicByIdResponse
 import com.tdtu.finalproject.model.topic.Topic
 import com.tdtu.finalproject.model.user.LoginRequest
 import com.tdtu.finalproject.model.user.LoginResponse
@@ -18,6 +28,7 @@ import com.tdtu.finalproject.model.topic.Vocabulary
 import com.tdtu.finalproject.utils.WrongCredentialsException
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Call
@@ -32,7 +43,7 @@ import java.util.concurrent.CompletableFuture
 class DataRepository() {
 
     companion object{
-        private const val baseUrl: String = "http://192.168.1.6:3000/android/"
+        private const val baseUrl: String = "http://10.0.2.2:3000/android/"
         private val api = Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(GsonConverterFactory.create()).build().create(API::class.java)
         private var instance: DataRepository? = null
         fun getInstance() : DataRepository{
@@ -165,7 +176,7 @@ class DataRepository() {
     fun getTopicsByUserId(userId: String, token: String) : CompletableFuture<List<Topic>>{
         val future: CompletableFuture<List<Topic>> = CompletableFuture()
         val call = api.getTopicsByUserId(userId, token)
-        var error: String? = null
+        var error: String?
         call.enqueue(object : Callback<GetTopicsResponse>{
             override fun onResponse(call: Call<GetTopicsResponse>, response: Response<GetTopicsResponse>) {
                 if(response.code() == 200){
@@ -180,6 +191,192 @@ class DataRepository() {
                 }
             }
             override fun onFailure(call: Call<GetTopicsResponse>, t: Throwable) {
+                future.completeExceptionally(t)
+            }
+        })
+        return future
+    }
+
+    fun createFolder(folderNameEnglish: String, folderNameVietnamese: String, token: String) : CompletableFuture<CreateFolderResponse>{
+        val future: CompletableFuture<CreateFolderResponse> = CompletableFuture()
+        val call = api.createNewFolder(CreateFolderRequest(folderNameEnglish, folderNameVietnamese), token)
+        var error: String? = null
+        call.enqueue(object : Callback<CreateFolderResponse>{
+            override fun onResponse(call: Call<CreateFolderResponse>, response: Response<CreateFolderResponse>) {
+                if(response.code() == 200){
+                    future.complete(response.body())
+                }
+                else{
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
+                    future.completeExceptionally(Exception(error))
+                }
+            }
+            override fun onFailure(call: Call<CreateFolderResponse>, t: Throwable) {
+                future.completeExceptionally(t)
+            }
+        })
+        return future
+    }
+
+    fun getFolderByUser(userId: String, token: String) : CompletableFuture<List<Folder>>{
+        val future: CompletableFuture<List<Folder>> = CompletableFuture()
+        val call = api.getFoldersByUserId(userId, token)
+        var error: String? = null
+        call.enqueue(object : Callback<GetFolderByUserResponse>{
+            override fun onResponse(call: Call<GetFolderByUserResponse>, response: Response<GetFolderByUserResponse>) {
+                if(response.code() == 200){
+                    future.complete(response.body()?.folders)
+                }
+                else if(response.code() == 404){
+                    future.complete(ArrayList<Folder>())
+                }
+                else{
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
+                    future.completeExceptionally(Exception(error))
+                }
+            }
+            override fun onFailure(call: Call<GetFolderByUserResponse>, t: Throwable) {
+                future.completeExceptionally(t)
+            }
+        })
+        return future
+    }
+
+    fun addTopicToFolder(folderId: String, topicId: String, token:String) : CompletableFuture<Boolean>{
+        val future: CompletableFuture<Boolean> = CompletableFuture()
+        val call = api.addTopicToFolder(folderId, topicId, token)
+        var error: String?
+        call.enqueue(object : Callback<AddTopicToFolderResponse>{
+            override fun onResponse(call: Call<AddTopicToFolderResponse>, response: Response<AddTopicToFolderResponse>) {
+                if(response.code() == 200){
+                    future.complete(true)
+                }
+                else if(response.code() == 409){
+                    future.complete(true)
+                }
+                else{
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
+                    future.completeExceptionally(Exception(error))
+                }
+            }
+            override fun onFailure(call: Call<AddTopicToFolderResponse>, t: Throwable) {
+                future.completeExceptionally(t)
+            }
+        })
+        return future
+    }
+
+    fun getTopicById(topicId: String, token: String): CompletableFuture<Topic>{
+        val future: CompletableFuture<Topic> = CompletableFuture()
+        val call = api.getTopicById(topicId, token)
+        var error: String?
+        call.enqueue(object : Callback<GetTopicByIdResponse>{
+            override fun onResponse(call: Call<GetTopicByIdResponse>, response: Response<GetTopicByIdResponse>) {
+                if(response.code() == 200){
+                    future.complete(response.body()?.topic)
+                }
+                else{
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
+                    future.completeExceptionally(Exception(error))
+                }
+            }
+            override fun onFailure(call: Call<GetTopicByIdResponse>, t: Throwable) {
+                future.completeExceptionally(t)
+            }
+        })
+        return future
+    }
+
+    fun getTopicByFolderId(folderId: String, token: String) : CompletableFuture<List<Topic>>{
+        val future: CompletableFuture<List<Topic>> = CompletableFuture()
+        val call = api.getTopicsByFolderId(folderId, token)
+        var error: String?
+        call.enqueue(object : Callback<GetTopicByFolderResponse>{
+            override fun onResponse(call: Call<GetTopicByFolderResponse>, response: Response<GetTopicByFolderResponse>) {
+                if(response.code() == 200){
+                    if(response.body()?.topics != null && response.body()?.topics!!.isNotEmpty()){
+                        val result = ArrayList<Topic>()
+                        for (topic in response.body()?.topics!!){
+                            result.add(topic.topic)
+                        }
+                        future.complete(result)
+                    }
+                    else{
+                        future.complete(ArrayList())
+                    }
+                }
+                else if(response.code() == 404){
+                    future.complete(ArrayList())
+                }
+                else{
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
+                    future.completeExceptionally(Exception(error))
+                }
+            }
+            override fun onFailure(call: Call<GetTopicByFolderResponse>, t: Throwable) {
+                future.completeExceptionally(t)
+            }
+        })
+        return future
+    }
+
+    fun updateFolder(folderId: String,folderNameEnglish: String, folderNameVietnamese: String, token: String): CompletableFuture<Folder>{
+        val future: CompletableFuture<Folder> = CompletableFuture()
+        val call = api.updateFolder(folderId, token, UpdateFolderRequest(folderNameEnglish, folderNameVietnamese))
+        var error: String?
+        call.enqueue(object : Callback<UpdateFolderResponse>{
+            override fun onResponse(call: Call<UpdateFolderResponse>, response: Response<UpdateFolderResponse>) {
+                if(response.code() == 200){
+                    future.complete(response.body()?.folder)
+                }
+                else{
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
+                    future.completeExceptionally(Exception(error))
+                }
+            }
+            override fun onFailure(call: Call<UpdateFolderResponse>, t: Throwable) {
+                future.completeExceptionally(t)
+            }
+        })
+        return future
+    }
+
+    fun deleteFolder(folderId: String, token: String): CompletableFuture<Boolean>{
+        val future: CompletableFuture<Boolean> = CompletableFuture()
+        val call = api.deleteFolder(folderId, token)
+        var error: String?
+        call.enqueue(object : Callback<Message>{
+            override fun onResponse(call: Call<Message>, response: Response<Message>) {
+                if(response.code() == 200){
+                    future.complete(true)
+                }
+                else{
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
+                    future.completeExceptionally(Exception(error))
+                }
+            }
+            override fun onFailure(call: Call<Message>, t: Throwable) {
+                future.completeExceptionally(t)
+            }
+        })
+        return future
+    }
+
+    fun deleteTopicFromFolder(folderId: String, topicId: String, token: String): CompletableFuture<Boolean>{
+        val future: CompletableFuture<Boolean> = CompletableFuture()
+        val call = api.deleteTopicFromFolder(folderId, topicId, token)
+        var error: String?
+        call.enqueue(object : Callback<CreateFolderResponse>{
+            override fun onResponse(call: Call<CreateFolderResponse>, response: Response<CreateFolderResponse>) {
+                if(response.code() == 200){
+                    future.complete(true)
+                }
+                else{
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
+                    future.completeExceptionally(Exception(error))
+                }
+            }
+            override fun onFailure(call: Call<CreateFolderResponse>, t: Throwable) {
                 future.completeExceptionally(t)
             }
         })

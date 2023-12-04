@@ -1,15 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent"
     android:background="@color/primary_color"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".FolderFragment">
 
-    <TextView
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/noFolderLayout"
+        android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textColor="@color/white"
-        android:text="@string/folder" />
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/folder"/>
+        <TextView
+            android:layout_marginTop="20dp"
+            android:textSize="25sp"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:text="@string/create_folder_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/addTopicBtn"
+            android:layout_marginTop="50dp"
+            app:backgroundTint="@null"
+            android:background="@drawable/register_btn"
+            android:text="@string/add_folder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:visibility="gone"
+        android:id="@+id/folderRecyclerView"
+        android:nestedScrollingEnabled="true"
+        android:layout_width="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        />
 
-</FrameLayout>
+</LinearLayout>

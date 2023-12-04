@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:id="@+id/homePageFragment"
     android:orientation="vertical"
     android:background="@color/primary_color"
     android:layout_height="match_parent"
-    tools:context=".HomePageFragment">
+    android:id="@+id/homePageFragment"
+    tools:context=".HomePageFragment"
+    android:layout_width="match_parent"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:background="@color/primary_color"
+        android:layout_height="wrap_content"
+        >
 
     <LinearLayout
         android:background="@drawable/top_container"
@@ -25,7 +33,7 @@
                 android:textSize="30sp"
                 android:text="3T"
                 android:layout_weight="1"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"/>
             <ImageButton
                 android:id="@+id/openDrawerBtn"
@@ -69,164 +77,116 @@
             android:layout_height="wrap_content"/>
     </LinearLayout>
 
-    <ScrollView
-        android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp">
-        <LinearLayout
-            android:layout_marginTop="25dp"
-            android:orientation="vertical"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent">
+    <LinearLayout
+        android:layout_marginBottom="100dp"
+        android:layout_marginTop="25dp"
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
 
-            <RelativeLayout
-                android:layout_marginHorizontal="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_alignParentStart="true"
-                    android:textAllCaps="true"
-                    android:layout_centerVertical="true"
-                    android:text="@string/topic"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    android:fontFamily="@font/bevietnampro_bold"
-                    android:letterSpacing="0.05"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+        <RelativeLayout
+            android:layout_marginHorizontal="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_alignParentStart="true"
+                android:textAllCaps="true"
+                android:layout_centerVertical="true"
+                android:text="@string/topic"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:fontFamily="@font/bevietnampro_bold"
+                android:letterSpacing="0.05"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
-                <Button
-                    android:id="@+id/seeAllTopicBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginStart="0dp"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginEnd="0dp"
-                    android:layout_marginBottom="0dp"
-                    android:background="@android:color/transparent"
-                    android:fontFamily="@font/bevietnampro_extrabold"
-                    android:padding="0dp"
-                    android:text="@string/see_all"
-                    android:textColor="@color/tertiary_color"
-                    android:textSize="16sp" />
-            </RelativeLayout>
-            <FrameLayout
+            <Button
+                android:id="@+id/seeAllTopicBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="0dp"
+                android:background="@android:color/transparent"
+                android:fontFamily="@font/bevietnampro_extrabold"
+                android:padding="0dp"
+                android:text="@string/see_all"
+                android:textColor="@color/tertiary_color"
+                android:textSize="16sp" />
+        </RelativeLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp">
+            <TextView
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+                android:id="@+id/noTopicText"
+                android:textAlignment="center"
+                android:text="@string/no_topics"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <androidx.viewpager2.widget.ViewPager2
                 android:layout_width="match_parent"
-                android:layout_height="200dp">
-                <TextView
-                    android:textSize="16sp"
-                    android:textColor="@color/white"
-                    android:layout_gravity="center"
-                    android:id="@+id/noTopicText"
-                    android:textAlignment="center"
-                    android:text="@string/no_topics"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <androidx.viewpager2.widget.ViewPager2
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/topicRecyclerView"
-                    />
-            </FrameLayout>
+                android:layout_height="match_parent"
+                android:id="@+id/topicRecyclerView"
+                />
+        </FrameLayout>
 
-            <RelativeLayout
-                android:layout_marginHorizontal="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_alignParentStart="true"
-                    android:textAllCaps="true"
-                    android:layout_centerVertical="true"
-                    android:text="@string/folder"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    android:fontFamily="@font/bevietnampro_bold"
-                    android:letterSpacing="0.05"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <Button
-                    android:textSize="16sp"
-                    android:textColor="@color/tertiary_color"
-                    android:text="@string/see_all"
-                    android:fontFamily="@font/bevietnampro_extrabold"
-                    android:background="@android:color/transparent"
-                    android:padding="0dp"
-                    android:id="@+id/seeAllFoldersBtn"
-                    android:layout_margin="0dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </RelativeLayout>
+        <RelativeLayout
+            android:layout_marginHorizontal="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_alignParentStart="true"
+                android:textAllCaps="true"
+                android:layout_centerVertical="true"
+                android:text="@string/folder"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:fontFamily="@font/bevietnampro_bold"
+                android:letterSpacing="0.05"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="200dp">
-                <TextView
-                    android:textSize="16sp"
-                    android:textColor="@color/white"
-                    android:layout_gravity="center"
-                    android:id="@+id/noFolderText"
-                    android:textAlignment="center"
-                    android:text="@string/no_folders"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <androidx.recyclerview.widget.RecyclerView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/folderRecyclerView"
-                    />
-            </FrameLayout>
+            <Button
+                android:id="@+id/seeAllFoldersBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="0dp"
+                android:background="@android:color/transparent"
+                android:fontFamily="@font/bevietnampro_extrabold"
+                android:padding="0dp"
+                android:text="@string/see_all"
+                android:textColor="@color/tertiary_color"
+                android:textSize="16sp" />
+        </RelativeLayout>
 
-            <RelativeLayout
-                android:layout_marginHorizontal="20dp"
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp">
+            <TextView
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+                android:id="@+id/noFolderText"
+                android:textAlignment="center"
+                android:text="@string/no_folders"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <androidx.viewpager2.widget.ViewPager2
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_alignParentStart="true"
-                    android:textAllCaps="true"
-                    android:layout_centerVertical="true"
-                    android:text="@string/classes"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    android:fontFamily="@font/bevietnampro_bold"
-                    android:letterSpacing="0.05"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <Button
-                    android:textSize="16sp"
-                    android:textColor="@color/tertiary_color"
-                    android:text="@string/see_all"
-                    android:fontFamily="@font/bevietnampro_extrabold"
-                    android:background="@android:color/transparent"
-                    android:padding="0dp"
-                    android:id="@+id/seeAllClassesBtn"
-                    android:layout_margin="0dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </RelativeLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="200dp">
-                <TextView
-                    android:textSize="16sp"
-                    android:textColor="@color/white"
-                    android:layout_gravity="center"
-                    android:id="@+id/noClassesText"
-                    android:textAlignment="center"
-                    android:text="@string/no_classes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <androidx.recyclerview.widget.RecyclerView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/classRecyclerView"
-                    />
-            </FrameLayout>
+                android:layout_height="match_parent"
+                android:id="@+id/folderRecyclerView"
+                />
+        </FrameLayout>
         </LinearLayout>
-    </ScrollView>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
 
-
-</LinearLayout>
