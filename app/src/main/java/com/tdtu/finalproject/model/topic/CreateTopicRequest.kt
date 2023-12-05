@@ -1,5 +1,7 @@
 package com.tdtu.finalproject.model.topic
 
+import com.tdtu.finalproject.model.vocabulary.Vocabulary
+
 data class CreateTopicRequest (
     val topicNameEnglish: String,
     val topicNameVietnamese: String,

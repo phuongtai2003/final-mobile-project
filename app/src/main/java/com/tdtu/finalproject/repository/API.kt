@@ -20,6 +20,7 @@ import com.tdtu.finalproject.model.user.UpdateUserResponse
 import com.tdtu.finalproject.model.user.RegisterRequest
 import com.tdtu.finalproject.model.user.RegisterResponse
 import com.tdtu.finalproject.model.user.UpdateUserInfoRequest
+import com.tdtu.finalproject.model.vocabulary.GetVocabulariesByTopicResponse
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.Body
@@ -66,4 +67,6 @@ interface API {
     fun deleteFolder(@Path("id") folderId: String, @Header("token") token: String) : Call<Message>
     @DELETE("folders/{id}/topics/{topicId}")
     fun deleteTopicFromFolder(@Path("id") folderId: String, @Path("topicId") topicId: String, @Header("token") token: String) : Call<CreateFolderResponse>
+    @GET("vocabularies/topics/{topicId}")
+    fun getVocabulariesByTopicId(@Path("topicId") topicId: String, @Header("token") token: String): Call<GetVocabulariesByTopicResponse>
 }

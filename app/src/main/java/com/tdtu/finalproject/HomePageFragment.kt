@@ -144,6 +144,9 @@ class HomePageFragment : Fragment(), CustomOnItemClickListener {
     }
 
     override fun onTopicClick(topic: Topic) {
+        val intent = Intent(requireContext(), TopicActivity::class.java)
+        intent.putExtra("topic", topic)
+        startActivity(intent)
     }
 
     override fun onFolderClick(folder: Folder) {

@@ -88,4 +88,8 @@
     <string name="update_folder_failed">Cập nhật thư mục thất bại</string>
     <string name="remove_folder_failed">Xóa thư mục thất bại</string>
     <string name="remove_folder_confirm_message">Bạn có chắc chắn muốn xóa thư mục này ?</string>
+    <string name="premium_account_only">Chức năng này chỉ dành cho tài khoản premium</string>
+    <string name="please_add_vocabulary">Vui lòng thêm từ vựng</string>
+    <string name="tts_init_failed">Khởi tạo chuyển văn bản sang giọng nói thất bại</string>
+    <string name="language_not_supported">Ngôn ngữ không được hỗ trợ</string>
 </resources>

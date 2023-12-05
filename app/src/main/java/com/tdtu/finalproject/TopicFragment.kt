@@ -96,6 +96,9 @@ class TopicFragment : Fragment(), CustomOnItemClickListener {
     }
 
     override fun onTopicClick(topic: Topic) {
+        val intent = Intent(requireActivity(), TopicActivity::class.java)
+        intent.putExtra("topic", topic)
+        startActivity(intent)
     }
 
     override fun onFolderClick(folder: Folder) {
