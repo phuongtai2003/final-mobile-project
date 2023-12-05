@@ -36,19 +36,4 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <com.google.android.material.button.MaterialButton
-        app:backgroundTint="@null"
-        android:background="@android:color/transparent"
-        app:icon="@drawable/baseline_people_alt_24"
-        android:text="@string/add_class"
-        android:id="@+id/addClassBtn"
-        android:textColor="@color/white"
-        app:iconTint="@color/white"
-        app:iconPadding="20dp"
-        android:textAlignment="viewStart"
-        android:drawableStart="@drawable/baseline_menu_book_24"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-
 </LinearLayout>

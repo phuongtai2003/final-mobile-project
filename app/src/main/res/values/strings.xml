@@ -87,4 +87,8 @@
     <string name="update_folder_failed">Remove Folder</string>
     <string name="remove_folder_failed">Remove Folder</string>
     <string name="remove_folder_confirm_message">Are you sure you want to remove this folder ?</string>
+    <string name="premium_account_only">This feature is only available to premium account</string>
+    <string name="please_add_vocabulary">Please add vocabulary</string>
+    <string name="tts_init_failed">Text to speech initialization failed</string>
+    <string name="language_not_supported">Language not supported</string>
 </resources>

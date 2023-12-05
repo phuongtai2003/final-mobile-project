@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/primary_color"
+    android:orientation="vertical"
+    android:weightSum="10"
+    tools:context=".TopicActivity">
+    <LinearLayout
+        android:paddingHorizontal="15dp"
+        android:paddingVertical="20dp"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:id="@+id/returnBtn"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_baseline_arrow_back_24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_marginStart="20dp"
+            android:textSize="25sp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/bevietnampro_extrabold"
+            android:text="@string/topic"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+        <ImageButton
+            android:layout_marginStart="10dp"
+            android:id="@+id/optionMenuBtn"
+            android:background="@android:color/transparent"
+            android:src="@drawable/outline_more_vert_24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/flashCardViewPager"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"/>
+
+            <ru.tinkoff.scrollingpagerindicator.ScrollingPagerIndicator
+                android:id="@+id/scrollPagerIndicator"
+                app:spi_visibleDotCount="5"
+                android:layout_height="wrap_content"
+                app:spi_dotSize="10dp"
+                app:spi_dotSelectedSize="15dp"
+                android:layout_gravity="center_horizontal"
+                app:spi_dotColor="@color/white"
+                app:spi_dotSelectedColor="@color/secondary_color"
+                android:layout_width="match_parent">
+            </ru.tinkoff.scrollingpagerindicator.ScrollingPagerIndicator>
+        </LinearLayout>
+
+        <ProgressBar
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:id="@+id/progressBar"
+            android:indeterminateTint="@color/secondary_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </FrameLayout>
+
+    <TextView
+        android:textSize="20sp"
+        android:layout_marginHorizontal="15dp"
+        android:textColor="@color/white"
+        android:id="@+id/topicNameEnglishTxt"
+        android:text="@string/topic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:layout_marginHorizontal="15dp"
+        android:id="@+id/topicNameVietnameseTxt"
+        android:text="@string/topic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+
+</LinearLayout>

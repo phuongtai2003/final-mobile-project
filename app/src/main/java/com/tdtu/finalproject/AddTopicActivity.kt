@@ -6,21 +6,23 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Gravity
 import android.widget.PopupMenu
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
 import com.tdtu.finalproject.adapter.VocabularyAdapter
 import com.tdtu.finalproject.databinding.ActivityAddTopicBinding
-import com.tdtu.finalproject.model.topic.Vocabulary
+import com.tdtu.finalproject.model.vocabulary.Vocabulary
+import com.tdtu.finalproject.model.user.User
 import com.tdtu.finalproject.repository.DataRepository
 import com.tdtu.finalproject.utils.Utils
 
 class AddTopicActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddTopicBinding
-    private lateinit var vocabularyList: MutableList<Vocabulary>
+    private lateinit var vocabularyList: ArrayList<Vocabulary>
     private lateinit var vocabularyAdapter: VocabularyAdapter
-    private final val PICK_FILE_REQUEST_CODE = 1
-    private final val dataRepository: DataRepository = DataRepository()
+    private val PICK_FILE_REQUEST_CODE = 1
+    private val dataRepository: DataRepository = DataRepository()
     private lateinit var sharedPref: SharedPreferences
+    private lateinit var user : User
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddTopicBinding.inflate(layoutInflater)
@@ -29,9 +31,10 @@ class AddTopicActivity : AppCompatActivity() {
         }
 
         sharedPref = this.getSharedPreferences(getString(R.string.shared_preferences_key), MODE_PRIVATE)
+        user = Gson().fromJson(sharedPref.getString(getString(R.string.user_data_key), null), User::class.java)
 
-        vocabularyList = ArrayList<Vocabulary>()
-        vocabularyList.add(Vocabulary(null, "Hello", "Xin chào", "Hello", "Xin chào", null, null, null))
+        vocabularyList = ArrayList()
+        vocabularyList.add(Vocabulary(null, "Hello", "Xin chào", "Hello", "Xin chào", null, ArrayList(), ArrayList()))
 
 
         binding.popupBtn.setOnClickListener{
@@ -39,11 +42,16 @@ class AddTopicActivity : AppCompatActivity() {
             popupMenu.setOnMenuItemClickListener {
                 it-> when(it.itemId) {
                     R.id.addVocabularyItem -> {
-                        addVocabulary(Vocabulary(null, "", "", "", "", null, null, null))
+                        vocabularyList.add( vocabularyList.size ,
+                            Vocabulary(null, "", "", "", "", null, ArrayList(), ArrayList())
+                        )
+                        vocabularyAdapter.notifyItemInserted(vocabularyList.size - 1)
+                        binding.vocabularyListView.scrollToPosition(vocabularyList.size - 1)
                         true
                     }
                     R.id.removeAllVocabularyItem -> {
-                        vocabularyAdapter.removeAllVocabulary()
+                        vocabularyList.clear()
+                        vocabularyAdapter.notifyDataSetChanged()
                         true
                     }
                     else -> false
@@ -53,19 +61,28 @@ class AddTopicActivity : AppCompatActivity() {
             popupMenu.show()
         }
         vocabularyAdapter = VocabularyAdapter(this, vocabularyList, R.layout.add_vocabulary_item)
-        binding.vocabularyListView.setHasFixedSize(true)
         binding.vocabularyListView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        binding.vocabularyListView.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
+        binding.vocabularyListView.setHasFixedSize(true)
         binding.vocabularyListView.adapter = vocabularyAdapter
-
+        binding.vocabularyListView.recycledViewPool.setMaxRecycledViews(0, 0)
         binding.addVocabularyBtn.setOnClickListener{
-            addVocabulary(Vocabulary(null, "", "", "", "", null, null, null))
-            binding.vocabularyListView.scrollToPosition(vocabularyAdapter.itemCount - 1)
+            vocabularyList.add( vocabularyList.size ,
+                Vocabulary(null, "", "", "", "", null, ArrayList(), ArrayList())
+            )
+            vocabularyAdapter.notifyItemInserted(vocabularyList.size - 1)
+            binding.vocabularyListView.scrollToPosition(vocabularyList.size - 1)
         }
         binding.importDocumentBtn.setOnClickListener {
-            val pickFileIntent = Intent(Intent.ACTION_PICK)
-            pickFileIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
-            startActivityForResult(pickFileIntent, PICK_FILE_REQUEST_CODE)
+            if(user.isPremiumAccount){
+                val pickFileIntent = Intent(Intent.ACTION_PICK)
+                pickFileIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
+                startActivityForResult(pickFileIntent, PICK_FILE_REQUEST_CODE)
+            }
+            else{
+                runOnUiThread {
+                    Utils.showDialog(Gravity.CENTER, getString(R.string.premium_account_only), this)
+                }
+            }
         }
 
         binding.confirmBtn.setOnClickListener{
@@ -74,15 +91,17 @@ class AddTopicActivity : AppCompatActivity() {
             val englishDescription = binding.topicDescriptionEnglishEdt.text.toString()
             val vietnameseDescription = binding.topicDescriptionVietnameseEdt.text.toString()
             val isPublic = binding.publicTopicSwitch.isChecked
-            val vocabularyList = vocabularyAdapter.getVocabularies()
             val token = sharedPref.getString(getString(R.string.token_key), null)
             if(englishTitle.isEmpty() || vietnameseTitle.isEmpty() || englishDescription.isEmpty() || vietnameseDescription.isEmpty()) {
                 Utils.showDialog(Gravity.CENTER, getString(R.string.please_fill), this)
                 return@setOnClickListener
             }
+            if(vocabularyList.size == 0) {
+                Utils.showDialog(Gravity.CENTER, getString(R.string.please_add_vocabulary), this)
+                return@setOnClickListener
+            }
             dataRepository.createTopic(englishTitle, vietnameseTitle, englishDescription, vietnameseDescription, vocabularyList, isPublic, token!!).thenAccept {
                 runOnUiThread{
-                    finish()
                     Utils.showDialog(Gravity.CENTER, getString(R.string.create_topic_success), this)
                 }
             }.exceptionally {
@@ -94,9 +113,5 @@ class AddTopicActivity : AppCompatActivity() {
             }
         }
         setContentView(binding.root)
-    }
-
-    private fun addVocabulary(vocabulary: Vocabulary) {
-        vocabularyAdapter.addVocabulary(vocabulary)
     }
 }

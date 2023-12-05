@@ -24,11 +24,11 @@ import com.tdtu.finalproject.model.user.RegisterRequest
 import com.tdtu.finalproject.model.user.RegisterResponse
 import com.tdtu.finalproject.model.user.UpdateUserInfoRequest
 import com.tdtu.finalproject.model.user.UserInfo
-import com.tdtu.finalproject.model.topic.Vocabulary
+import com.tdtu.finalproject.model.vocabulary.Vocabulary
+import com.tdtu.finalproject.model.vocabulary.GetVocabulariesByTopicResponse
 import com.tdtu.finalproject.utils.WrongCredentialsException
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
-import okhttp3.OkHttpClient
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Call
@@ -43,7 +43,7 @@ import java.util.concurrent.CompletableFuture
 class DataRepository() {
 
     companion object{
-        private const val baseUrl: String = "http://10.0.2.2:3000/android/"
+        private const val baseUrl: String = "http://192.168.101.159:3000/android/"
         private val api = Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(GsonConverterFactory.create()).build().create(API::class.java)
         private var instance: DataRepository? = null
         fun getInstance() : DataRepository{
@@ -99,7 +99,6 @@ class DataRepository() {
                 }
             }
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                Log.d("USER TAG", "onFailure: " + t.message)
                 future.completeExceptionally(t)
             }
         })
@@ -180,6 +179,7 @@ class DataRepository() {
         call.enqueue(object : Callback<GetTopicsResponse>{
             override fun onResponse(call: Call<GetTopicsResponse>, response: Response<GetTopicsResponse>) {
                 if(response.code() == 200){
+                    Log.d("USER TAG", "onResponse: ${response.body()}")
                     future.complete(response.body()?.topics)
                 }
                 else if(response.code() == 404){
@@ -377,6 +377,31 @@ class DataRepository() {
                 }
             }
             override fun onFailure(call: Call<CreateFolderResponse>, t: Throwable) {
+                future.completeExceptionally(t)
+            }
+        })
+        return future
+    }
+
+    fun getVocabulariesByTopic(topicId: String, token: String): CompletableFuture<List<Vocabulary>> {
+        val future: CompletableFuture<List<Vocabulary>> = CompletableFuture()
+        val call = api.getVocabulariesByTopicId(topicId, token)
+        var error: String?
+        call.enqueue(object : Callback<GetVocabulariesByTopicResponse>{
+            override fun onResponse(call: Call<GetVocabulariesByTopicResponse>, response: Response<GetVocabulariesByTopicResponse>) {
+                if(response.code() == 200){
+                    future.complete(response.body()?.vocabularies)
+                }
+                else if(response.code() == 404){
+                    future.complete(ArrayList())
+                }
+                else{
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
+                    future.completeExceptionally(Exception(error))
+                }
+
+            }
+            override fun onFailure(call: Call<GetVocabulariesByTopicResponse>, t: Throwable) {
                 future.completeExceptionally(t)
             }
         })

@@ -35,7 +35,7 @@ class FolderDetailActivity : AppCompatActivity() , CustomOnItemClickListener, On
     private lateinit var user: User
     private lateinit var addTopicResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var adapter: TopicAdapter
-    private lateinit var topicList: MutableList<Topic>
+    private var topicList: MutableList<Topic> = mutableListOf()
     private lateinit var dataRepository: DataRepository
     private lateinit var folderDataViewModel: FolderDetailViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,12 +99,13 @@ class FolderDetailActivity : AppCompatActivity() , CustomOnItemClickListener, On
             if(it.resultCode == RESULT_OK && it.data != null){
                 val topics = it.data!!.getParcelableArrayListExtra<Topic>("topics")
                 if(topics != null){
-                    val currentList = adapter.getTopics().toList()
+                    val currentList = topicList
                     val addedTopic = topics - currentList
                     val removedTopic = currentList - topics
 
                     folderDataViewModel.updateTopicForFolder(dataRepository,binding, this, addedTopic, removedTopic, folder!!, sharedPreferences)
                     runOnUiThread {
+                        topicList = topics
                         if(topics.isEmpty()){
                             binding.folderTopicCount.text = "0 " + getString(R.string.topic)
                             binding.folderDetailRecyclerView.visibility = android.view.View.GONE
@@ -134,6 +135,9 @@ class FolderDetailActivity : AppCompatActivity() , CustomOnItemClickListener, On
     }
 
     override fun onTopicClick(topic: Topic) {
+        val intent = Intent(this, TopicActivity::class.java)
+        intent.putExtra("topic", topic)
+        startActivity(intent)
     }
 
     override fun onFolderClick(folder: Folder) {
