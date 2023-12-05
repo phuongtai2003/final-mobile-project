@@ -43,7 +43,6 @@ const getTopicsByUserId = async (req, res) => {
     }
 };
 
-
 const updateTopic = async (req, res) => {
     const id = req.params.id || req.query.id;
     const {topicNameEnglish, topicNameVietnamese, descriptionEnglish, descriptionVietNamese} = req.body;
