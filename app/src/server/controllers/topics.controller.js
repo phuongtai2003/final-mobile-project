@@ -1,5 +1,5 @@
 require('dotenv').config();
-const {Users ,Topic, Vocabulary, TopicInFolder, BookmarkTopics, VocabularyStatistic, LearningStatistics} = require('../models');
+const {Users ,Topic, Vocabulary, TopicInFolder, BookmarkTopic, VocabularyStatistic, LearningStatistics} = require('../models');
 
 const getTopicById = async (req, res) => {
     const id = req.params.id || req.query.id;
@@ -27,16 +27,22 @@ const getAllTopics = async (req, res) => {
 const getTopicsByUserId = async (req, res) => {
     const userId = req.params.id || req.query.id;
     try {
-        const topics = await Topic.find({ userId });
-        if(topics.length === 0){
-            res.status(404).json({error: "Topics not found"});
+        const user = await Users.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        const topics = await Topic.find({ '_id': { $in: user.topicId } }).populate('vocabularyId');
+        if (topics.length === 0) {
+            res.status(404).json({ error: "Topics not found" });
             return;
         }
-        res.status(200).json({topics});
+        res.status(200).json({ topics });
     } catch (error) {
-        res.status(500).json({ error : error.message });
+        res.status(500).json({ error: error.message });
     }
-}
+};
+
 
 const updateTopic = async (req, res) => {
     const id = req.params.id || req.query.id;
@@ -57,7 +63,7 @@ const deleteTopic = async (req, res) => {
         if (!topic) {
             return res.status(404).json({ message: 'Topic not found' });
         }
-        if (topic.ownerId !== userId) {
+        if (topic.ownerId.toString() !== userId) {
             // Xóa topic khỏi danh sách của người dùng hiện tại
             await Users.findByIdAndUpdate(userId, { $pull: { topicId: topicId } });
             await LearningStatistics.findOneAndDelete({ userId, topicId });
@@ -67,12 +73,11 @@ const deleteTopic = async (req, res) => {
         // Người dùng là chủ sở hữu của topic, xóa topic và tất cả các tham chiếu liên quan
         await TopicInFolder.deleteMany({ topicId });
         await VocabularyStatistic.deleteMany({ topicId });
-        await BookmarkTopics.deleteMany({ topicId });
+        await BookmarkTopic.deleteMany({ topicId });
         await LearningStatistics.deleteMany({ topicId });
         await Vocabulary.deleteMany({ topicId });
         await Users.updateMany({}, { $pull: { topicId } }); // Xóa topic khỏi tất cả người dùng
         await Topic.findByIdAndDelete(topicId);
-        await LearningStatistics.deleteMany({ topicId: topicId })
         res.status(200).json({ message: 'Delete topic successfully'});
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -102,7 +107,7 @@ const deleteVocabularyInTopic = async (req, res) => {
             return res.status(404).json({ error: 'Vocabulary does not exist in topic' });
         }
         const topic = await Topic.findByIdAndUpdate(topicId, { $inc: { vocabularyCount: -1 } }, { new: true });
-        await BookmarkTopics.findOneAndDelete({vocabularyId, userId});
+        await BookmarkTopic.findOneAndDelete({vocabularyId, userId});
         await VocabularyStatistic.findOneAndDelete({vocabularyId, userId});
         await Vocabulary.findByIdAndDelete(vocabularyId);
         res.status(200).json({ message: 'Vocabulary deleted successfully', topic});
@@ -158,12 +163,15 @@ const importCSV = async (req, res) => {
             descriptionVietnamese,
             vocabularyCount: vocabularyList.length,
             isPublic,
-            ownerId :userId
+            ownerId : userId
         });
+        await Users.findByIdAndUpdate(userId, { $addToSet: { topicId: topic._id } });
         for (let i = 0; i < vocabularyList.length; i++) {
             const { englishWord, vietnameseWord, englishMeaning, vietnameseMeaning } = vocabularyList[i];
-            await Vocabulary.create({ englishWord, vietnameseWord, englishMeaning, vietnameseMeaning, topicId : topic._id });
+            const vocab = await Vocabulary.create({ englishWord, vietnameseWord, englishMeaning, vietnameseMeaning, topicId : topic._id });
+            topic.vocabularyId.push(vocab._id);
         }
+        await topic.save();
         res.status(200).json({ message: 'Import data successfully', topic});
     } catch (error) {
         res.status(500).json({ error : error.message });
@@ -226,14 +234,13 @@ const userLearnPublicTopic = async (req, res) => {
             return res.status(403).json({ message: 'Topic is not public' });
         }
 
-        // Thêm topic vào danh sách của người dùng
-        await Users.findByIdAndUpdate(userId, { $addToSet: { topicId: topicId } });
+        // Add topic ID to user's document
+        await Users.findByIdAndUpdate(userId, { $addToSet: { topicId } });
         res.status(200).json({ message: 'Topic added to user successfully'});
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
-
 
 module.exports = {
     getTopicById,

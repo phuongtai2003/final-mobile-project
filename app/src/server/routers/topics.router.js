@@ -31,7 +31,7 @@ topicsRouter.get("/folders/:folderId", getTopicsByFolderId);
 // view topic is public of user (tested)
 topicsRouter.get("/public/users/:userId", authentication, checkId(Users, "userId"), viewTopicIsPublic);
 // learn public topic (tested)
-topicsRouter.get("/public/learnTopic/:id", authentication, isExistId(Topic), userLearnPublicTopic);
+topicsRouter.post("/public/learnTopic/:id", authentication, isExistId(Topic), userLearnPublicTopic);
 // create topic (tested)
 topicsRouter.post("/", authentication, 
 validateInput(['topicNameEnglish', 'topicNameVietnamese', 'descriptionEnglish', 'descriptionVietnamese']), importCSV);
