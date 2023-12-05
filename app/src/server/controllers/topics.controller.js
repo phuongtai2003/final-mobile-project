@@ -36,11 +36,7 @@ const getTopicsByUserId = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error : error.message });
     }
-<<<<<<< HEAD
 };
-=======
-}
->>>>>>> 5a67afc311791674be11cfeff6ac7f330131e065
 
 const updateTopic = async (req, res) => {
     const id = req.params.id || req.query.id;
