@@ -1,0 +1,37 @@
+[33m56f0a55[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m HEAD@{0}: reset: moving to HEAD
+[33m56f0a55[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m HEAD@{1}: pull origin main: Fast-forward
+[33m5a67afc[m HEAD@{2}: commit: .
+[33m709e227[m HEAD@{3}: pull origin main: Fast-forward
+[33m30f97ee[m HEAD@{4}: pull origin main: Fast-forward
+[33m3508c9a[m HEAD@{5}: commit: Completed folder
+[33m1f93b3b[m HEAD@{6}: pull origin main: Merge made by the 'ort' strategy.
+[33mef50401[m HEAD@{7}: commit: Added library
+[33m4426144[m HEAD@{8}: reset: moving to HEAD
+[33m4426144[m HEAD@{9}: pull origin main: Fast-forward
+[33mcf9c615[m HEAD@{10}: reset: moving to HEAD
+[33mcf9c615[m HEAD@{11}: commit: Add Topic Complete
+[33m18609a4[m HEAD@{12}: pull origin main: Fast-forward
+[33med1adfb[m HEAD@{13}: pull origin main: Merge made by the 'ort' strategy.
+[33mc6bd450[m HEAD@{14}: commit (merge): Refactor UI
+[33m5e872fc[m HEAD@{15}: commit: .
+[33m9f0d9de[m HEAD@{16}: pull origin main: Fast-forward
+[33maeefe74[m HEAD@{17}: commit: .
+[33mba119f7[m HEAD@{18}: pull origin main: Merge made by the 'ort' strategy.
+[33mc4a4f45[m HEAD@{19}: pull origin main: Merge made by the 'ort' strategy.
+[33m470e825[m HEAD@{20}: commit: .
+[33mb086052[m HEAD@{21}: pull origin main: Merge made by the 'ort' strategy.
+[33m25c4305[m HEAD@{22}: commit: .
+[33m6b33caa[m HEAD@{23}: commit: .
+[33m90e295c[m HEAD@{24}: commit (merge): .
+[33m3144542[m HEAD@{25}: commit: .
+[33me3b9078[m HEAD@{26}: commit: .
+[33md51ec4a[m HEAD@{27}: pull origin main: Fast-forward
+[33mdb2e854[m HEAD@{28}: pull origin main: Fast-forward
+[33m2e25a85[m HEAD@{29}: commit: Added drawer
+[33mae536fd[m HEAD@{30}: commit: Added home screen
+[33m55e8e15[m HEAD@{31}: commit: Added retrofit
+[33m4768a1a[m HEAD@{32}: commit: .
+[33madcf771[m HEAD@{33}: commit: Added login and register screen
+[33mf98d45f[m HEAD@{34}: commit: Complete intro screen
+[33m7bf19ce[m HEAD@{35}: Branch: renamed refs/heads/master to refs/heads/main
+[33m7bf19ce[m HEAD@{37}: commit (initial): Fix commit

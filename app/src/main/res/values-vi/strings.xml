@@ -92,4 +92,11 @@
     <string name="please_add_vocabulary">Vui lòng thêm từ vựng</string>
     <string name="tts_init_failed">Khởi tạo chuyển văn bản sang giọng nói thất bại</string>
     <string name="language_not_supported">Ngôn ngữ không được hỗ trợ</string>
+    <string name="learn_by_flashcard">Học bằng Flashcard</string>
+    <string name="learn_by_quiz">Học bằng Trắc Nghiệm</string>
+    <string name="learn_by_typing">Học bằng Gõ Từ</string>
+    <string name="add_topic_to_folder">Thêm học phần vào thư mục</string>
+    <string name="save_and_edit_topic">Lưu và sửa học phần</string>
+    <string name="add_topic_success">Thêm học phần thành công</string>
+    <string name="delete_topic_success">Xóa học phần thành công</string>
 </resources>

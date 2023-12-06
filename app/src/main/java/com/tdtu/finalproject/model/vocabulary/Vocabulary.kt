@@ -14,7 +14,7 @@ data class Vocabulary(
     var topicId: String?,
     var vocabularyStatisticId: List<String>,
     var bookmarkVocabularyId: List<String>,
-    var isFront: Boolean = true
+    var isFront: Boolean = false
 ): Parcelable{
     constructor(parcel: Parcel) : this(
         parcel.readString(),
@@ -24,7 +24,8 @@ data class Vocabulary(
         parcel.readString(),
         parcel.readString(),
         parcel.createStringArrayList()!!,
-        parcel.createStringArrayList()!!
+        parcel.createStringArrayList()!!,
+        parcel.readByte() != 0.toByte()
     ) {
     }
 
@@ -37,6 +38,7 @@ data class Vocabulary(
         parcel.writeString(topicId)
         parcel.writeStringList(vocabularyStatisticId)
         parcel.writeStringList(bookmarkVocabularyId)
+        parcel.writeByte(if (isFront) 1 else 0)
     }
 
     override fun describeContents(): Int {

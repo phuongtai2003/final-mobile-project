@@ -38,12 +38,7 @@ class ChooseTopicAdapter(private var mContext: Context, private var topics: Muta
         val topic: Topic = topics[position]
         holder.itemView.setOnClickListener{
             topic.chosen = !topic.chosen
-            if(topic.chosen){
-                holder.itemView.background = mContext.getDrawable(R.drawable.chosen_topic_library_bg)
-            }
-            else{
-                holder.itemView.background = mContext.getDrawable(R.drawable.topic_library_bg)
-            }
+            notifyItemChanged(position)
         }
         holder.itemView.background = if (topic.chosen) mContext.getDrawable(R.drawable.chosen_topic_library_bg) else mContext.getDrawable(R.drawable.topic_library_bg)
 

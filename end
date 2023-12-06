@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:background="@color/tertiary_color"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.button.MaterialButton
+        app:backgroundTint="@null"
+        android:background="@android:color/transparent"
+        app:icon="@drawable/baseline_menu_book_24"
+        android:textColor="@color/white"
+        android:text="@string/add_topic_to_folder"
+        android:id="@+id/addTopicToFolderBtn"
+        app:iconPadding="20dp"
+        app:iconTint="@color/white"
+        android:textAlignment="viewStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <com.google.android.material.button.MaterialButton
+        app:backgroundTint="@null"
+        android:background="@android:color/transparent"
+        app:icon="@drawable/baseline_content_copy_24"
+        android:textColor="@color/white"
+        android:text="@string/save_and_edit_topic"
+        android:id="@+id/saveAndEditTopicBtn"
+        app:iconPadding="20dp"
+        app:iconTint="@color/white"
+        android:textAlignment="viewStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <com.google.android.material.button.MaterialButton
+        app:backgroundTint="@null"
+        android:background="@android:color/transparent"
+        app:icon="@drawable/baseline_edit_24"
+        android:textColor="@color/white"
+        android:text="@string/edit"
+        android:id="@+id/editTopicBtn"
+        app:iconPadding="20dp"
+        app:iconTint="@color/white"
+        android:textAlignment="viewStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <com.google.android.material.button.MaterialButton
+        app:backgroundTint="@null"
+        android:background="@android:color/transparent"
+        app:icon="@drawable/outline_delete_outline_24"
+        android:textColor="@color/white"
+        android:text="@string/remove"
+        android:id="@+id/deleteTopicBtn"
+        app:iconPadding="20dp"
+        app:iconTint="@color/white"
+        android:textAlignment="viewStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
