@@ -111,4 +111,9 @@
     <string name="prompt_by">Prompt By</string>
     <string name="accept">Accept</string>
     <string name="shuffle_question">Shuffle Question</string>
+    <string name="correct">Correct</string>
+    <string name="correct_answer">You have chosen the correct answer!</string>
+    <string name="wrong_answer">Wrong Answer</string>
+    <string name="you_have_answered">You have answered</string>
+    <string name="the_correct_answer_is">The correct answer is</string>
 </resources>

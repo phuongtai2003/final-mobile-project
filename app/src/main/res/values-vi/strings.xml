@@ -112,4 +112,9 @@
     <string name="prompt_by">Hỏi bằng</string>
     <string name="accept">Chấp nhận</string>
     <string name="shuffle_question">Xáo trộn câu hỏi</string>
+    <string name="correct">Đúng</string>
+    <string name="correct_answer">Bạn đã chọn đáp án đúng</string>
+    <string name="wrong_answer">Đáp án sai</string>
+    <string name="you_have_answered">Bạn đã trả lời</string>
+    <string name="the_correct_answer_is">Đáp án đúng là</string>
 </resources>

@@ -70,6 +70,7 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
             val intent = Intent(this, StudyConfigurationActivity::class.java)
             intent.putExtra("topic", topic)
             intent.putExtra("studyMode", StudyMode.Quiz)
+            intent.putParcelableArrayListExtra("vocabularies", ArrayList(vocabulariesList))
             startActivity(intent)
         }
         editTopicVocabulariesResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
