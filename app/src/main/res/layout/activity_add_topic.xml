@@ -179,6 +179,7 @@
                 android:id="@+id/publicTopicSwitch"
                 android:layout_marginHorizontal="15dp"
                 app:switchPadding="10dp"
+                android:soundEffectsEnabled="true"
                 app:thumbTint="@color/secondary_color"
                 app:trackTint="@color/tertiary_color"
                 android:layout_gravity="center_vertical"

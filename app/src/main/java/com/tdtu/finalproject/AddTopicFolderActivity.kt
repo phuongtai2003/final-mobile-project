@@ -59,24 +59,40 @@ class AddTopicFolderActivity : AppCompatActivity() {
         dataRepository = DataRepository.getInstance()
         sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_key), MODE_PRIVATE)
         user = Gson().fromJson(sharedPreferences.getString(getString(R.string.user_data_key), ""), User::class.java)
-        dataRepository.getFolderByUser(user.id, sharedPreferences.getString(getString(R.string.token_key), "")!!).thenAcceptAsync {
-            runOnUiThread {
-                folderList = it.toMutableList()
-                val current = topic.topicInFolderId!!
-                for(folder in folderList)
-                {
-                    if(current.contains(folder.id))
-                    {
-                        folder.isChosen = true
+        dataRepository.getFolderByUser(
+            user.id,
+            sharedPreferences.getString(getString(R.string.token_key), "")!!
+        ).thenAcceptAsync {
+            folderList = it.toMutableList()
+            dataRepository.getFoldersByTopic(
+                topic.id!!,
+                sharedPreferences.getString(getString(R.string.token_key), null)!!
+            ).thenAcceptAsync { usersFolders ->
+                if (usersFolders.isNotEmpty()) {
+                    for (folder in folderList) {
+                        for (userFolder in usersFolders) {
+                            if (folder.id == userFolder.id) {
+                                folder.isChosen = true
+                            }
+                        }
                     }
                 }
-                adapter = ChooseFolderAdapter(this, folderList, R.layout.folder_library_item, user)
-                binding.folderRecyclerView.setHasFixedSize(true)
-                binding.folderRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-                binding.folderRecyclerView.adapter = adapter
+                runOnUiThread {
+                    adapter =
+                        ChooseFolderAdapter(this, folderList, R.layout.folder_library_item, user)
+                    binding.folderRecyclerView.setHasFixedSize(true)
+                    binding.folderRecyclerView.layoutManager =
+                        LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+                    binding.folderRecyclerView.adapter = adapter
+                }
+            }.exceptionally {
+                runOnUiThread {
+                    Utils.showDialog(Gravity.CENTER, it.message!!.toString(), this)
+                }
+                null
             }
         }.exceptionally {
-            runOnUiThread{
+            runOnUiThread {
                 Utils.showDialog(Gravity.CENTER, it.message!!.toString(), this)
             }
             null

@@ -24,5 +24,6 @@ class Constant {
             "NUAA", // National University of Agriculture
             "DNMUE" // Danang University of Education
         )
+        val languagesList = listOf("English", "Vietnamese")
     }
 }

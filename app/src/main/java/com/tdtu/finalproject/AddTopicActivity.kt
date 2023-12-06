@@ -155,16 +155,28 @@ class AddTopicActivity : AppCompatActivity() {
                 Utils.showDialog(Gravity.CENTER, getString(R.string.please_add_vocabulary), this)
                 return@setOnClickListener
             }
-            dataRepository.createTopic(englishTitle, vietnameseTitle, englishDescription, vietnameseDescription, vocabularyList, isPublic, token!!).thenAccept {
-                runOnUiThread{
-                    Utils.showDialog(Gravity.CENTER, getString(R.string.create_topic_success), this)
+            if(isEdit){
+                val returnIntent = Intent()
+                returnIntent.putParcelableArrayListExtra("vocabularies", vocabularyList)
+                returnIntent.putExtra("titleEnglish", englishTitle)
+                returnIntent.putExtra("titleVietnamese", vietnameseTitle)
+                returnIntent.putExtra("topicDescriptionEnglish", englishDescription)
+                returnIntent.putExtra("topicDescriptionVietnamese", vietnameseDescription)
+                setResult(RESULT_OK, returnIntent)
+                finish()
+            }
+            else{
+                dataRepository.createTopic(englishTitle, vietnameseTitle, englishDescription, vietnameseDescription, vocabularyList, isPublic, token!!).thenAccept {
+                    runOnUiThread{
+                        Utils.showDialog(Gravity.CENTER, getString(R.string.create_topic_success), this)
+                    }
+                }.exceptionally {
+                        it->
+                    runOnUiThread{
+                        Utils.showDialog(Gravity.CENTER, it.message!!, this)
+                    }
+                    null
                 }
-            }.exceptionally {
-                it->
-                runOnUiThread{
-                    Utils.showDialog(Gravity.CENTER, it.message!!, this)
-                }
-                null
             }
         }
         setContentView(binding.root)

@@ -44,7 +44,7 @@ import java.util.concurrent.CompletableFuture
 class DataRepository() {
 
     companion object{
-        private const val baseUrl: String = "http://192.168.1.81:3000/android/"
+        private const val baseUrl: String = "http://192.168.1.7:3000/android/"
         private val api = Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(GsonConverterFactory.create()).build().create(API::class.java)
         private var instance: DataRepository? = null
         fun getInstance() : DataRepository{
@@ -446,6 +446,129 @@ class DataRepository() {
                 }
             }
             override fun onFailure(call: Call<Message>, t: Throwable) {
+                future.completeExceptionally(t)
+            }
+        })
+        return future
+    }
+
+    fun addVocabularyToTopic(topicId: String, token: String, vocabulary: Vocabulary): CompletableFuture<Boolean>{
+        val future: CompletableFuture<Boolean> = CompletableFuture()
+        val call = api.addVocabularyToTopic(topicId, token, vocabulary)
+        var error: String?
+        call.enqueue(object : Callback<Message>{
+            override fun onResponse(call: Call<Message>, response: Response<Message>) {
+                if(response.code() == 200){
+                    future.complete(true)
+                }
+                else if(response.code() == 409){
+                    future.complete(true)
+                }
+                else{
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
+                    future.completeExceptionally(Exception(error))
+                }
+
+            }
+            override fun onFailure(call: Call<Message>, t: Throwable) {
+                future.completeExceptionally(t)
+            }
+        })
+        return future
+    }
+
+    fun editVocabularyInTopic(topicId: String, token: String, vocabulary: Vocabulary): CompletableFuture<Boolean>{
+        val future: CompletableFuture<Boolean> = CompletableFuture()
+        val call = api.updateVocabularyFromTopic(topicId, vocabulary.id!!,token, vocabulary)
+        var error: String?
+        call.enqueue(object : Callback<Message>{
+            override fun onResponse(call: Call<Message>, response: Response<Message>) {
+                if(response.code() == 200){
+                    future.complete(true)
+                }
+                else if(response.code() == 409){
+                    future.complete(true)
+                }
+                else{
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
+                    future.completeExceptionally(Exception(error))
+                }
+
+            }
+            override fun onFailure(call: Call<Message>, t: Throwable) {
+                future.completeExceptionally(t)
+            }
+        })
+        return future
+    }
+
+    fun deleteVocabularyFromTopic(topicId: String, token: String, vocabularyId: String): CompletableFuture<Boolean>{
+        val future: CompletableFuture<Boolean> = CompletableFuture()
+        val call = api.deleteVocabularyFromTopic(topicId, vocabularyId, token)
+        var error: String?
+        call.enqueue(object : Callback<Message>{
+            override fun onResponse(call: Call<Message>, response: Response<Message>) {
+                if(response.code() == 200){
+                    future.complete(true)
+                }
+                else if(response.code() == 404){
+                    future.complete(true)
+                }
+                else{
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
+                    future.completeExceptionally(Exception(error))
+                }
+
+            }
+            override fun onFailure(call: Call<Message>, t: Throwable) {
+                future.completeExceptionally(t)
+            }
+        })
+        return future
+    }
+
+    fun updateTopic(topicId: String, token: String, topic: Topic): CompletableFuture<Topic>{
+        val future: CompletableFuture<Topic> = CompletableFuture()
+        val call = api.updateTopic(topicId, token, topic)
+        var error: String?
+        call.enqueue(object : Callback<GetTopicByIdResponse>{
+            override fun onResponse(call: Call<GetTopicByIdResponse>, response: Response<GetTopicByIdResponse>) {
+                if(response.code() == 200){
+                    future.complete(response.body()?.topic)
+                }
+                else{
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
+                    future.completeExceptionally(Exception(error))
+                }
+
+            }
+            override fun onFailure(call: Call<GetTopicByIdResponse>, t: Throwable) {
+                future.completeExceptionally(t)
+            }
+        })
+        return future
+    }
+    fun getFoldersByTopic(topicId: String, token: String): CompletableFuture<List<Folder>>{
+        val future: CompletableFuture<List<Folder>> = CompletableFuture()
+        val call = api.getFoldersByTopicId(topicId, token)
+        Log.d("USER TAG", "getFoldersByTopic: $topicId")
+        var error: String?
+        call.enqueue(object : Callback<GetFolderByUserResponse>{
+            override fun onResponse(call: Call<GetFolderByUserResponse>, response: Response<GetFolderByUserResponse>) {
+                if(response.code() == 200){
+                    Log.d("USER TAG", "onResponse: " + response.body()?.folders)
+                    future.complete(response.body()?.folders)
+                }
+                else if(response.code() == 404){
+                    future.complete(ArrayList())
+                }
+                else{
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
+                    future.completeExceptionally(Exception(error))
+                }
+
+            }
+            override fun onFailure(call: Call<GetFolderByUserResponse>, t: Throwable) {
                 future.completeExceptionally(t)
             }
         })
