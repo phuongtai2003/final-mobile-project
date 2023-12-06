@@ -100,4 +100,16 @@
     <string name="add_topic_success">Thêm học phần thành công</string>
     <string name="delete_topic_success">Xóa học phần thành công</string>
     <string name="update_topic_failed">Cập nhật học phần thất bại</string>
+    <string name="set_up_your_test">Thiết lập bài kiểm tra của bạn</string>
+    <string name="question_count">Số câu hỏi</string>
+    <string name="study_language">Ngôn ngữ học tập</string>
+    <string name="answer_by">Trả lời bằng</string>
+    <string name="start">Bắt đầu</string>
+    <string name="vietnamese">Tiếng Việt</string>
+    <string name="english">Tiếng Anh</string>
+    <string name="answer_options">Các phương án trả lời</string>
+    <string name="definition">Định nghĩa</string>
+    <string name="prompt_by">Hỏi bằng</string>
+    <string name="accept">Chấp nhận</string>
+    <string name="shuffle_question">Xáo trộn câu hỏi</string>
 </resources>

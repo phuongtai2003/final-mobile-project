@@ -44,7 +44,7 @@ import java.util.concurrent.CompletableFuture
 class DataRepository() {
 
     companion object{
-        private const val baseUrl: String = "http://192.168.1.81:3000/android/"
+        private const val baseUrl: String = "http://192.168.1.7:3000/android/"
         private val api = Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(GsonConverterFactory.create()).build().create(API::class.java)
         private var instance: DataRepository? = null
         fun getInstance() : DataRepository{
@@ -543,6 +543,32 @@ class DataRepository() {
 
             }
             override fun onFailure(call: Call<GetTopicByIdResponse>, t: Throwable) {
+                future.completeExceptionally(t)
+            }
+        })
+        return future
+    }
+    fun getFoldersByTopic(topicId: String, token: String): CompletableFuture<List<Folder>>{
+        val future: CompletableFuture<List<Folder>> = CompletableFuture()
+        val call = api.getFoldersByTopicId(topicId, token)
+        Log.d("USER TAG", "getFoldersByTopic: $topicId")
+        var error: String?
+        call.enqueue(object : Callback<GetFolderByUserResponse>{
+            override fun onResponse(call: Call<GetFolderByUserResponse>, response: Response<GetFolderByUserResponse>) {
+                if(response.code() == 200){
+                    Log.d("USER TAG", "onResponse: " + response.body()?.folders)
+                    future.complete(response.body()?.folders)
+                }
+                else if(response.code() == 404){
+                    future.complete(ArrayList())
+                }
+                else{
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
+                    future.completeExceptionally(Exception(error))
+                }
+
+            }
+            override fun onFailure(call: Call<GetFolderByUserResponse>, t: Throwable) {
                 future.completeExceptionally(t)
             }
         })

@@ -19,6 +19,7 @@ import com.tdtu.finalproject.model.topic.Topic
 import com.tdtu.finalproject.model.vocabulary.Vocabulary
 import com.tdtu.finalproject.repository.DataRepository
 import com.tdtu.finalproject.utils.OnTopicDialogListener
+import com.tdtu.finalproject.utils.StudyMode
 import com.tdtu.finalproject.utils.Utils
 import com.tdtu.finalproject.viewmodel.TopicViewModel
 import java.util.Locale
@@ -64,6 +65,12 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
         initViewModel()
         binding.returnBtn.setOnClickListener {
             finish()
+        }
+        binding.learnByQuizBtn.setOnClickListener {
+            val intent = Intent(this, StudyConfigurationActivity::class.java)
+            intent.putExtra("topic", topic)
+            intent.putExtra("studyMode", StudyMode.Quiz)
+            startActivity(intent)
         }
         editTopicVocabulariesResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
             if(it.resultCode == RESULT_OK && data != null){
@@ -117,11 +124,11 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
                     }
                     runOnUiThread {
                         binding.fullScreenProgressBar.visibility = View.GONE
+                        topicViewModel.setVocabulariesList(returnResult)
+                        binding.vocabularyCountTxt.text = returnResult.size.toString() + " " + getString(R.string.vocabulary)
+                        binding.topicNameEnglishTxt.text = titleEnglishResult
+                        binding.topicNameVietnameseTxt.text = titleVietnameseResult
                     }
-                    topicViewModel.setVocabulariesList(returnResult)
-                    binding.vocabularyCountTxt.text = returnResult.size.toString() + " " + getString(R.string.vocabulary)
-                    binding.topicNameEnglishTxt.text = titleEnglishResult
-                    binding.topicNameVietnameseTxt.text = titleVietnameseResult
                 }
             }
         }

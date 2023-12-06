@@ -82,4 +82,6 @@ interface API {
     fun updateVocabularyFromTopic(@Path("id") topicId: String, @Path("vocabularyId") vocabularyId: String, @Header("token") token: String, @Body() vocabulary: Vocabulary) : Call<Message>
     @PUT("topics/{id}")
     fun updateTopic(@Path("id") topicId: String, @Header("token") token: String, @Body() topic: Topic) : Call<GetTopicByIdResponse>
+    @GET("topics/{id}/folder")
+    fun getFoldersByTopicId(@Path("id") topicId: String, @Header("token") token: String) : Call<GetFolderByUserResponse>
 }

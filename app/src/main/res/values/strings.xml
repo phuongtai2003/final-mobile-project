@@ -99,4 +99,16 @@
     <string name="add_topic_success">Add Topic Successfully</string>
     <string name="delete_topic_success">Delete Topic Successfully</string>
     <string name="update_topic_failed">Update Topic Failed</string>
+    <string name="set_up_your_test">Set up your test</string>
+    <string name="question_count">Question Count</string>
+    <string name="study_language">Study Language</string>
+    <string name="answer_by">Answer By</string>
+    <string name="start">Start</string>
+    <string name="vietnamese">Vietnamese</string>
+    <string name="english">English</string>
+    <string name="answer_options">Answer Options</string>
+    <string name="definition">Definition</string>
+    <string name="prompt_by">Prompt By</string>
+    <string name="accept">Accept</string>
+    <string name="shuffle_question">Shuffle Question</string>
 </resources>
