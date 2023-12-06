@@ -45,11 +45,7 @@ const addTopicToFolder = async (req, res) => {
         }
         const topicInFolder = await TopicInFolder.create({ folderId, topicId });
         const folder = await Folder.findByIdAndUpdate(folderId, { $inc: { topicCount: 1 }, $push: { topicInFolderId: topicInFolder._id } }, { new: true });
-<<<<<<< HEAD
-        await Topic.findByIdAndUpdate(topicId, { $push: { topicInFolderId: topicInFolder._id, folderId }});
-=======
         await Topic.findByIdAndUpdate(topicId, { $push: { topicInFolderId: topicInFolder._id } });
->>>>>>> f4d8c17750b0c0889ff21b0a9193241e8dd13c22
         res.status(200).json({ message: "add topic to folder successfully", folder, dateTimeAdded: topicInFolder.dateTimeAdded });
     } catch (error) {
         res.status(500).json({ error: error.message });

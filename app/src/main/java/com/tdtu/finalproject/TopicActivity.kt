@@ -16,6 +16,7 @@ import com.tdtu.finalproject.adapter.VocabularyFlashCardAdapter
 import com.tdtu.finalproject.databinding.ActivityTopicBinding
 import com.tdtu.finalproject.model.folder.Folder
 import com.tdtu.finalproject.model.topic.Topic
+import com.tdtu.finalproject.model.vocabulary.Vocabulary
 import com.tdtu.finalproject.repository.DataRepository
 import com.tdtu.finalproject.utils.OnTopicDialogListener
 import com.tdtu.finalproject.utils.Utils
@@ -28,11 +29,13 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
     private lateinit var topicViewModel: TopicViewModel
     private lateinit var dataRepository: DataRepository
     private lateinit var topic: Topic
+    private lateinit var vocabulariesList: List<Vocabulary>
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var vocabulariesAdapter: VocabularyFlashCardAdapter
     private var ttsEnglish: TextToSpeech? = null
     private var ttsVietnamese: TextToSpeech? = null
     private lateinit var addTopicToFolderResultLauncher: ActivityResultLauncher<Intent>
+    private lateinit var editTopicVocabulariesResultLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,15 +65,75 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
         binding.returnBtn.setOnClickListener {
             finish()
         }
-        addTopicToFolderResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+        editTopicVocabulariesResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+            if(it.resultCode == RESULT_OK && data != null){
+                val currentVocabList = vocabulariesList
+                val returnResult = it.data?.getParcelableArrayListExtra<Vocabulary>("vocabularies")
+                val titleEnglishResult = it.data?.getStringExtra("titleEnglish")
+                val titleVietnameseResult = it.data?.getStringExtra("titleVietnamese")
+                val topicDescriptionEnglishResult = it.data?.getStringExtra("topicDescriptionEnglish")
+                val topicDescriptionVietnameseResult = it.data?.getStringExtra("topicDescriptionVietnamese")
+                if(returnResult != null){
+                    binding.fullScreenProgressBar.visibility = View.VISIBLE
+                    val newVocabulariesList = returnResult - currentVocabList
+                    val deletedVocabulariesList = currentVocabList - returnResult
+                    val matchingVocabulariesList = currentVocabList.intersect(returnResult)
+                    for (vocab in newVocabulariesList){
+                        dataRepository.addVocabularyToTopic(topic.id!!, sharedPreferences.getString(getString(R.string.token_key), null)!!, vocab).exceptionally {error->
+                            runOnUiThread {
+                                Utils.showDialog(Gravity.CENTER, error.message!!.toString(), this)
+                            }
+                            null
+                        }
+                    }
+                    for(vocab in deletedVocabulariesList){
+                        dataRepository.deleteVocabularyFromTopic(topic.id!!, sharedPreferences.getString(getString(R.string.token_key), null)!!, vocab.id!!).exceptionally {error->
+                            runOnUiThread {
+                                Utils.showDialog(Gravity.CENTER, error.message!!.toString(), this)
+                            }
+                            null
+                        }
+                    }
+                    for (vocab in matchingVocabulariesList){
+                        dataRepository.editVocabularyInTopic(topic.id!!, sharedPreferences.getString(getString(R.string.token_key), null)!!, vocab).exceptionally {error->
+                            runOnUiThread {
+                                Utils.showDialog(Gravity.CENTER, error.message!!.toString(), this)
+                            }
+                            null
+                        }
+                    }
+                    dataRepository.updateTopic(topic.id!!, sharedPreferences.getString(getString(R.string.token_key), null)!!, Topic(null, titleEnglishResult, titleVietnameseResult, 0, false, 0, 0, topicDescriptionEnglishResult, topicDescriptionVietnameseResult, null, null, null, null, null, false)).thenAcceptAsync {res->
+                        if(res == null){
+                            runOnUiThread {
+                                Utils.showDialog(Gravity.CENTER, getString(R.string.update_topic_failed), this)
+                            }
+                            return@thenAcceptAsync
+                        }
+                    }.exceptionally {error->
+                        runOnUiThread {
+                            Utils.showDialog(Gravity.CENTER, error.message!!.toString(), this)
+                        }
+                        null
+                    }
+                    runOnUiThread {
+                        binding.fullScreenProgressBar.visibility = View.GONE
+                    }
+                    topicViewModel.setVocabulariesList(returnResult)
+                    binding.vocabularyCountTxt.text = returnResult.size.toString() + " " + getString(R.string.vocabulary)
+                    binding.topicNameEnglishTxt.text = titleEnglishResult
+                    binding.topicNameVietnameseTxt.text = titleVietnameseResult
+                }
+            }
+        }
+        addTopicToFolderResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ it ->
             if(it.resultCode == RESULT_OK && data != null){
                 val folders = it.data?.getParcelableArrayListExtra<Folder>("folders")
                 if(!folders.isNullOrEmpty()){
                     binding.fullScreenProgressBar.visibility = View.VISIBLE
                     runOnUiThread {
                         for (folder in folders){
-                            dataRepository.addTopicToFolder(folder.id!!, topic.id!!, sharedPreferences.getString(getString(R.string.token_key), null)!!).exceptionally {
-                                Utils.showDialog(Gravity.CENTER, it.message!!.toString(), this)
+                            dataRepository.addTopicToFolder(folder.id!!, topic.id!!, sharedPreferences.getString(getString(R.string.token_key), null)!!).exceptionally {error->
+                                Utils.showDialog(Gravity.CENTER, error.message!!.toString(), this)
                                 null
                             }
                         }
@@ -92,6 +155,7 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
             runOnUiThread {
                 topicViewModel.setVocabulariesList(it)
                 topicViewModel.getVocabularies().observe(this){items->
+                    vocabulariesList = items
                     vocabulariesAdapter = VocabularyFlashCardAdapter(true, this, items, R.layout.vocabulary_flash_card_layout, ttsEnglish, ttsVietnamese)
                     binding.flashCardViewPager.adapter = vocabulariesAdapter
                     binding.flashCardViewPager.offscreenPageLimit = 3
@@ -155,19 +219,26 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
     }
 
     override fun onDeleteTopic() {
-            binding.fullScreenProgressBar.visibility = View.VISIBLE
-            dataRepository.deleteTopic(topic.id!!, sharedPreferences.getString(getString(R.string.token_key), null)!!).thenAcceptAsync {
-                runOnUiThread {
-                    Utils.showDialog(Gravity.CENTER, getString(R.string.delete_topic_success), this)
-                    binding.fullScreenProgressBar.visibility = View.GONE
-                    finish()
-                }
-            }.exceptionally {
-                runOnUiThread{
-                    Utils.showDialog(Gravity.CENTER, it.message!!.toString(), this)
-                    binding.fullScreenProgressBar.visibility = View.GONE
-                }
-                null
+        binding.fullScreenProgressBar.visibility = View.VISIBLE
+        dataRepository.deleteTopic(topic.id!!, sharedPreferences.getString(getString(R.string.token_key), null)!!).thenAcceptAsync {
+            runOnUiThread {
+                Utils.showDialog(Gravity.CENTER, getString(R.string.delete_topic_success), this)
+                binding.fullScreenProgressBar.visibility = View.GONE
+                finish()
             }
+        }.exceptionally {
+            runOnUiThread{
+                Utils.showDialog(Gravity.CENTER, it.message!!.toString(), this)
+                binding.fullScreenProgressBar.visibility = View.GONE
+            }
+            null
+        }
+    }
+
+    override fun onEditTopic() {
+        val intent  = Intent(this, AddTopicActivity::class.java)
+        intent.putExtra("topic", topic)
+        intent.putExtra("isEdit", true)
+        editTopicVocabulariesResultLauncher.launch(intent)
     }
 }

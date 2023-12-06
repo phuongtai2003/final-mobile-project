@@ -98,4 +98,5 @@
     <string name="save_and_edit_topic">Save And Edit Topic</string>
     <string name="add_topic_success">Add Topic Successfully</string>
     <string name="delete_topic_success">Delete Topic Successfully</string>
+    <string name="update_topic_failed">Update Topic Failed</string>
 </resources>

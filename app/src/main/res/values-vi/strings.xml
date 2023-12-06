@@ -99,4 +99,5 @@
     <string name="save_and_edit_topic">Lưu và sửa học phần</string>
     <string name="add_topic_success">Thêm học phần thành công</string>
     <string name="delete_topic_success">Xóa học phần thành công</string>
+    <string name="update_topic_failed">Cập nhật học phần thất bại</string>
 </resources>

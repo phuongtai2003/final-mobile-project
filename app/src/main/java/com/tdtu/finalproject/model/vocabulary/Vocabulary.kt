@@ -3,6 +3,7 @@ package com.tdtu.finalproject.model.vocabulary
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import com.tdtu.finalproject.model.topic.Topic
 
 data class Vocabulary(
     @SerializedName("_id")
@@ -55,4 +56,17 @@ data class Vocabulary(
         }
     }
 
+    override fun equals(other: Any?): Boolean {
+        if(this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        if(other is Topic){
+            return this.id == other.id
+        }
+        return super.equals(other)
+    }
+
+    override fun hashCode(): Int {
+        return super.hashCode()
+    }
 }

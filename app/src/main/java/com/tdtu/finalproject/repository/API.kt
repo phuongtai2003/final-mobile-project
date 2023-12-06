@@ -21,6 +21,7 @@ import com.tdtu.finalproject.model.user.RegisterRequest
 import com.tdtu.finalproject.model.user.RegisterResponse
 import com.tdtu.finalproject.model.user.UpdateUserInfoRequest
 import com.tdtu.finalproject.model.vocabulary.GetVocabulariesByTopicResponse
+import com.tdtu.finalproject.model.vocabulary.Vocabulary
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.Body
@@ -73,4 +74,12 @@ interface API {
     fun getUserById(@Path("id") userId: String, @Header("token") token: String): Call<UpdateUserResponse>
     @DELETE("topics/{id}")
     fun deleteTopic(@Path("id") topicId: String, @Header("token") token: String) : Call<Message>
+    @POST("topics/{id}/vocabularies")
+    fun addVocabularyToTopic(@Path("id") topicId: String, @Header("token") token: String, @Body() vocabulary: Vocabulary) : Call<Message>
+    @DELETE("topics/{id}/vocabularies/{vocabularyId}")
+    fun deleteVocabularyFromTopic(@Path("id") topicId: String, @Path("vocabularyId") vocabularyId: String, @Header("token") token: String) : Call<Message>
+    @PUT("topics/{id}/vocabularies/{vocabularyId}")
+    fun updateVocabularyFromTopic(@Path("id") topicId: String, @Path("vocabularyId") vocabularyId: String, @Header("token") token: String, @Body() vocabulary: Vocabulary) : Call<Message>
+    @PUT("topics/{id}")
+    fun updateTopic(@Path("id") topicId: String, @Header("token") token: String, @Body() topic: Topic) : Call<GetTopicByIdResponse>
 }
