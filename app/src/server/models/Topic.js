@@ -15,6 +15,7 @@ const TopicSchema = new Schema({
     learningStatisticsId: [{ type: Schema.Types.ObjectId, ref: 'LearningStatistics'}],
     topicInFolderId: [{ type: Schema.Types.ObjectId, ref: 'TopicInFolder' }],
     vocabularyId: [{ type: Schema.Types.ObjectId, ref: 'Vocabulary' }],
+    folderId : { type: Schema.Types.ObjectId, ref: 'Folder'},
 });
 
 const Topic = mongoose.model('Topic', TopicSchema);
