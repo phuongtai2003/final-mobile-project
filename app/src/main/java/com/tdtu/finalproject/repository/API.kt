@@ -69,4 +69,8 @@ interface API {
     fun deleteTopicFromFolder(@Path("id") folderId: String, @Path("topicId") topicId: String, @Header("token") token: String) : Call<CreateFolderResponse>
     @GET("vocabularies/topics/{topicId}")
     fun getVocabulariesByTopicId(@Path("topicId") topicId: String, @Header("token") token: String): Call<GetVocabulariesByTopicResponse>
+    @GET("users/{id}")
+    fun getUserById(@Path("id") userId: String, @Header("token") token: String): Call<UpdateUserResponse>
+    @DELETE("topics/{id}")
+    fun deleteTopic(@Path("id") topicId: String, @Header("token") token: String) : Call<Message>
 }

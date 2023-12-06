@@ -1,0 +1,85 @@
+package com.tdtu.finalproject
+
+import android.content.Intent
+import android.content.SharedPreferences
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.util.Log
+import android.view.Gravity
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
+import com.tdtu.finalproject.adapter.ChooseFolderAdapter
+import com.tdtu.finalproject.adapter.FolderAdapter
+import com.tdtu.finalproject.databinding.ActivityAddTopicFolderBinding
+import com.tdtu.finalproject.model.folder.Folder
+import com.tdtu.finalproject.model.topic.Topic
+import com.tdtu.finalproject.model.user.User
+import com.tdtu.finalproject.repository.DataRepository
+import com.tdtu.finalproject.utils.Utils
+
+class AddTopicFolderActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityAddTopicFolderBinding
+    private lateinit var topic: Topic
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var dataRepository: DataRepository
+    private lateinit var adapter: ChooseFolderAdapter
+    private lateinit var user: User
+    private lateinit var folderList: MutableList<Folder>
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityAddTopicFolderBinding.inflate(layoutInflater)
+        val data = intent.getParcelableExtra<Topic>("topic")
+        if(data == null)
+        {
+            finish()
+        }
+        else
+        {
+            topic = data
+        }
+        binding.addFolderBtn.setOnClickListener {
+
+        }
+        binding.returnBtn.setOnClickListener {
+            finish()
+        }
+        initViewModel()
+        binding.acceptTopicBtn.setOnClickListener {
+            val resultIntent = Intent()
+            val arrayList: ArrayList<Folder> = ArrayList(folderList.filter { it.isChosen })
+            resultIntent.putParcelableArrayListExtra("folders", arrayList)
+            setResult(RESULT_OK, resultIntent)
+            finish()
+        }
+        setContentView(binding.root)
+    }
+
+    private fun initViewModel()
+    {
+        dataRepository = DataRepository.getInstance()
+        sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_key), MODE_PRIVATE)
+        user = Gson().fromJson(sharedPreferences.getString(getString(R.string.user_data_key), ""), User::class.java)
+        dataRepository.getFolderByUser(user.id, sharedPreferences.getString(getString(R.string.token_key), "")!!).thenAcceptAsync {
+            runOnUiThread {
+                folderList = it.toMutableList()
+                val current = topic.topicInFolderId!!
+                for(folder in folderList)
+                {
+                    if(current.contains(folder.id))
+                    {
+                        folder.isChosen = true
+                    }
+                }
+                adapter = ChooseFolderAdapter(this, folderList, R.layout.folder_library_item, user)
+                binding.folderRecyclerView.setHasFixedSize(true)
+                binding.folderRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+                binding.folderRecyclerView.adapter = adapter
+            }
+        }.exceptionally {
+            runOnUiThread{
+                Utils.showDialog(Gravity.CENTER, it.message!!.toString(), this)
+            }
+            null
+        }
+    }
+}

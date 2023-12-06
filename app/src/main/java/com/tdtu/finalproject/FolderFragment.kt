@@ -113,6 +113,12 @@ class FolderFragment : Fragment(), OnDialogConfirmListener, CustomOnItemClickLis
     ) {
         dataRepository.createFolder(folderNameEnglish, folderNameVietnamese, sharedPreferences.getString(requireActivity().getString(R.string.token_key), null)!!).thenAccept {
             Utils.showDialog(Gravity.CENTER, requireActivity().getString(R.string.create_folder_success), requireActivity())
+            dataRepository.getFolderByUser(homeDataViewModel.getUser()?.value!!.id, sharedPreferences.getString(requireActivity().getString(R.string.token_key), null)!!).thenAccept {
+                homeDataViewModel.setFolderList(it)
+            }.exceptionally{
+                Utils.showDialog(Gravity.CENTER, it.message.toString(), requireActivity())
+                null
+            }
         }.exceptionally {
             Utils.showDialog(Gravity.CENTER, it.message.toString(), requireActivity())
             null

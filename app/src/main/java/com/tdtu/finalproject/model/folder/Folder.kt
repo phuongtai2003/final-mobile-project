@@ -12,7 +12,8 @@ data class Folder(
     val folderNameEnglish: String?,
     val folderNameVietnamese: String?,
     val topicCount: Int,
-    val topicInFolderId: ArrayList<String>?
+    val topicInFolderId: ArrayList<String>?,
+    var isChosen: Boolean = false
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
@@ -20,7 +21,8 @@ data class Folder(
         parcel.readString(),
         parcel.readString(),
         parcel.readInt(),
-        parcel.createStringArrayList()
+        parcel.createStringArrayList(),
+        parcel.readByte() != 0.toByte()
     ) {
     }
 
@@ -31,6 +33,7 @@ data class Folder(
         parcel.writeString(folderNameVietnamese)
         parcel.writeInt(topicCount)
         parcel.writeStringList(topicInFolderId)
+        parcel.writeByte(if (isChosen) 1 else 0)
     }
 
     override fun describeContents(): Int {

@@ -44,8 +44,8 @@ class VocabularyFlashCardAdapter(private var studyEnglishMode: Boolean, private 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val vocabulary = vocabularies[position]
-        holder.backView.text = if (studyEnglishMode) vocabulary.vietnameseWord else vocabulary.englishWord
-        holder.frontView.text = if (studyEnglishMode) vocabulary.englishWord else vocabulary.vietnameseWord
+        holder.backView.text = if (studyEnglishMode) vocabulary.englishWord else vocabulary.vietnameseWord
+        holder.frontView.text = if (studyEnglishMode) vocabulary.vietnameseWord else vocabulary.englishWord
 
         if(ttsVietnamese == null || ttsEnglish == null){
             holder.ttsBackBtn.visibility = View.GONE
@@ -53,7 +53,7 @@ class VocabularyFlashCardAdapter(private var studyEnglishMode: Boolean, private 
         }
         else{
             holder.ttsBackBtn.setOnClickListener {
-                if(studyEnglishMode){
+                if(!studyEnglishMode){
                     ttsVietnamese?.speak(vocabulary.vietnameseWord, TextToSpeech.QUEUE_FLUSH, null, null)
                 }
                 else{
@@ -61,7 +61,7 @@ class VocabularyFlashCardAdapter(private var studyEnglishMode: Boolean, private 
                 }
             }
             holder.ttsFrontBtn.setOnClickListener {
-                if(studyEnglishMode){
+                if(!studyEnglishMode){
                     ttsEnglish?.speak(vocabulary.englishWord, TextToSpeech.QUEUE_FLUSH, null, null)
                 }
                 else{
@@ -81,11 +81,9 @@ class VocabularyFlashCardAdapter(private var studyEnglishMode: Boolean, private 
                         override fun onAnimationStart(p0: Animator) {
                             isFlipping = true
                         }
-
                         override fun onAnimationEnd(p0: Animator) {
                             isFlipping = false
                         }
-
                         override fun onAnimationCancel(p0: Animator) {
                         }
 

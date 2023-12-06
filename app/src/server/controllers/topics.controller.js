@@ -36,7 +36,7 @@ const getTopicsByUserId = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error : error.message });
     }
-};
+}
 
 const getFolderByTopicId = async (req, res) => {
     const topicId = req.params.id || req.query.id;

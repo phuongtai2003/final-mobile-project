@@ -1,6 +1,7 @@
 package com.tdtu.finalproject.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,10 +9,19 @@ import android.widget.EditText
 import android.widget.ImageButton
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
+import com.google.mlkit.common.model.DownloadConditions
+import com.google.mlkit.nl.translate.TranslateLanguage
+import com.google.mlkit.nl.translate.Translation
+import com.google.mlkit.nl.translate.TranslatorOptions
 import com.tdtu.finalproject.R
 import com.tdtu.finalproject.model.vocabulary.Vocabulary
 
 class VocabularyAdapter(private var mContext:Context, private var vocabularies: ArrayList<Vocabulary>, private var layout: Int): RecyclerView.Adapter<VocabularyAdapter.VocabularyViewHolder>() {
+    private var downloadConditions = DownloadConditions.Builder().requireWifi().build()
+    private var engToVietOptions = TranslatorOptions.Builder().setSourceLanguage(TranslateLanguage.ENGLISH).setTargetLanguage(TranslateLanguage.VIETNAMESE).build()
+    private var vietToEngOptions = TranslatorOptions.Builder().setSourceLanguage(TranslateLanguage.ENGLISH).setTargetLanguage(TranslateLanguage.VIETNAMESE).build()
+    private val engToVietTranslator = Translation.getClient(engToVietOptions)
+    private val vietToEngTranslator = Translation.getClient(vietToEngOptions)
     class VocabularyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         var englishWord: EditText = itemView.findViewById(R.id.englishWordTxt)
         var vietnameseWord: EditText = itemView.findViewById(R.id.vietnameseWordTxt)
@@ -32,14 +42,28 @@ class VocabularyAdapter(private var mContext:Context, private var vocabularies: 
         holder.englishMeaning.setText(vocabulary.englishMeaning)
         holder.vietnameseMeaning.setText(vocabulary.vietnameseMeaning)
 
-        holder.englishWord.addTextChangedListener {
-            vocabularies[position].englishWord = it.toString()
+        holder.englishWord.addTextChangedListener { text ->
+            engToVietTranslator.downloadModelIfNeeded(downloadConditions).addOnSuccessListener {
+                engToVietTranslator.translate(text.toString()).addOnSuccessListener {translatedText->
+                    holder.vietnameseWord.setText(translatedText)
+                }.addOnFailureListener{
+                    holder.vietnameseWord.setText("")
+                }
+            }
+            vocabularies[position].englishWord = text.toString()
         }
-        holder.vietnameseWord.addTextChangedListener {
-            vocabularies[position].vietnameseWord = it.toString()
+        holder.vietnameseWord.addTextChangedListener { editable ->
+            vocabularies[position].vietnameseWord = editable.toString()
         }
-        holder.englishMeaning.addTextChangedListener {
-            vocabularies[position].englishMeaning = it.toString()
+        holder.englishMeaning.addTextChangedListener { editable ->
+            engToVietTranslator.downloadModelIfNeeded(downloadConditions).addOnSuccessListener {
+                engToVietTranslator.translate(editable.toString()).addOnSuccessListener {translatedText->
+                    holder.vietnameseMeaning.setText(translatedText)
+                }.addOnFailureListener{
+                    holder.vietnameseMeaning.setText("")
+                }
+            }
+            vocabularies[position].englishMeaning = editable.toString()
         }
         holder.vietnameseMeaning.addTextChangedListener {
             vocabularies[position].vietnameseMeaning = it.toString()

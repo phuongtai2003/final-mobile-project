@@ -91,4 +91,11 @@
     <string name="please_add_vocabulary">Please add vocabulary</string>
     <string name="tts_init_failed">Text to speech initialization failed</string>
     <string name="language_not_supported">Language not supported</string>
+    <string name="learn_by_flashcard">Learn by Flashcard</string>
+    <string name="learn_by_quiz">Learn by Quiz</string>
+    <string name="learn_by_typing">Learn by Typing</string>
+    <string name="add_topic_to_folder">Add Topic To Folder</string>
+    <string name="save_and_edit_topic">Save And Edit Topic</string>
+    <string name="add_topic_success">Add Topic Successfully</string>
+    <string name="delete_topic_success">Delete Topic Successfully</string>
 </resources>

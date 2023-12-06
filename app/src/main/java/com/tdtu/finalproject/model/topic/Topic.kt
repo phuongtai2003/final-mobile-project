@@ -21,6 +21,7 @@ data class Topic(
     val learningStatisticsId: List<String>?,
     val topicInFolderId: List<String>?,
     val vocabularyId: List<String>?,
+    val ownerId: String?,
     var chosen: Boolean = false
 ): Parcelable {
     override fun equals(other: Any?): Boolean {
@@ -50,6 +51,7 @@ data class Topic(
         parcel.createStringArrayList(),
         parcel.createStringArrayList(),
         parcel.createStringArrayList(),
+        parcel.readString(),
         parcel.readByte() != 0.toByte()
     ) {
     }
@@ -68,6 +70,7 @@ data class Topic(
         parcel.writeStringList(learningStatisticsId)
         parcel.writeStringList(topicInFolderId)
         parcel.writeStringList(vocabularyId)
+        parcel.writeString(ownerId)
         parcel.writeByte(if (chosen) 1 else 0)
     }
 
