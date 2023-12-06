@@ -18,7 +18,8 @@ const {getTopicById,
     getTopicsByUserId,
     getTopicsByFolderId,
     viewTopicIsPublic,
-    userLearnPublicTopic} = require('../controllers/topics.controller');
+    userLearnPublicTopic,
+    getFolderByTopicId} = require('../controllers/topics.controller');
 
 // get all topics (tested)
 topicsRouter.get("/", getAllTopics);
@@ -53,5 +54,7 @@ topicsRouter.put("/downvote/:id", authentication, isExistId(Topic), downVoteCoun
 topicsRouter.post("/import-csv", authentication, validateInput(['topicNameEnglish', 'topicNameVietnamese', 'descriptionEnglish', 'descriptionVietnamese', 'vocabularyList']), importCSV);
 // export csv (tested)
 topicsRouter.get("/export-csv/:id",authentication, isExistId(Topic), exportCSV);
+// get folder by topic id (tested)
+topicsRouter.get("/:id/folder", authentication, isExistId(Topic), getFolderByTopicId);
 
 module.exports = topicsRouter;
