@@ -3,8 +3,13 @@ package com.tdtu.finalproject
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.speech.tts.TextToSpeech
 import android.view.Gravity
+import android.view.KeyEvent
+import android.view.View
+import android.view.inputmethod.EditorInfo
+import androidx.core.widget.addTextChangedListener
 import com.tdtu.finalproject.databinding.ActivityTypingBinding
 import com.tdtu.finalproject.model.quizzes.Quiz
 import com.tdtu.finalproject.model.topic.Topic
@@ -74,6 +79,22 @@ class TypingActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 binding.questionTxt.setTextColor(getColor(R.color.white))
             }
         }
+        binding.skipBtn.setOnClickListener{
+            if(questionCount <= totalQuestions){
+                answersCorrectness[questionCount - 1] = false
+                chosenAnswers[questionCount - 1] = ""
+                questionCount++
+                generateQuestionView()
+            }
+        }
+        binding.answerTxt.addTextChangedListener {
+            if(!it.isNullOrEmpty()){
+                binding.skipBtn.visibility = View.GONE
+            }
+            else{
+                binding.skipBtn.visibility = View.VISIBLE
+            }
+        }
         setContentView(binding.root)
     }
 
@@ -97,22 +118,6 @@ class TypingActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         binding.answerTxt.setText("")
         val quiz = quizzesList[questionCount - 1]
         binding.quizProgressTxt.text = questionCount.toString() + "/" + totalQuestions.toString()
-        val allAnswers = if(vocabulariesList.size >= 4) listOf(
-            quiz.correctAnswer,
-            quiz.wrongAnswer?.get(0),
-            quiz.wrongAnswer?.get(1),
-            quiz.wrongAnswer?.get(2)
-        ) else if(vocabulariesList.size == 3) listOf(
-            quiz.correctAnswer,
-            quiz.wrongAnswer?.get(0),
-            quiz.wrongAnswer?.get(1)
-        ) else if(vocabulariesList.size == 2) listOf(
-            quiz.correctAnswer,
-            quiz.wrongAnswer?.get(0)
-        ) else listOf(quiz.correctAnswer)
-
-        val shuffledAnswers = allAnswers.shuffled()
-
 
         if(studyLanguage == Language.ENGLISH){
             if(questionByVocabulary && questionByDefinition){
@@ -127,6 +132,35 @@ class TypingActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                         }
                     }
                     binding.answerTxt.hint = getString(R.string.answer_by_term)
+                    binding.answerTxt.setOnEditorActionListener { _, actionId, keyEvent ->
+                        if(actionId == EditorInfo.IME_ACTION_GO){
+                            val answer = binding.answerTxt.text.toString()
+                            if(answer.lowercase() == quiz.correctAnswer?.vietnameseWord?.lowercase()){
+                                answersCorrectness[questionCount - 1] = true
+                                chosenAnswers[questionCount - 1] = answer
+                                runOnUiThread {
+                                    Utils.propCorrectAnswer(this)
+                                }
+                            }
+                            else{
+                                answersCorrectness[questionCount - 1] = false
+                                chosenAnswers[questionCount - 1] = answer
+                                runOnUiThread {
+                                    Utils.propWrongAnswer(this, quiz.correctAnswer?.vietnameseWord!!, answer)
+                                }
+                            }
+                            Handler().postDelayed({
+                                runOnUiThread {
+                                    questionCount++
+                                    generateQuestionView()
+                                }
+                            }, if(instantFeedback) 1000 else 0)
+                            true
+                        }
+                        else{
+                            false
+                        }
+                    }
                 }
                 else{
                     currentAnswerMode = false
@@ -139,6 +173,35 @@ class TypingActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                         }
                     }
                     binding.answerTxt.hint = getString(R.string.answer_by_definition)
+                    binding.answerTxt.setOnEditorActionListener { _, actionId, keyEvent ->
+                        if(actionId == EditorInfo.IME_ACTION_GO){
+                            val answer = binding.answerTxt.text.toString()
+                            if(answer.lowercase() == quiz.correctAnswer?.vietnameseMeaning?.lowercase()){
+                                answersCorrectness[questionCount - 1] = true
+                                chosenAnswers[questionCount - 1] = answer
+                                runOnUiThread {
+                                    Utils.propCorrectAnswer(this)
+                                }
+                            }
+                            else{
+                                answersCorrectness[questionCount - 1] = false
+                                chosenAnswers[questionCount - 1] = answer
+                                runOnUiThread {
+                                    Utils.propWrongAnswer(this, quiz.correctAnswer?.vietnameseMeaning!!, answer)
+                                }
+                            }
+                            Handler().postDelayed({
+                                runOnUiThread {
+                                    questionCount++
+                                    generateQuestionView()
+                                }
+                            }, if(instantFeedback) 1000 else 0)
+                            true
+                        }
+                        else{
+                            false
+                        }
+                    }
                 }
             }
             else if(questionByDefinition){
@@ -151,6 +214,35 @@ class TypingActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                     }
                 }
                 binding.answerTxt.hint = getString(R.string.answer_by_term)
+                binding.answerTxt.setOnEditorActionListener { _, actionId, keyEvent ->
+                    if(actionId == EditorInfo.IME_ACTION_GO){
+                        val answer = binding.answerTxt.text.toString()
+                        if(answer.lowercase() == quiz.correctAnswer?.vietnameseWord?.lowercase()){
+                            answersCorrectness[questionCount - 1] = true
+                            chosenAnswers[questionCount - 1] = answer
+                            runOnUiThread {
+                                Utils.propCorrectAnswer(this)
+                            }
+                        }
+                        else{
+                            answersCorrectness[questionCount - 1] = false
+                            chosenAnswers[questionCount - 1] = answer
+                            runOnUiThread {
+                                Utils.propWrongAnswer(this, quiz.correctAnswer?.vietnameseWord!!, answer)
+                            }
+                        }
+                        Handler().postDelayed({
+                            runOnUiThread {
+                                questionCount++
+                                generateQuestionView()
+                            }
+                        }, if(instantFeedback) 1000 else 0)
+                        true
+                    }
+                    else{
+                        false
+                    }
+                }
             }else if(questionByVocabulary){
                 binding.questionTxt.text = quiz.correctAnswer?.englishWord
                 binding.questionTxt.setOnClickListener{
@@ -161,6 +253,35 @@ class TypingActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                     }
                 }
                 binding.answerTxt.hint = getString(R.string.answer_by_definition)
+                binding.answerTxt.setOnEditorActionListener { _, actionId, keyEvent ->
+                    if(actionId == EditorInfo.IME_ACTION_GO){
+                        val answer = binding.answerTxt.text.toString()
+                        if(answer.lowercase() == quiz.correctAnswer?.vietnameseMeaning?.lowercase()){
+                            answersCorrectness[questionCount - 1] = true
+                            chosenAnswers[questionCount - 1] = answer
+                            runOnUiThread {
+                                Utils.propCorrectAnswer(this)
+                            }
+                        }
+                        else{
+                            answersCorrectness[questionCount - 1] = false
+                            chosenAnswers[questionCount - 1] = answer
+                            runOnUiThread {
+                                Utils.propWrongAnswer(this, quiz.correctAnswer?.vietnameseMeaning!!, answer)
+                            }
+                        }
+                        Handler().postDelayed({
+                            runOnUiThread {
+                                questionCount++
+                                generateQuestionView()
+                            }
+                        }, if(instantFeedback) 1000 else 0)
+                        true
+                    }
+                    else{
+                        false
+                    }
+                }
             }
         }
         else{
@@ -176,6 +297,35 @@ class TypingActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                         }
                     }
                     binding.answerTxt.hint = getString(R.string.answer_by_term)
+                    binding.answerTxt.setOnEditorActionListener { _, actionId, keyEvent ->
+                        if(actionId == EditorInfo.IME_ACTION_GO){
+                            val answer = binding.answerTxt.text.toString()
+                            if(answer.lowercase() == quiz.correctAnswer?.englishWord?.lowercase()){
+                                answersCorrectness[questionCount - 1] = true
+                                chosenAnswers[questionCount - 1] = answer
+                                runOnUiThread {
+                                    Utils.propCorrectAnswer(this)
+                                }
+                            }
+                            else{
+                                answersCorrectness[questionCount - 1] = false
+                                chosenAnswers[questionCount - 1] = answer
+                                runOnUiThread {
+                                    Utils.propWrongAnswer(this, quiz.correctAnswer?.englishWord!!, answer)
+                                }
+                            }
+                            Handler().postDelayed({
+                                runOnUiThread {
+                                    questionCount++
+                                    generateQuestionView()
+                                }
+                            }, if(instantFeedback) 1000 else 0)
+                            true
+                        }
+                        else{
+                            false
+                        }
+                    }
                 }
                 else{
                     currentAnswerMode = false
@@ -188,6 +338,35 @@ class TypingActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                         }
                     }
                     binding.answerTxt.hint = getString(R.string.answer_by_definition)
+                    binding.answerTxt.setOnEditorActionListener { _, actionId, keyEvent ->
+                        if(actionId == EditorInfo.IME_ACTION_GO){
+                            val answer = binding.answerTxt.text.toString()
+                            if(answer.lowercase() == quiz.correctAnswer?.englishMeaning?.lowercase()){
+                                answersCorrectness[questionCount - 1] = true
+                                chosenAnswers[questionCount - 1] = answer
+                                runOnUiThread {
+                                    Utils.propCorrectAnswer(this)
+                                }
+                            }
+                            else{
+                                answersCorrectness[questionCount - 1] = false
+                                chosenAnswers[questionCount - 1] = answer
+                                runOnUiThread {
+                                    Utils.propWrongAnswer(this, quiz.correctAnswer?.englishMeaning!!, answer)
+                                }
+                            }
+                            Handler().postDelayed({
+                                runOnUiThread {
+                                    questionCount++
+                                    generateQuestionView()
+                                }
+                            }, if(instantFeedback) 1000 else 0)
+                            true
+                        }
+                        else{
+                            false
+                        }
+                    }
                 }
             }
             else if(questionByDefinition){
@@ -200,6 +379,35 @@ class TypingActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                     }
                 }
                 binding.answerTxt.hint = getString(R.string.answer_by_term)
+                binding.answerTxt.setOnEditorActionListener { _, actionId, keyEvent ->
+                    if(actionId == EditorInfo.IME_ACTION_GO){
+                        val answer = binding.answerTxt.text.toString()
+                        if(answer.lowercase() == quiz.correctAnswer?.englishWord?.lowercase()){
+                            answersCorrectness[questionCount - 1] = true
+                            chosenAnswers[questionCount - 1] = answer
+                            runOnUiThread {
+                                Utils.propCorrectAnswer(this)
+                            }
+                        }
+                        else{
+                            answersCorrectness[questionCount - 1] = false
+                            chosenAnswers[questionCount - 1] = answer
+                            runOnUiThread {
+                                Utils.propWrongAnswer(this, quiz.correctAnswer?.englishWord!!, answer)
+                            }
+                        }
+                        Handler().postDelayed({
+                            runOnUiThread {
+                                questionCount++
+                                generateQuestionView()
+                            }
+                        }, if(instantFeedback) 1000 else 0)
+                        true
+                    }
+                    else{
+                        false
+                    }
+                }
             }else if(questionByVocabulary){
                 binding.questionTxt.text = quiz.correctAnswer?.vietnameseWord
                 binding.questionTxt.setOnClickListener{
@@ -210,6 +418,35 @@ class TypingActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                     }
                 }
                 binding.answerTxt.hint = getString(R.string.answer_by_definition)
+                binding.answerTxt.setOnEditorActionListener { _, actionId, keyEvent ->
+                    if(actionId == EditorInfo.IME_ACTION_GO){
+                        val answer = binding.answerTxt.text.toString()
+                        if(answer.lowercase() == quiz.correctAnswer?.englishMeaning?.lowercase()){
+                            answersCorrectness[questionCount - 1] = true
+                            chosenAnswers[questionCount - 1] = answer
+                            runOnUiThread {
+                                Utils.propCorrectAnswer(this)
+                            }
+                        }
+                        else{
+                            answersCorrectness[questionCount - 1] = false
+                            chosenAnswers[questionCount - 1] = answer
+                            runOnUiThread {
+                                Utils.propWrongAnswer(this, quiz.correctAnswer?.englishMeaning!!, answer)
+                            }
+                        }
+                        Handler().postDelayed({
+                            runOnUiThread {
+                                questionCount++
+                                generateQuestionView()
+                            }
+                        }, if(instantFeedback) 1000 else 0)
+                        true
+                    }
+                    else{
+                        false
+                    }
+                }
             }
         }
 

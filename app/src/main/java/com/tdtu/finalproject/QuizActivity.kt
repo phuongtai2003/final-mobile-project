@@ -117,6 +117,7 @@ class QuizActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             feedBackIntent.putExtra("quizzes", ArrayList(quizzesList))
             feedBackIntent.putExtra("topic", topic)
             feedBackIntent.putExtra("studyMode", studyMode)
+            feedBackIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(feedBackIntent)
             return
         }

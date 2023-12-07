@@ -65,6 +65,11 @@
         <EditText
             android:textColorHint="@color/quaternary_color"
             android:padding="10dp"
+            android:inputType="text"
+            android:imeOptions="actionGo"
+            android:imeActionId="666"
+            android:imeActionLabel="Some Label"
+            android:maxLines="1"
             android:hint="@string/answer_by_term"
             android:background="@color/dark_color"
             android:textColor="@color/white"
