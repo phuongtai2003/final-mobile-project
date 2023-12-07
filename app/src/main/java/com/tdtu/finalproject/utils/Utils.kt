@@ -4,10 +4,8 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.util.Log
 import android.view.Gravity
 import android.view.View
-import android.view.View.OnClickListener
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Button
@@ -163,7 +161,7 @@ class Utils {
             val shuffledVocabularies = if(isShuffled) vocabularies.shuffled() else vocabularies
             for(vocabulary in shuffledVocabularies){
                 val incorrectVocabularies : List<Vocabulary> = vocabularies - vocabulary
-                val quiz = Quiz(vocabulary, incorrectVocabularies.shuffled().take(3))
+                val quiz = Quiz(vocabulary, ArrayList(incorrectVocabularies.shuffled().take(3)))
                 quizzes.add(quiz)
             }
             return quizzes

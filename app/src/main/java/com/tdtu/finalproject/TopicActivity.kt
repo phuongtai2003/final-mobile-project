@@ -73,6 +73,13 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
             intent.putParcelableArrayListExtra("vocabularies", ArrayList(vocabulariesList))
             startActivity(intent)
         }
+        binding.learnByTypingBtn.setOnClickListener {
+            val intent = Intent(this, StudyConfigurationActivity::class.java)
+            intent.putExtra("topic", topic)
+            intent.putExtra("studyMode", StudyMode.Typing)
+            intent.putParcelableArrayListExtra("vocabularies", ArrayList(vocabulariesList))
+            startActivity(intent)
+        }
         editTopicVocabulariesResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
             if(it.resultCode == RESULT_OK && data != null){
                 val currentVocabList = vocabulariesList

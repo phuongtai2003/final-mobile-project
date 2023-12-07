@@ -44,7 +44,7 @@ import java.util.concurrent.CompletableFuture
 class DataRepository() {
 
     companion object{
-        private const val baseUrl: String = "http://192.168.1.7:3000/android/"
+        private const val baseUrl: String = "http://192.168.0.181:3000/android/"
         private val api = Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(GsonConverterFactory.create()).build().create(API::class.java)
         private var instance: DataRepository? = null
         fun getInstance() : DataRepository{
@@ -180,7 +180,6 @@ class DataRepository() {
         call.enqueue(object : Callback<GetTopicsResponse>{
             override fun onResponse(call: Call<GetTopicsResponse>, response: Response<GetTopicsResponse>) {
                 if(response.code() == 200){
-                    Log.d("USER TAG", "onResponse: ${response.body()}")
                     future.complete(response.body()?.topics)
                 }
                 else if(response.code() == 404){
@@ -556,7 +555,6 @@ class DataRepository() {
         call.enqueue(object : Callback<GetFolderByUserResponse>{
             override fun onResponse(call: Call<GetFolderByUserResponse>, response: Response<GetFolderByUserResponse>) {
                 if(response.code() == 200){
-                    Log.d("USER TAG", "onResponse: " + response.body()?.folders)
                     future.complete(response.body()?.folders)
                 }
                 else if(response.code() == 404){

@@ -101,10 +101,25 @@ class StudyConfigurationActivity : AppCompatActivity(), PromptOptionsListener {
                 quizIntent.putExtra("questionByDefinition", questionByDefinition)
                 quizIntent.putExtra("questionByVocabulary", questionByVocabulary)
                 quizIntent.putParcelableArrayListExtra("vocabularies", ArrayList(vocabularies))
+                quizIntent.putExtra("instantFeedBack", binding.instantFeedBackSwitch.isChecked)
+                quizIntent.putExtra("studyMode", studyMode)
                 startActivity(quizIntent)
             }
             else if(studyMode == StudyMode.Typing){
-
+                val typingIntent = Intent(this, TypingActivity::class.java)
+                val shuffleQuestion = binding.shuffleQuestionSwitch.isChecked
+                typingIntent.putExtra("topic", topic)
+                typingIntent.putExtra("studyLanguage", studyLanguage)
+                typingIntent.putExtra("questionCount", if(binding.questionCountEdt.text.isEmpty()) topic.vocabularyCount else binding.questionCountEdt.text.toString().toInt() )
+                typingIntent.putExtra("shuffleQuestion", shuffleQuestion)
+                typingIntent.putExtra("answerByDefinition", answerByDefinition)
+                typingIntent.putExtra("answerByVocabulary", answerByVocabulary)
+                typingIntent.putExtra("questionByDefinition", questionByDefinition)
+                typingIntent.putExtra("questionByVocabulary", questionByVocabulary)
+                typingIntent.putParcelableArrayListExtra("vocabularies", ArrayList(vocabularies))
+                typingIntent.putExtra("instantFeedBack", binding.instantFeedBackSwitch.isChecked)
+                typingIntent.putExtra("studyMode", studyMode)
+                startActivity(typingIntent)
             }
         }
 

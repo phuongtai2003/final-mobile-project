@@ -116,4 +116,17 @@
     <string name="wrong_answer">Wrong Answer</string>
     <string name="you_have_answered">You have answered</string>
     <string name="the_correct_answer_is">The correct answer is</string>
+    <string name="your_result">Your Result</string>
+    <string name="next_steps">Next Steps</string>
+    <string name="try_again">Try Again</string>
+    <string name="incorrect">Incorrect</string>
+    <string name="you_know_your_stuff">You know your stuff!</string>
+    <string name="you_need_to_study_more">You need to study more!</string>
+    <string name="practice_again">Practice with the topic terms until you\'ve gotten them right</string>
+    <string name="very_good">You have studied very well! Learn again or try another test</string>
+    <string name="your_answers">Your Answers</string>
+    <string name="instant_feedback">Instant Feedback</string>
+    <string name="answer_by_definition">Answer By Definition</string>
+    <string name="answer_by_term">Answer By Prompt</string>
+    <string name="dont_know">Don\'t Know</string>
 </resources>
