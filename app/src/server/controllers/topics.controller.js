@@ -115,7 +115,7 @@ const deleteVocabularyInTopic = async (req, res) => {
         if (!vocab) {
             return res.status(404).json({ error: 'Vocabulary does not exist in topic' });
         }
-        const topic = await Topic.findByIdAndUpdate(topicId, { $inc: { vocabularyCount: -1 } }, { new: true });
+        const topic = await Topic.findByIdAndUpdate(topicId, { $inc: { vocabularyCount: -1 }, $pull: {vocabularyId} }, { new: true });
         await BookmarkTopic.findOneAndDelete({vocabularyId, userId});
         await VocabularyStatistic.findOneAndDelete({vocabularyId, userId});
         await Vocabulary.findByIdAndDelete(vocabularyId);
