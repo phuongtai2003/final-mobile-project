@@ -2,12 +2,12 @@ const {BookmarkVocabulary, Vocabulary} = require('../models');
 
 const createBookmarkVocabulary = async (req, res) => {
     const userId = req.user.data._id;
-    const vocabularies = req.body;
+    const {vocabularies} = req.body;
     try {
         for(let vocabulary of vocabularies){
             const {vocabularyId} = vocabulary;
             
-            const vocab = await Vocabulary.findById(vocabularyId);
+            const vocab = await Vocabulary.findById(vocabularyId._id);
             if (!vocab) {
                 return res.status(404).json({ error: 'Vocabulary does not exist' });
             }

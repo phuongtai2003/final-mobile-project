@@ -19,7 +19,8 @@ const {getTopicById,
     getTopicsByFolderId,
     viewTopicIsPublic,
     userLearnPublicTopic,
-    getFolderByTopicId} = require('../controllers/topics.controller');
+    getFolderByTopicId,
+    getBookmarkVocabInTopic} = require('../controllers/topics.controller');
 
 // get all topics (tested)
 topicsRouter.get("/", getAllTopics);
@@ -57,4 +58,6 @@ topicsRouter.get("/export-csv/:id",authentication, isExistId(Topic), exportCSV);
 // get folder by topic id (tested)
 topicsRouter.get("/:id/folder", authentication, isExistId(Topic), getFolderByTopicId);
 
+// get bookmark in topic (tested)
+topicsRouter.get("/:id/bookmark", authentication, isExistId(Topic), getBookmarkVocabInTopic);
 module.exports = topicsRouter;

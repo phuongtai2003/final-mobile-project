@@ -1,5 +1,5 @@
 require('dotenv').config();
-const {Users ,Topic, Vocabulary, TopicInFolder, BookmarkTopic, VocabularyStatistic, LearningStatistics, Folder} = require('../models');
+const {Users ,Topic, Vocabulary, TopicInFolder, BookmarkTopic, VocabularyStatistic, LearningStatistics, Folder, BookmarkVocabulary} = require('../models');
 
 const getTopicById = async (req, res) => {
     const id = req.params.id || req.query.id;
@@ -247,6 +247,25 @@ const userLearnPublicTopic = async (req, res) => {
     }
 };
 
+const getBookmarkVocabInTopic = async (req, res) => {
+    const topicId = req.params.id || req.query.id;
+    const userId = req.user.data._id;
+    try{
+        // get bookmark vocab in topic
+        const vocabInTopic = await Topic.findById(topicId).populate('vocabularyId');
+        let bookmarkVocab = [];
+        for(let i = 0; i < vocabInTopic.vocabularyId.length; i++){
+            const bookmark = await BookmarkVocabulary.findOne({vocabularyId: vocabInTopic.vocabularyId[i]._id, userId});
+            if(bookmark){
+                bookmarkVocab.push(vocabInTopic.vocabularyId[i]);
+            }
+        }
+        res.status(200).json({bookmarkVocab});
+    }catch(error){
+        res.status(500).json({ error: error.message });
+    }
+};
+
 
 module.exports = {
     getTopicById,
@@ -264,5 +283,6 @@ module.exports = {
     getTopicsByFolderId,
     viewTopicIsPublic,
     userLearnPublicTopic,
-    getFolderByTopicId
+    getFolderByTopicId,
+    getBookmarkVocabInTopic
 }
