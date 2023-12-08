@@ -20,6 +20,7 @@ import com.tdtu.finalproject.model.user.UpdateUserResponse
 import com.tdtu.finalproject.model.user.RegisterRequest
 import com.tdtu.finalproject.model.user.RegisterResponse
 import com.tdtu.finalproject.model.user.UpdateUserInfoRequest
+import com.tdtu.finalproject.model.vocabulary.BookmarkVocabulariesRequest
 import com.tdtu.finalproject.model.vocabulary.GetVocabulariesByTopicResponse
 import com.tdtu.finalproject.model.vocabulary.Vocabulary
 import okhttp3.MultipartBody
@@ -84,4 +85,6 @@ interface API {
     fun updateTopic(@Path("id") topicId: String, @Header("token") token: String, @Body() topic: Topic) : Call<GetTopicByIdResponse>
     @GET("topics/{id}/folder")
     fun getFoldersByTopicId(@Path("id") topicId: String, @Header("token") token: String) : Call<GetFolderByUserResponse>
+    @POST("bookmarkVocabularies/")
+    fun createBookmarkVocabulary(@Header("token") token: String, @Body() request: BookmarkVocabulariesRequest) : Call<Message>
 }

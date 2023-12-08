@@ -80,6 +80,13 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
             intent.putParcelableArrayListExtra("vocabularies", ArrayList(vocabulariesList))
             startActivity(intent)
         }
+        binding.learnByFlashCardBtn.setOnClickListener {
+            val intent = Intent(this, FlashCardActivity::class.java)
+            intent.putExtra("topic", topic)
+
+            intent.putParcelableArrayListExtra("vocabularies", ArrayList(vocabulariesList))
+            startActivity(intent)
+        }
         editTopicVocabulariesResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
             if(it.resultCode == RESULT_OK && data != null){
                 val currentVocabList = vocabulariesList
@@ -136,6 +143,7 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
                         binding.vocabularyCountTxt.text = returnResult.size.toString() + " " + getString(R.string.vocabulary)
                         binding.topicNameEnglishTxt.text = titleEnglishResult
                         binding.topicNameVietnameseTxt.text = titleVietnameseResult
+                        initViewModel()
                     }
                 }
             }

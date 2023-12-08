@@ -130,4 +130,5 @@
     <string name="answer_by_definition">Trả lời bằng định nghĩa</string>
     <string name="answer_by_term">Trả lời bằng thuật ngữ</string>
     <string name="dont_know">Không biết</string>
+    <string name="bookmark_vocabulary_failed">Đánh dấu từ vựng thất bại</string>
 </resources>
