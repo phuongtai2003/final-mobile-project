@@ -25,6 +25,7 @@ import com.tdtu.finalproject.model.user.RegisterResponse
 import com.tdtu.finalproject.model.user.UpdateUserInfoRequest
 import com.tdtu.finalproject.model.user.User
 import com.tdtu.finalproject.model.user.UserInfo
+import com.tdtu.finalproject.model.vocabulary.BookmarkVocabulariesRequest
 import com.tdtu.finalproject.model.vocabulary.Vocabulary
 import com.tdtu.finalproject.model.vocabulary.GetVocabulariesByTopicResponse
 import com.tdtu.finalproject.utils.WrongCredentialsException
@@ -41,10 +42,10 @@ import java.io.File
 import java.lang.Exception
 import java.util.concurrent.CompletableFuture
 
-class DataRepository() {
+class DataRepository {
 
     companion object{
-        private const val baseUrl: String = "http://192.168.1.7:3000/android/"
+        private const val baseUrl: String = "http://192.168.1.53:3000/android/"
         private val api = Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(GsonConverterFactory.create()).build().create(API::class.java)
         private var instance: DataRepository? = null
         fun getInstance() : DataRepository{
@@ -180,7 +181,6 @@ class DataRepository() {
         call.enqueue(object : Callback<GetTopicsResponse>{
             override fun onResponse(call: Call<GetTopicsResponse>, response: Response<GetTopicsResponse>) {
                 if(response.code() == 200){
-                    Log.d("USER TAG", "onResponse: ${response.body()}")
                     future.complete(response.body()?.topics)
                 }
                 else if(response.code() == 404){
@@ -556,7 +556,6 @@ class DataRepository() {
         call.enqueue(object : Callback<GetFolderByUserResponse>{
             override fun onResponse(call: Call<GetFolderByUserResponse>, response: Response<GetFolderByUserResponse>) {
                 if(response.code() == 200){
-                    Log.d("USER TAG", "onResponse: " + response.body()?.folders)
                     future.complete(response.body()?.folders)
                 }
                 else if(response.code() == 404){
@@ -569,6 +568,30 @@ class DataRepository() {
 
             }
             override fun onFailure(call: Call<GetFolderByUserResponse>, t: Throwable) {
+                future.completeExceptionally(t)
+            }
+        })
+        return future
+    }
+    fun createBookmarkVocabularies(vocabularies: List<Vocabulary>, token: String): CompletableFuture<Boolean>{
+        val future: CompletableFuture<Boolean> = CompletableFuture()
+        val call = api.createBookmarkVocabulary(token, BookmarkVocabulariesRequest(vocabularies))
+        var error: String?
+        call.enqueue(object : Callback<Message>{
+            override fun onResponse(call: Call<Message>, response: Response<Message>) {
+                if(response.code() == 200){
+                    future.complete(true)
+                }
+                else if(response.code() == 400){
+                    future.complete(true)
+                }
+                else{
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
+                    future.completeExceptionally(Exception(error))
+                }
+
+            }
+            override fun onFailure(call: Call<Message>, t: Throwable) {
                 future.completeExceptionally(t)
             }
         })

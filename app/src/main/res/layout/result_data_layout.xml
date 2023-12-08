@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/dark_color"
+    android:layout_marginHorizontal="15dp"
+    android:layout_marginVertical="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="20dp"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:fontFamily="@font/bevietnampro_semibold"
+        android:id="@+id/resultQuestionTxt"
+        android:text="@string/learn_by_quiz"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:textAlignment="center"
+            android:id="@+id/resultCorrectTxt"
+            android:textColor="@color/dark_green_color"
+            android:text="@string/correct_answer"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:textSize="16sp"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:textAlignment="center"
+            android:id="@+id/resultIncorrectTxt"
+            android:textColor="@color/red_color"
+            android:text="@string/correct_answer"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:textSize="16sp"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <TextView
+        android:textAlignment="center"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:text="@string/correct"
+        android:paddingHorizontal="10dp"
+        android:background="@color/dark_green_color"
+        android:layout_marginTop="30dp"
+        android:id="@+id/resultTxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:drawableStartCompat="@drawable/baseline_check_24" />
+</LinearLayout>

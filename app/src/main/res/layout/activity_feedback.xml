@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".FeedbackActivity"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary_color"
+        android:orientation="vertical"
+        >
+        <ImageButton
+            android:id="@+id/closeBtn"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/baseline_close_24"
+            app:backgroundTint="@null"
+            android:background="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_marginTop="30dp"
+            android:gravity="center_vertical"
+            android:layout_marginHorizontal="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:fontFamily="@font/bevietnampro_semibold"
+                    android:textSize="24sp"
+                    android:id="@+id/resultFeedbackTxt"
+                    android:text="@string/hello"
+                    android:textColor="@color/white"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:fontFamily="@font/bevietnampro_semibold"
+                    android:textSize="20sp"
+                    android:layout_marginTop="20dp"
+                    android:id="@+id/feedBackTxt"
+                    android:text="@string/hello"
+                    android:textColor="@color/white"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <ImageView
+                android:src="@drawable/idea"
+                android:layout_width="100dp"
+                android:layout_height="100dp"/>
+
+        </LinearLayout>
+        <TextView
+            android:textSize="18sp"
+            android:layout_marginHorizontal="20dp"
+            android:textColor="@color/tertiary_color"
+            android:fontFamily="@font/bevietnampro_semibold"
+            android:text="@string/your_result"
+            android:layout_marginTop="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="30dp"
+
+            android:layout_height="wrap_content">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ProgressBar
+                    android:id="@+id/correctProgressBar"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:indeterminateOnly="false"
+                    android:progress="15"
+                    android:progressDrawable="@drawable/feedback_progress_bar"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/progressTxt"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/bevietnampro_semibold"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="20%"
+                    app:layout_constraintBottom_toBottomOf="@+id/correctProgressBar"
+                    app:layout_constraintEnd_toEndOf="@+id/correctProgressBar"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/correctProgressBar" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:gravity="center_vertical"
+                android:layout_marginStart="20dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/correctCountTxt"
+                    android:textColor="@color/light_green_color"
+                    android:text="@string/correct"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:layout_marginTop="20dp"
+                    android:id="@+id/wrongCountTxt"
+                    android:textColor="@color/orange_color"
+                    android:text="@string/incorrect"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/next_steps"
+            android:textColor="@color/tertiary_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="match_parent"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="10dp"
+            app:backgroundTint="@null"
+            android:background="@drawable/register_btn"
+            android:textColor="@color/white"
+            android:text="@string/learn_by_flashcard"
+            app:icon="@drawable/flashcard"
+            app:iconTint="@null"
+            app:iconSize="40dp"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="match_parent"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="10dp"
+            app:backgroundTint="@null"
+            android:id="@+id/tryAgainBtn"
+            android:background="@drawable/login_btn"
+            android:textColor="@color/white"
+            android:text="@string/try_again"
+            app:icon="@drawable/baseline_restart_alt_24"
+            app:iconSize="40dp"
+            app:iconTint="@color/white"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:textSize="18sp"
+            android:fontFamily="@font/bevietnampro_semibold"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/your_answers"
+            android:textColor="@color/tertiary_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/answerRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</ScrollView>

@@ -112,4 +112,23 @@
     <string name="prompt_by">Hỏi bằng</string>
     <string name="accept">Chấp nhận</string>
     <string name="shuffle_question">Xáo trộn câu hỏi</string>
+    <string name="correct">Đúng</string>
+    <string name="correct_answer">Bạn đã chọn đáp án đúng</string>
+    <string name="wrong_answer">Đáp án sai</string>
+    <string name="you_have_answered">Bạn đã trả lời</string>
+    <string name="the_correct_answer_is">Đáp án đúng là</string>
+    <string name="your_result">Kết quả của bạn</string>
+    <string name="next_steps">Bước tiếp theo</string>
+    <string name="try_again">Thử lại</string>
+    <string name="incorrect">Sai</string>
+    <string name="you_know_your_stuff">Bạn biết rất nhiều về chủ đề này!</string>
+    <string name="you_need_to_study_more">Bạn cần phải học thêm nhiều hơn!</string>
+    <string name="practice_again">Hãy luyện tập với các từ vựng trong học phần này cho đến khi bạn trả lời đúng</string>
+    <string name="very_good">Bạn đã học rất tốt! Hãy học lại hoặc thử bài kiểm tra khác</string>
+    <string name="your_answers">Câu trả lời của bạn</string>
+    <string name="instant_feedback">Phản hồi sau khi trả lời</string>
+    <string name="answer_by_definition">Trả lời bằng định nghĩa</string>
+    <string name="answer_by_term">Trả lời bằng thuật ngữ</string>
+    <string name="dont_know">Không biết</string>
+    <string name="bookmark_vocabulary_failed">Đánh dấu từ vựng thất bại</string>
 </resources>

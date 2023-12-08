@@ -2,10 +2,10 @@ const {BookmarkVocabulary, Vocabulary} = require('../models');
 
 const createBookmarkVocabulary = async (req, res) => {
     const userId = req.user.data._id;
-    const vocabularies = req.body;
+    const {vocabularies} = req.body;
     try {
         for(let vocabulary of vocabularies){
-            const {vocabularyId} = vocabulary;
+            const vocabularyId = vocabulary._id;
             
             const vocab = await Vocabulary.findById(vocabularyId);
             if (!vocab) {

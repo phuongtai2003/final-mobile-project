@@ -4,9 +4,8 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.util.Log
+import android.view.Gravity
 import android.view.View
-import android.view.View.OnClickListener
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Button
@@ -14,6 +13,8 @@ import android.widget.TextView
 import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
 import com.tdtu.finalproject.R
+import com.tdtu.finalproject.model.quizzes.Quiz
+import com.tdtu.finalproject.model.vocabulary.Vocabulary
 
 class Utils {
     companion object{
@@ -154,5 +155,53 @@ class Utils {
             }
             dialog.show()
         }
+
+        fun generateQuizzes(vocabularies: List<Vocabulary>, isShuffled: Boolean) : List<Quiz> {
+            val quizzes = mutableListOf<Quiz>()
+            val shuffledVocabularies = if(isShuffled) vocabularies.shuffled() else vocabularies
+            for(vocabulary in shuffledVocabularies){
+                val incorrectVocabularies : List<Vocabulary> = vocabularies - vocabulary
+                val quiz = Quiz(vocabulary, ArrayList(incorrectVocabularies.shuffled().take(3)))
+                quizzes.add(quiz)
+            }
+            return quizzes
+        }
+
+        fun propCorrectAnswer(mContext: Context){
+            val dialog = Dialog(mContext)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.success_answer_dialog)
+            val window = dialog.window ?: return
+            window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT)
+            window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            val windowAttribute: WindowManager.LayoutParams = window.attributes
+            windowAttribute.gravity = Gravity.CENTER
+            window.attributes = windowAttribute
+            dialog.setCancelable(true)
+
+            dialog.show()
+        }
+
+        fun propWrongAnswer(mContext: Context, correctAnswer: String, wrongAnswer: String){
+            val dialog = Dialog(mContext)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.wrong_answer_dialog)
+            val window = dialog.window ?: return
+            window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT)
+            window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            val windowAttribute: WindowManager.LayoutParams = window.attributes
+            windowAttribute.gravity = Gravity.CENTER
+            window.attributes = windowAttribute
+            dialog.setCancelable(true)
+
+            val correctAnswerTxt = dialog.findViewById<TextView>(R.id.correctAnswerTxt)
+            val wrongAnswerTxt = dialog.findViewById<TextView>(R.id.chosenWrongAnswerTxt)
+
+            correctAnswerTxt.text = correctAnswer
+            wrongAnswerTxt.text = wrongAnswer
+
+            dialog.show()
+        }
+
     }
 }
