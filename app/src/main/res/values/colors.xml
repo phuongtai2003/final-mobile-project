@@ -17,4 +17,8 @@
     <color name="senary_color">#EAECF9</color>
     <color name="dark_color">#262540</color>
     <color name="yellow_color">#FFCF1C</color>
+    <color name="orange_color">#FF9517</color>
+    <color name="light_green_color">#5DF6A6</color>
+    <color name="red_color">#FF1B1B</color>
+    <color name="dark_green_color">#0A7D7D</color>
 </resources>

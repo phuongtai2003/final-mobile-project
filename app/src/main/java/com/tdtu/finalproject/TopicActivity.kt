@@ -70,6 +70,21 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
             val intent = Intent(this, StudyConfigurationActivity::class.java)
             intent.putExtra("topic", topic)
             intent.putExtra("studyMode", StudyMode.Quiz)
+            intent.putParcelableArrayListExtra("vocabularies", ArrayList(vocabulariesList))
+            startActivity(intent)
+        }
+        binding.learnByTypingBtn.setOnClickListener {
+            val intent = Intent(this, StudyConfigurationActivity::class.java)
+            intent.putExtra("topic", topic)
+            intent.putExtra("studyMode", StudyMode.Typing)
+            intent.putParcelableArrayListExtra("vocabularies", ArrayList(vocabulariesList))
+            startActivity(intent)
+        }
+        binding.learnByFlashCardBtn.setOnClickListener {
+            val intent = Intent(this, FlashCardActivity::class.java)
+            intent.putExtra("topic", topic)
+
+            intent.putParcelableArrayListExtra("vocabularies", ArrayList(vocabulariesList))
             startActivity(intent)
         }
         editTopicVocabulariesResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
@@ -128,6 +143,7 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
                         binding.vocabularyCountTxt.text = returnResult.size.toString() + " " + getString(R.string.vocabulary)
                         binding.topicNameEnglishTxt.text = titleEnglishResult
                         binding.topicNameVietnameseTxt.text = titleVietnameseResult
+                        initViewModel()
                     }
                 }
             }
