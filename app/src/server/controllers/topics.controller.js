@@ -71,20 +71,24 @@ const updateTopic = async (req, res) => {
 
 const deleteTopic = async (req, res) => {
     const topicId = req.params.id || req.query.id;
+    const userId = req.user.data._id;
     try {
-        const topic = await Topic.findById(topicId);
+        const topic = await Topic.findById(topicId).populate('vocabularyId');
         if (!topic) {
             return res.status(404).json({ message: 'Topic not found' });
         }
+        for(let vocab of topic.vocabularyId){
+            await BookmarkVocabulary.deleteMany({vocabularyId: vocab._id, userId});
+            await VocabularyStatistic.deleteMany({vocabularyId: vocab._id, userId});
+        }
         // Người dùng là chủ sở hữu của topic, xóa topic và tất cả các tham chiếu liên quan
         await TopicInFolder.deleteMany({ topicId });
-        await VocabularyStatistic.deleteMany({ topicId });
         await BookmarkTopic.deleteMany({ topicId });
-        await LearningStatistics.deleteMany({ topicId });
+        await LearningStatistics.deleteMany({ topicId, userId });
         await Vocabulary.deleteMany({ topicId });
         await Users.updateMany({}, { $pull: { topicId } }); // Xóa topic khỏi tất cả người dùng
         await Topic.findByIdAndDelete(topicId);
-        await LearningStatistics.deleteMany({ topicId: topicId })
+
         res.status(200).json({ message: 'Delete topic successfully'});
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -118,7 +122,9 @@ const deleteVocabularyInTopic = async (req, res) => {
         const topic = await Topic.findByIdAndUpdate(topicId, { $inc: { vocabularyCount: -1 }, $pull: {vocabularyId} }, { new: true });
         await BookmarkTopic.findOneAndDelete({vocabularyId, userId});
         await VocabularyStatistic.findOneAndDelete({vocabularyId, userId});
+        await BookmarkVocabulary.findOneAndDelete({vocabularyId, userId});
         await Vocabulary.findByIdAndDelete(vocabularyId);
+
         res.status(200).json({ message: 'Vocabulary deleted successfully', topic});
     } catch (error) {
         res.status(500).json({ error : error.message });
@@ -257,10 +263,8 @@ const getBookmarkVocabInTopic = async (req, res) => {
     try{
         // get bookmark vocab in topic
         const vocabInTopic = await Topic.findById(topicId).populate('vocabularyId');
-        console.log(vocabInTopic);
         let bookmarkVocab = [];
         for(let i = 0; i < vocabInTopic.vocabularyId.length; i++){
-            console.log(vocabInTopic.vocabularyId[i]);
             const bookmark = await BookmarkVocabulary.findOne({vocabularyId: vocabInTopic.vocabularyId[i]._id, userId});
             if(bookmark){
                 bookmarkVocab.push(vocabInTopic.vocabularyId[i]);

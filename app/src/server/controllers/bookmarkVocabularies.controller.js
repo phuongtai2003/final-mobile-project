@@ -32,16 +32,13 @@ const createBookmarkVocabulary = async (req, res) => {
 
 const deleteBookmarkVocabulary = async (req, res) => {
     const userId = req.user.data._id;
-    const vocabularyId = req.params.id || req.query.id;
+    const id = req.params.id || req.query.id;
 
     try {
-        const bookmarkVocab = await BookmarkVocabulary.findOne({userId, vocabularyId});
+        const bookmarkVocab = await BookmarkVocabulary.findOneAndDelete({userId, _id: id});
         if(!bookmarkVocab){
             return res.status(404).json({error: 'Bookmark vocabulary not found'});
         }
-
-        await bookmarkVocab.delete();
-
         res.status(200).json({message: 'Bookmark vocabulary deleted successfully'});
     } catch (error) {
         res.status(500).json({error: error.message});
@@ -58,8 +55,25 @@ const getAllBookmarkVocabulary = async (req, res) => {
     }
 }
 
+const deleteBookmarkVocabularyByVocabularyId = async (req, res) => {
+    const userId = req.user.data._id;
+    const vocabularyId = req.params.vocabularyId || req.query.vocabularyId;
+
+    try {
+        const bookmarkVocab = await BookmarkVocabulary.findOneAndDelete({userId, vocabularyId});
+        if(!bookmarkVocab){
+            return res.status(404).json({error: 'Bookmark vocabulary not found'});
+        }
+        res.status(200).json({message: 'Bookmark vocabulary deleted successfully'});
+    } catch (error) {
+        res.status(500).json({error: error.message});
+    }
+
+}
+
 module.exports = {
     createBookmarkVocabulary,
     deleteBookmarkVocabulary,
-    getAllBookmarkVocabulary
+    getAllBookmarkVocabulary,
+    deleteBookmarkVocabularyByVocabularyId
 }
