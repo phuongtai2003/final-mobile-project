@@ -98,6 +98,8 @@ const createVocabularyInTopic = async (req, res) => {
     try {
         let topic = await Topic.findByIdAndUpdate(topicId, {$inc: { vocabularyCount: 1 } }, { new: true });
         const vocabulary = await Vocabulary.create({ englishWord, vietnameseWord, englishMeaning, vietnameseMeaning, topicId });
+        topic.vocabularyId.push(vocabulary._id);
+        await topic.save();
         res.status(200).json({ message: 'Vocabulary added to topic successfully', topic, vocabulary});
     } catch (error) {
         res.status(500).json({ error : error.message });
@@ -175,8 +177,10 @@ const importCSV = async (req, res) => {
         });
         for (let i = 0; i < vocabularyList.length; i++) {
             const { englishWord, vietnameseWord, englishMeaning, vietnameseMeaning } = vocabularyList[i];
-            await Vocabulary.create({ englishWord, vietnameseWord, englishMeaning, vietnameseMeaning, topicId : topic._id });
+            const vocab = await Vocabulary.create({ englishWord, vietnameseWord, englishMeaning, vietnameseMeaning, topicId : topic._id });
+            topic.vocabularyId.push(vocab._id);
         }
+        await topic.save();
         res.status(200).json({ message: 'Import data successfully', topic});
     } catch (error) {
         res.status(500).json({ error : error.message });
@@ -253,8 +257,10 @@ const getBookmarkVocabInTopic = async (req, res) => {
     try{
         // get bookmark vocab in topic
         const vocabInTopic = await Topic.findById(topicId).populate('vocabularyId');
+        console.log(vocabInTopic);
         let bookmarkVocab = [];
         for(let i = 0; i < vocabInTopic.vocabularyId.length; i++){
+            console.log(vocabInTopic.vocabularyId[i]);
             const bookmark = await BookmarkVocabulary.findOne({vocabularyId: vocabInTopic.vocabularyId[i]._id, userId});
             if(bookmark){
                 bookmarkVocab.push(vocabInTopic.vocabularyId[i]);

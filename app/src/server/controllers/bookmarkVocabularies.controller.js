@@ -7,7 +7,7 @@ const createBookmarkVocabulary = async (req, res) => {
         for(let vocabulary of vocabularies){
             const vocabularyId = vocabulary._id;
             
-            const vocab = await Vocabulary.findById(vocabularyId._id);
+            const vocab = await Vocabulary.findById(vocabularyId);
             if (!vocab) {
                 return res.status(404).json({ error: 'Vocabulary does not exist' });
             }
