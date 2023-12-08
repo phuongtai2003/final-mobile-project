@@ -58,7 +58,6 @@ const getAllBookmarkVocabulary = async (req, res) => {
 const deleteBookmarkVocabularyByVocabularyId = async (req, res) => {
     const userId = req.user.data._id;
     const vocabularyId = req.params.vocabularyId || req.query.vocabularyId;
-
     try {
         const bookmarkVocab = await BookmarkVocabulary.findOneAndDelete({userId, vocabularyId});
         if(!bookmarkVocab){
@@ -68,7 +67,6 @@ const deleteBookmarkVocabularyByVocabularyId = async (req, res) => {
     } catch (error) {
         res.status(500).json({error: error.message});
     }
-
 }
 
 module.exports = {

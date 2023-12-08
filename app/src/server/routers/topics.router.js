@@ -20,7 +20,8 @@ const {getTopicById,
     viewTopicIsPublic,
     userLearnPublicTopic,
     getFolderByTopicId,
-    getBookmarkVocabInTopic} = require('../controllers/topics.controller');
+    getBookmarkVocabInTopic,
+    getAllPublicTopics} = require('../controllers/topics.controller');
 
 // get all topics (tested)
 topicsRouter.get("/", getAllTopics);
@@ -60,4 +61,7 @@ topicsRouter.get("/:id/folder", authentication, isExistId(Topic), getFolderByTop
 
 // get bookmark in topic (tested)
 topicsRouter.get("/:id/bookmark", authentication, isExistId(Topic), getBookmarkVocabInTopic);
+// get all public topics
+topicsRouter.get("/public/getPublicTopic", getAllPublicTopics);
+
 module.exports = topicsRouter;

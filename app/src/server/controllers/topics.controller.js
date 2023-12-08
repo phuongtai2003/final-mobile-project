@@ -276,6 +276,18 @@ const getBookmarkVocabInTopic = async (req, res) => {
     }
 };
 
+const getAllPublicTopics = async (req, res) => {
+    try {
+        const topics = await Topic.find({isPublic: true});
+        if(topics.length === 0){
+            res.status(404).json({error: "Topics not found"});
+            return;
+        }
+        res.status(200).json({topics});
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
 
 module.exports = {
     getTopicById,
@@ -294,5 +306,6 @@ module.exports = {
     viewTopicIsPublic,
     userLearnPublicTopic,
     getFolderByTopicId,
-    getBookmarkVocabInTopic
+    getBookmarkVocabInTopic,
+    getAllPublicTopics
 }
