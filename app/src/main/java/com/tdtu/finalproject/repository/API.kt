@@ -21,6 +21,7 @@ import com.tdtu.finalproject.model.user.RegisterRequest
 import com.tdtu.finalproject.model.user.RegisterResponse
 import com.tdtu.finalproject.model.user.UpdateUserInfoRequest
 import com.tdtu.finalproject.model.vocabulary.BookmarkVocabulariesRequest
+import com.tdtu.finalproject.model.vocabulary.GetBookmarkVocabulariesResponse
 import com.tdtu.finalproject.model.vocabulary.GetVocabulariesByTopicResponse
 import com.tdtu.finalproject.model.vocabulary.Vocabulary
 import okhttp3.MultipartBody
@@ -87,4 +88,10 @@ interface API {
     fun getFoldersByTopicId(@Path("id") topicId: String, @Header("token") token: String) : Call<GetFolderByUserResponse>
     @POST("bookmarkVocabularies/")
     fun createBookmarkVocabulary(@Header("token") token: String, @Body() request: BookmarkVocabulariesRequest) : Call<Message>
+    @GET("bookmarkVocabularies/")
+    fun getBookmarkVocabularies(@Header("token") token: String) : Call<GetBookmarkVocabulariesResponse>
+    @DELETE("bookmarkVocabularies/vocabularies/{vocabularyId}")
+    fun removeBookmarkVocabulary(@Header("token") token: String, @Path("vocabularyId") vocabularyId: String) : Call<Message>
+    @GET("topics/{id}/bookmark")
+    fun getBookmarkVocabulariesInTopic(@Header("token") token: String, @Path("id") topicId: String) : Call<GetBookmarkVocabulariesResponse>
 }

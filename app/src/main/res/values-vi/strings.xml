@@ -131,4 +131,12 @@
     <string name="answer_by_term">Trả lời bằng thuật ngữ</string>
     <string name="dont_know">Không biết</string>
     <string name="bookmark_vocabulary_failed">Đánh dấu từ vựng thất bại</string>
+    <string name="remove_bookmark_vocabulary_failed">Xóa đánh dấu từ vựng thất bại</string>
+    <string name="bookmark_vocabulary_success">Đánh dấu từ vựng thành công</string>
+    <string name="remove_bookmark_vocabulary_success">Xóa đánh dấu từ vựng thành công</string>
+    <string name="options">Tùy chọn</string>
+    <string name="shuffle">Xáo trộn</string>
+    <string name="play_audio">Phát âm thanh</string>
+    <string name="card_orientation">Hướng thẻ</string>
+    <string name="apply">Áp dụng</string>
 </resources>

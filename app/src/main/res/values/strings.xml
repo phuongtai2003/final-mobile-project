@@ -130,4 +130,12 @@
     <string name="answer_by_term">Answer By Prompt</string>
     <string name="dont_know">Don\'t Know</string>
     <string name="bookmark_vocabulary_failed">Bookmark Vocabulary Failed</string>
+    <string name="remove_bookmark_vocabulary_failed">Remove Bookmark Vocabulary Failed</string>
+    <string name="bookmark_vocabulary_success">Bookmark Vocabulary Successfully</string>
+    <string name="remove_bookmark_vocabulary_success">Remove Bookmark Vocabulary Successfully</string>
+    <string name="options">Options</string>
+    <string name="shuffle">Shuffle</string>
+    <string name="play_audio">Play Audio</string>
+    <string name="card_orientation">Card Orientation</string>
+    <string name="apply">Apply</string>
 </resources>

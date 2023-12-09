@@ -6,6 +6,7 @@
     android:background="@color/primary_color"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/flashCardActivityLayout"
     tools:context=".FlashCardActivity">
 
     <FrameLayout
@@ -30,6 +31,28 @@
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+        <ImageButton
+            android:id="@+id/flashCardOptionBtn"
+            android:layout_gravity="end|center_vertical"
+            android:src="@drawable/baseline_settings_24"
+            android:background="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_marginTop="20dp"
+        android:paddingHorizontal="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageButton
+            android:id="@+id/autoBtn"
+            android:layout_gravity="end|center_vertical"
+            android:scaleType="fitXY"
+            android:background="@android:color/transparent"
+            android:src="@drawable/outline_play_circle_outline_24"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
     </FrameLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -42,6 +65,7 @@
         android:layout_weight="1">
 
         <androidx.cardview.widget.CardView
+            android:padding="10dp"
             android:id="@+id/cardFrontWordView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -55,27 +79,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-            <FrameLayout
-                android:layout_marginTop="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
                 <ImageButton
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="20dp"
                     android:id="@+id/cardFrontTextToSpeechBtn"
                     android:background="@android:color/transparent"
                     android:src="@drawable/outline_volume_up_24"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
-                <ImageButton
-                    android:layout_gravity="end|center_vertical"
-                    android:id="@+id/bookmarkVocabBtn"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/outline_star_outline_24"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </FrameLayout>
 
 
             <TextView
@@ -88,10 +100,22 @@
                 android:textColor="@color/white"
                 android:textSize="25sp"
                 android:textStyle="bold" />
+
+            <ImageButton
+                android:layout_gravity="bottom|start"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="20dp"
+                android:id="@+id/bookmarkVocabBtn"
+                android:background="@android:color/transparent"
+                android:src="@drawable/outline_star_outline_24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
         </androidx.cardview.widget.CardView>
 
 
         <androidx.cardview.widget.CardView
+            android:padding="10dp"
             android:id="@+id/cardBackWordView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -106,26 +130,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <FrameLayout
-                android:layout_width="match_parent"
+            <ImageButton
                 android:layout_marginTop="20dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_height="wrap_content">
-                <ImageButton
-                    android:id="@+id/cardBackTextToSpeechBtn"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/outline_volume_up_24"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <ImageButton
-                    android:layout_gravity="end|center_vertical"
-                    android:id="@+id/bookmarkVocabularyBtn"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/outline_star_outline_24"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </FrameLayout>
+                android:id="@+id/cardBackTextToSpeechBtn"
+                android:background="@android:color/transparent"
+                android:src="@drawable/outline_volume_up_24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
             <TextView
                 android:id="@+id/cardBackTextView"
@@ -137,6 +149,16 @@
                 android:textColor="@color/white"
                 android:textSize="25sp"
                 android:textStyle="bold" />
+            <ImageButton
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_gravity="start|bottom"
+                android:id="@+id/bookmarkVocabularyBtn"
+                android:background="@android:color/transparent"
+                android:src="@drawable/outline_star_outline_24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
         </androidx.cardview.widget.CardView>
 
 
@@ -149,20 +171,22 @@
 
         android:layout_height="wrap_content">
         <ImageButton
+            android:scaleType="fitXY"
             app:tint="@color/grey"
             android:background="@android:color/transparent"
             android:src="@drawable/baseline_keyboard_return_24"
             android:id="@+id/prevVocabularyBtn"
-            android:layout_width="40dp"
+            android:layout_width="30dp"
             android:layout_gravity="start|center_vertical"
-            android:layout_height="40dp"/>
+            android:layout_height="30dp"/>
         <ImageButton
+            android:scaleType="fitXY"
             android:layout_gravity="end|center_vertical"
             app:tint="@color/white"
             android:background="@android:color/transparent"
             android:src="@drawable/baseline_play_arrow_24"
-            android:id="@+id/autoPlayBtn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"/>
+            android:id="@+id/nextVocabularyBtn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
     </FrameLayout>
 </LinearLayout>
