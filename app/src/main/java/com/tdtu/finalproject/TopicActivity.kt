@@ -31,6 +31,7 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
     private lateinit var dataRepository: DataRepository
     private lateinit var topic: Topic
     private lateinit var vocabulariesList: List<Vocabulary>
+    private lateinit var bookmarkedVocabulariesList: List<Vocabulary>
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var vocabulariesAdapter: VocabularyFlashCardAdapter
     private var ttsEnglish: TextToSpeech? = null
@@ -83,7 +84,7 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
         binding.learnByFlashCardBtn.setOnClickListener {
             val intent = Intent(this, FlashCardActivity::class.java)
             intent.putExtra("topic", topic)
-
+            intent.putExtra("bookmarkedVocabularies", ArrayList(bookmarkedVocabulariesList))
             intent.putParcelableArrayListExtra("vocabularies", ArrayList(vocabulariesList))
             startActivity(intent)
         }
@@ -194,6 +195,16 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
             }
             null
         }
+        dataRepository.getBookmarkVocabulariesInTopic(sharedPreferences.getString(getString(R.string.token_key), null)!!, topic.id!!).thenAcceptAsync {
+            runOnUiThread {
+                bookmarkedVocabulariesList = it
+            }
+        }.exceptionally {
+            runOnUiThread{
+                Utils.showDialog(Gravity.CENTER, it.message!!.toString(), this)
+            }
+            null
+        }
         dataRepository.getUserById(topic.ownerId!!, sharedPreferences.getString(getString(R.string.token_key), null)!!).thenAcceptAsync {
             runOnUiThread {
                 Picasso.get().load(it.profileImage).into(binding.topicOwnerImg)
@@ -205,6 +216,11 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
             }
             null
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        initViewModel()
     }
 
     override fun onInit(status: Int) {
