@@ -151,7 +151,7 @@ class AddTopicActivity : AppCompatActivity() {
                 Utils.showDialog(Gravity.CENTER, getString(R.string.please_fill), this)
                 return@setOnClickListener
             }
-            if(vocabularyList.size == 0) {
+            if(vocabularyList.size < 2) {
                 Utils.showDialog(Gravity.CENTER, getString(R.string.please_add_vocabulary), this)
                 return@setOnClickListener
             }

@@ -14,7 +14,7 @@ import com.tdtu.finalproject.model.topic.Topic
 import com.tdtu.finalproject.model.user.User
 import com.tdtu.finalproject.utils.CustomOnItemClickListener
 
-class TopicAdapter(private var mContext: Context, private var topics: MutableList<Topic>, private var layout:Int, private var user: User, private var customOnItemClickListener: CustomOnItemClickListener): RecyclerView.Adapter<TopicAdapter.TopicViewHolder>() {
+class TopicAdapter(private var mContext: Context, private var topics: MutableList<Topic>, private var layout:Int, private var customOnItemClickListener: CustomOnItemClickListener): RecyclerView.Adapter<TopicAdapter.TopicViewHolder>() {
     class TopicViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val topicNameTxt: TextView = itemView.findViewById(R.id.topicItemNameTxt)
         val topicTermsCount: TextView = itemView.findViewById(R.id.termsCount)
@@ -24,6 +24,11 @@ class TopicAdapter(private var mContext: Context, private var topics: MutableLis
 
     fun getTopics(): MutableList<Topic>{
         return topics
+    }
+
+    fun setTopics(topics: MutableList<Topic>){
+        this.topics = topics
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopicViewHolder {
@@ -42,7 +47,7 @@ class TopicAdapter(private var mContext: Context, private var topics: MutableLis
         }
         holder.topicNameTxt.text = topic.topicNameEnglish
         holder.topicTermsCount.text = topic.vocabularyCount.toString() + " " + mContext.getString(R.string.vocabulary)
-        holder.topicOwnerNameTxt.text = user.username
-        Picasso.get().load(user.profileImage).into(holder.topicOwnerImg)
+        holder.topicOwnerNameTxt.text = topic.ownerId?.username
+        Picasso.get().load(topic.ownerId?.profileImage).into(holder.topicOwnerImg)
     }
 }

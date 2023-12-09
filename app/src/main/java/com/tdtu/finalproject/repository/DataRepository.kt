@@ -46,7 +46,7 @@ import java.util.concurrent.CompletableFuture
 class DataRepository {
 
     companion object{
-        private const val baseUrl: String = "http://192.168.1.8:3000/android/"
+        private const val baseUrl: String = "http://172.168.99.98:3000/android/"
         private val api = Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(GsonConverterFactory.create()).build().create(API::class.java)
         private var instance: DataRepository? = null
         fun getInstance() : DataRepository{
@@ -642,6 +642,31 @@ class DataRepository {
 
             }
             override fun onFailure(call: Call<GetBookmarkVocabulariesResponse>, t: Throwable) {
+                future.completeExceptionally(t)
+            }
+        })
+        return future
+    }
+
+    fun getPublicTopics(token: String): CompletableFuture<List<Topic>> {
+        val future: CompletableFuture<List<Topic>> = CompletableFuture()
+        val call = api.getPublicTopics(token)
+        var error: String?
+        call.enqueue(object : Callback<GetTopicsResponse>{
+            override fun onResponse(call: Call<GetTopicsResponse>, response: Response<GetTopicsResponse>) {
+                if(response.code() == 200){
+                    future.complete(response.body()?.topics)
+                }
+                else if(response.code() == 404){
+                    future.complete(ArrayList())
+                }
+                else{
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
+                    future.completeExceptionally(Exception(error))
+                }
+
+            }
+            override fun onFailure(call: Call<GetTopicsResponse>, t: Throwable) {
                 future.completeExceptionally(t)
             }
         })

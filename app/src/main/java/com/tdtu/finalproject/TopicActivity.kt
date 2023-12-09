@@ -205,7 +205,7 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
             }
             null
         }
-        dataRepository.getUserById(topic.ownerId!!, sharedPreferences.getString(getString(R.string.token_key), null)!!).thenAcceptAsync {
+        dataRepository.getUserById(topic.ownerId!!.id, sharedPreferences.getString(getString(R.string.token_key), null)!!).thenAcceptAsync {
             runOnUiThread {
                 Picasso.get().load(it.profileImage).into(binding.topicOwnerImg)
                 binding.topicOwnerNameTxt.text = it.username

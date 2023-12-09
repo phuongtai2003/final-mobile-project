@@ -27,7 +27,7 @@ const getAllTopics = async (req, res) => {
 const getTopicsByUserId = async (req, res) => {
     const userId = req.params.id || req.query.id;
     try {
-        const topics = await Topic.find({ userId });
+        const topics = await Topic.find({ userId }).populate('ownerId').exec();
         if(topics.length === 0){
             res.status(404).json({error: "Topics not found"});
             return;
@@ -211,7 +211,12 @@ const exportCSV = async (req, res) => {
 const getTopicsByFolderId = async (req, res) => {
     const folderId = req.params.folderId || req.query.folderId;
     try {
-        const topicsInFolder = await TopicInFolder.find({folderId}).populate('topicId');
+        const topicsInFolder = await TopicInFolder.find({folderId}).populate({
+            path: 'topicId',
+            populate:{
+                path: 'ownerId'
+            }
+        });
         if(topicsInFolder.length === 0){
             res.status(404).json({error: "Topics not found"});
             return;
@@ -277,8 +282,9 @@ const getBookmarkVocabInTopic = async (req, res) => {
 };
 
 const getAllPublicTopics = async (req, res) => {
+    const userId = req.user.data._id;
     try {
-        const topics = await Topic.find({isPublic: true});
+        const topics = await Topic.find({isPublic: true, ownerId: {$ne: userId}}).populate('ownerId').exec();
         if(topics.length === 0){
             res.status(404).json({error: "Topics not found"});
             return;

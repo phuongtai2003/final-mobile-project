@@ -66,10 +66,10 @@ class HomePageFragment : Fragment(), CustomOnItemClickListener {
 
     private fun getUserVM(){
         userViewModel = ViewModelProvider(requireActivity())[HomeDataViewModel::class.java]
-        userViewModel.getUser()?.observe(viewLifecycleOwner) {
+        userViewModel.getUser().observe(viewLifecycleOwner) {
             binding.helloText.text = "${getString(R.string.hello)}, ${it.username}"
         }
-        userViewModel.getTopicsList()?.observe(viewLifecycleOwner){
+        userViewModel.getTopicsList().observe(viewLifecycleOwner){
             val mutableList: MutableList<Topic> = it.toMutableList()
             if(mutableList.isEmpty()){
                 binding.topicRecyclerView.visibility = View.GONE
@@ -77,7 +77,7 @@ class HomePageFragment : Fragment(), CustomOnItemClickListener {
             } else{
                 binding.topicRecyclerView.visibility = View.VISIBLE
                 binding.noTopicText.visibility = View.GONE
-                topicAdapter = TopicAdapter(requireContext(), mutableList, R.layout.topic_menu_item, userViewModel.getUser()?.value!!, this)
+                topicAdapter = TopicAdapter(requireContext(), mutableList, R.layout.topic_menu_item, this)
                 binding.topicRecyclerView.adapter = topicAdapter
                 binding.topicRecyclerView.clipToPadding = false
                 binding.topicRecyclerView.clipChildren = false

@@ -94,4 +94,6 @@ interface API {
     fun removeBookmarkVocabulary(@Header("token") token: String, @Path("vocabularyId") vocabularyId: String) : Call<Message>
     @GET("topics/{id}/bookmark")
     fun getBookmarkVocabulariesInTopic(@Header("token") token: String, @Path("id") topicId: String) : Call<GetBookmarkVocabulariesResponse>
+    @GET("topics/public/getPublicTopic")
+    fun getPublicTopics(@Header("token") token: String) : Call<GetTopicsResponse>
 }

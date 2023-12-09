@@ -82,7 +82,7 @@ class FolderDetailActivity : AppCompatActivity() , CustomOnItemClickListener, On
                 runOnUiThread {
                     val mutableList = it.toMutableList()
                     topicList = MutableList(mutableList.size){i -> mutableList[i]}
-                    adapter = TopicAdapter(this, mutableList, R.layout.topic_library_item, user, this)
+                    adapter = TopicAdapter(this, mutableList, R.layout.topic_library_item, this)
                     binding.folderDetailRecyclerView.setHasFixedSize(true)
                     binding.folderDetailRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
                     binding.folderDetailRecyclerView.adapter = adapter
@@ -115,7 +115,7 @@ class FolderDetailActivity : AppCompatActivity() , CustomOnItemClickListener, On
                             binding.folderTopicCount.text = topics.size.toString() + " " + getString(R.string.topic)
                             binding.folderDetailRecyclerView.visibility = android.view.View.VISIBLE
                             binding.noTopicsInFolderLayout.visibility = android.view.View.GONE
-                            adapter = TopicAdapter(this, topics, R.layout.topic_library_item, user, this)
+                            adapter = TopicAdapter(this, topics, R.layout.topic_library_item, this)
                             binding.folderDetailRecyclerView.setHasFixedSize(true)
                             binding.folderDetailRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
                             binding.folderDetailRecyclerView.adapter = adapter

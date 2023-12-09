@@ -58,7 +58,7 @@ class TopicFragment : Fragment(), CustomOnItemClickListener {
             else{
                 binding.noTopicLayout.visibility = View.GONE
                 binding.topicRecyclerView.visibility = View.VISIBLE
-                topicAdapter = TopicAdapter(requireActivity(), mutableList, R.layout.topic_library_item, homeDataViewModel.getUser()!!.value!!, this)
+                topicAdapter = TopicAdapter(requireActivity(), mutableList, R.layout.topic_library_item, this)
                 binding.topicRecyclerView.setHasFixedSize(true)
                 binding.topicRecyclerView.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
                binding.topicRecyclerView.adapter = topicAdapter

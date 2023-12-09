@@ -3,6 +3,7 @@ package com.tdtu.finalproject.model.topic
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import com.tdtu.finalproject.model.user.User
 import java.util.ArrayList
 
 data class Topic(
@@ -21,7 +22,7 @@ data class Topic(
     val learningStatisticsId: List<String>?,
     val topicInFolderId: List<String>?,
     val vocabularyId: List<String>?,
-    val ownerId: String?,
+    val ownerId: User?,
     var chosen: Boolean = false
 ): Parcelable {
     override fun equals(other: Any?): Boolean {
@@ -51,7 +52,7 @@ data class Topic(
         parcel.createStringArrayList(),
         parcel.createStringArrayList(),
         parcel.createStringArrayList(),
-        parcel.readString(),
+        parcel.readParcelable(User::class.java.classLoader),
         parcel.readByte() != 0.toByte()
     ) {
     }
@@ -70,7 +71,7 @@ data class Topic(
         parcel.writeStringList(learningStatisticsId)
         parcel.writeStringList(topicInFolderId)
         parcel.writeStringList(vocabularyId)
-        parcel.writeString(ownerId)
+        parcel.writeParcelable(ownerId, flags)
         parcel.writeByte(if (chosen) 1 else 0)
     }
 

@@ -62,6 +62,6 @@ topicsRouter.get("/:id/folder", authentication, isExistId(Topic), getFolderByTop
 // get bookmark in topic (tested)
 topicsRouter.get("/:id/bookmark", authentication, isExistId(Topic), getBookmarkVocabInTopic);
 // get all public topics
-topicsRouter.get("/public/getPublicTopic", getAllPublicTopics);
+topicsRouter.get("/public/getPublicTopic", authentication, getAllPublicTopics);
 
 module.exports = topicsRouter;
