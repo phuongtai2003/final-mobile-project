@@ -12,6 +12,7 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.ViewModelProvider
 import com.tdtu.finalproject.databinding.ActivityTypingBinding
 import com.tdtu.finalproject.model.quizzes.Quiz
 import com.tdtu.finalproject.model.topic.Topic
@@ -22,6 +23,7 @@ import com.tdtu.finalproject.repository.DataRepository
 import com.tdtu.finalproject.utils.Language
 import com.tdtu.finalproject.utils.StudyMode
 import com.tdtu.finalproject.utils.Utils
+import com.tdtu.finalproject.viewmodel.StudyViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -53,10 +55,13 @@ class TypingActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var currentAnswerMode = false
     private lateinit var dataRepository: DataRepository
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var studyViewModel: StudyViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTypingBinding.inflate(layoutInflater)
+        studyViewModel = ViewModelProvider(this)[StudyViewModel::class.java]
+        studyViewModel.startTimer()
         ttsEnglish = TextToSpeech(this, this)
         ttsVietnamese = TextToSpeech(this, this)
         studyLanguage = intent.getSerializableExtra("studyLanguage") as Language
@@ -115,6 +120,7 @@ class TypingActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private fun generateQuestionView(){
         if(questionCount > totalQuestions){
+            val seconds = studyViewModel.seconds.value!!
             val scope = CoroutineScope(Dispatchers.Main)
             scope.launch {
                 val isOwnedTopic = topic.ownerId?.id == Utils.getUserFromSharedPreferences(this@TypingActivity,sharedPreferences).id
@@ -122,13 +128,21 @@ class TypingActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                     val studyJob = async {
                         dataRepository.studyTopicForUser(sharedPreferences.getString(getString(R.string.token_key), null)!!, topic.id!!).exceptionally {
                             runOnUiThread {
-                                Log.d("USER TAG", "generateQuestionView: " + it.message)
                                 Utils.showSnackBar(binding.root, it.message!!)
                             }
                             null
                         }
                     }
                     studyJob.await()
+                    val updateLearningJob = async {
+                        dataRepository.updateLearningStatisticTopic(sharedPreferences.getString(getString(R.string.token_key), null)!!, topic.id!!,seconds ).exceptionally {
+                            runOnUiThread {
+                                Utils.showSnackBar(binding.root, it.message!!)
+                            }
+                            null
+                        }
+                    }
+                    updateLearningJob.await()
                 }
                 val studyVocabularies = mutableListOf<StudyVocabulary>()
                 for(i in quizzesList.indices){

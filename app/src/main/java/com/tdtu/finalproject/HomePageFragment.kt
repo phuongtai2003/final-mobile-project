@@ -36,8 +36,8 @@ class HomePageFragment : Fragment(), CustomOnItemClickListener {
     private var onBottomNavigationChangeListener: OnBottomNavigationChangeListener? = null
     private var onDrawerNavigationPressedListener: OnDrawerNavigationPressedListener? = null
     private lateinit var userViewModel :HomeDataViewModel
-    private lateinit var topicAdapter: TopicAdapter
-    private lateinit var folderAdapter: FolderAdapter
+    private var topicAdapter: TopicAdapter? = null
+    private var folderAdapter: FolderAdapter? = null
 
     private val binding get() = _binding!!
 
@@ -80,10 +80,15 @@ class HomePageFragment : Fragment(), CustomOnItemClickListener {
             } else{
                 binding.topicRecyclerView.visibility = View.VISIBLE
                 binding.noTopicText.visibility = View.GONE
-                topicAdapter = TopicAdapter(requireContext(), mutableList, R.layout.topic_menu_item, this)
-                binding.topicRecyclerView.adapter = topicAdapter
-                binding.topicRecyclerView.clipToPadding = false
-                binding.topicRecyclerView.clipChildren = false
+                if(topicAdapter == null){
+                    topicAdapter = TopicAdapter(requireContext(), mutableList, R.layout.topic_menu_item, this)
+                    binding.topicRecyclerView.adapter = topicAdapter
+                    binding.topicRecyclerView.clipToPadding = false
+                    binding.topicRecyclerView.clipChildren = false
+                }
+                else{
+                    topicAdapter?.setTopics(mutableList)
+                }
             }
         }
         userViewModel.getFolderList()?.observe(viewLifecycleOwner){
@@ -94,10 +99,14 @@ class HomePageFragment : Fragment(), CustomOnItemClickListener {
             } else{
                 binding.folderRecyclerView.visibility = View.VISIBLE
                 binding.noFolderText.visibility = View.GONE
-                folderAdapter = FolderAdapter(requireContext(), mutableList, R.layout.folder_menu_item, userViewModel.getUser()?.value!!, this)
-                binding.folderRecyclerView.adapter = folderAdapter
-                binding.folderRecyclerView.clipToPadding = false
-                binding.folderRecyclerView.clipChildren = false
+                if(folderAdapter == null){
+                    folderAdapter = FolderAdapter(requireContext(), mutableList, R.layout.folder_menu_item, userViewModel.getUser()?.value!!, this)
+                    binding.folderRecyclerView.adapter = folderAdapter
+                    binding.folderRecyclerView.clipToPadding = false
+                    binding.folderRecyclerView.clipChildren = false
+                }else{
+                    folderAdapter?.setFolders(mutableList)
+                }
             }
         }
     }

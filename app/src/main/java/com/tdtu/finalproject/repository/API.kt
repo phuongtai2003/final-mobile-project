@@ -14,6 +14,7 @@ import com.tdtu.finalproject.model.topic.CreateTopicResponse
 import com.tdtu.finalproject.model.topic.GetTopicByFolderResponse
 import com.tdtu.finalproject.model.topic.GetTopicByIdResponse
 import com.tdtu.finalproject.model.topic.Topic
+import com.tdtu.finalproject.model.topic.UpdateLearningStatisticsRequest
 import com.tdtu.finalproject.model.user.LoginRequest
 import com.tdtu.finalproject.model.user.LoginResponse
 import com.tdtu.finalproject.model.user.UpdateUserResponse
@@ -101,4 +102,6 @@ interface API {
     fun studyVocabulary(@Header("token") token: String, @Body() request: StudyVocabularyRequest) : Call<Message>
     @POST("topics/public/learnTopic/{id}")
     fun learnTopic(@Header("token") token: String, @Path("id") topicId: String) : Call<Message>
+    @PUT("learningStatistics/topic/{topicId}/progress")
+    fun updateTopicProgress(@Header("token") token: String, @Path("topicId") topicId: String, @Body() updateLearningStatisticsRequest: UpdateLearningStatisticsRequest) : Call<Message>
 }

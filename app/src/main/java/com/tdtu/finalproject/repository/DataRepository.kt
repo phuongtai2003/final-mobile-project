@@ -17,6 +17,7 @@ import com.tdtu.finalproject.model.folder.UpdateFolderResponse
 import com.tdtu.finalproject.model.topic.GetTopicByFolderResponse
 import com.tdtu.finalproject.model.topic.GetTopicByIdResponse
 import com.tdtu.finalproject.model.topic.Topic
+import com.tdtu.finalproject.model.topic.UpdateLearningStatisticsRequest
 import com.tdtu.finalproject.model.user.LoginRequest
 import com.tdtu.finalproject.model.user.LoginResponse
 import com.tdtu.finalproject.model.user.UpdateUserResponse
@@ -47,7 +48,7 @@ import java.util.concurrent.CompletableFuture
 class DataRepository {
 
     companion object{
-        private const val baseUrl: String = "http://192.168.2.13:3000/android/"
+        private const val baseUrl: String = "http://192.168.1.8:3000/android/"
         private val api = Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(GsonConverterFactory.create()).build().create(API::class.java)
         private var instance: DataRepository? = null
         fun getInstance() : DataRepository{
@@ -710,6 +711,27 @@ class DataRepository {
                     error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
                     future.completeExceptionally(Exception(error))
                 }
+            }
+            override fun onFailure(call: Call<Message>, t: Throwable) {
+                future.completeExceptionally(t)
+            }
+        })
+        return future
+    }
+    fun updateLearningStatisticTopic(token: String, topicId: String, time: Long): CompletableFuture<Boolean>{
+        val future: CompletableFuture<Boolean> = CompletableFuture()
+        val call = api.updateTopicProgress(token, topicId, UpdateLearningStatisticsRequest(time))
+        var error: String?
+        call.enqueue(object : Callback<Message>{
+            override fun onResponse(call: Call<Message>, response: Response<Message>) {
+                if(response.code() == 200){
+                    future.complete(true)
+                }
+                else{
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
+                    future.completeExceptionally(Exception(error))
+                }
+
             }
             override fun onFailure(call: Call<Message>, t: Throwable) {
                 future.completeExceptionally(t)

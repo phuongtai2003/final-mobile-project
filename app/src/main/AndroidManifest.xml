@@ -25,42 +25,55 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="33">
         <activity
+            android:screenOrientation="portrait"
             android:name=".FlashCardActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".TypingActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".FeedbackActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".QuizActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".StudyConfigurationActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".AddTopicFolderActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".TopicActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".AddTopicToFolderActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".FolderDetailActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".AddTopicActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".AccountActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".HomeActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".RegisterActivity"
             android:exported="false">
             <meta-data
@@ -69,12 +82,14 @@
         </activity>
         <activity
             android:name=".LoginActivity"
+            android:screenOrientation="portrait"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
+            android:screenOrientation="portrait"
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
