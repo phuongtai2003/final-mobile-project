@@ -1,6 +1,7 @@
 package com.tdtu.finalproject
 
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -12,8 +13,10 @@ import com.tdtu.finalproject.model.quizzes.Quiz
 import com.tdtu.finalproject.model.results.ResultData
 import com.tdtu.finalproject.model.topic.Topic
 import com.tdtu.finalproject.model.vocabulary.Vocabulary
+import com.tdtu.finalproject.repository.DataRepository
 import com.tdtu.finalproject.utils.Language
 import com.tdtu.finalproject.utils.StudyMode
+import com.tdtu.finalproject.utils.Utils
 
 class FeedbackActivity : AppCompatActivity() {
     private lateinit var binding: ActivityFeedbackBinding
@@ -29,10 +32,15 @@ class FeedbackActivity : AppCompatActivity() {
     private lateinit var topic: Topic
     private lateinit var resultDataList: List<ResultData>
     private lateinit var resultDataAdapter: FeedbackResultAdapter
+    private lateinit var bookmarkedVocabulariesList : List<Vocabulary>
     private lateinit var studyMode: StudyMode
+    private lateinit var dataRepository: DataRepository
+    private lateinit var sharedPreference: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFeedbackBinding.inflate(layoutInflater)
+        dataRepository = DataRepository.getInstance()
+        sharedPreference = getSharedPreferences(getString(R.string.shared_preferences_key), MODE_PRIVATE)
         studyLanguage = intent.getSerializableExtra("studyLanguage") as Language
         answerByDefinition = intent.getBooleanExtra("answerByDefinition", true)
         answerByVocabulary = intent.getBooleanExtra("answerByVocabulary", true)
@@ -41,6 +49,7 @@ class FeedbackActivity : AppCompatActivity() {
         vocabularies = intent.getParcelableArrayListExtra<Vocabulary>("vocabularies")!!
         chosenAnswers = intent.getStringArrayListExtra("chosenAnswers")!!
         quizzesList = intent.getParcelableArrayListExtra<Quiz>("quizzes")!!
+        bookmarkedVocabulariesList = intent.getParcelableArrayListExtra<Vocabulary>("bookmarkedVocabularies")!!
         answerCorrectness = intent.getSerializableExtra("answersCorrectness") as List<Boolean>
         studyMode = intent.getSerializableExtra("studyMode") as StudyMode
         topic = intent.getParcelableExtra<Topic>("topic")!!
@@ -98,6 +107,18 @@ class FeedbackActivity : AppCompatActivity() {
         binding.answerRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.answerRecyclerView.adapter = resultDataAdapter
 
+        dataRepository.getBookmarkVocabulariesInTopic(sharedPreference.getString(getString(R.string.token_key),null)!!, topic.id!!).thenAcceptAsync {
+            if(it != null){
+                bookmarkedVocabulariesList = it
+            }
+        }.exceptionally {
+            val intent = Intent(this, HomeActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+            Utils.showSnackBar(binding.root, getString(R.string.something_went_wrong))
+            null
+        }
+
         binding.closeBtn.setOnClickListener {
             val intent = Intent(this, HomeActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
@@ -110,6 +131,28 @@ class FeedbackActivity : AppCompatActivity() {
             intent.putParcelableArrayListExtra("vocabularies", ArrayList(vocabularies))
             startActivity(intent)
         }
+        binding.flashcardBtn.setOnClickListener {
+            val intent = Intent(this, FlashCardActivity::class.java)
+            intent.putExtra("topic", topic)
+            intent.putExtra("bookmarkedVocabularies", ArrayList(bookmarkedVocabulariesList))
+            intent.putParcelableArrayListExtra("vocabularies", ArrayList(vocabularies))
+            startActivity(intent)
+        }
         setContentView(binding.root)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        dataRepository.getBookmarkVocabulariesInTopic(sharedPreference.getString(getString(R.string.token_key),null)!!, topic.id!!).thenAcceptAsync {
+            if(it != null){
+                bookmarkedVocabulariesList = it
+            }
+        }.exceptionally {
+            val intent = Intent(this, HomeActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+            Utils.showSnackBar(binding.root, getString(R.string.something_went_wrong))
+            null
+        }
     }
 }

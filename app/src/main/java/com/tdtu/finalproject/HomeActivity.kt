@@ -190,6 +190,13 @@ class HomeActivity : AppCompatActivity(), OnBottomNavigationChangeListener, OnDr
             Utils.showSnackBar(binding.root, e.message!!)
             null
         }
+        dataRepository.getPublicTopics(sharedPref.getString(getString(R.string.token_key), null)!!).thenAccept {
+            userViewModel.setPublicTopicsList(it)
+        }.exceptionally{
+            e ->
+            Utils.showSnackBar(binding.root, e.message!!)
+            null
+        }
     }
 
     override fun openDrawerFromFragment() {

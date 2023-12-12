@@ -1,11 +1,20 @@
 package com.tdtu.finalproject
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.tdtu.finalproject.adapter.TopicAdapter
 import com.tdtu.finalproject.databinding.FragmentSearchBinding
+import com.tdtu.finalproject.model.folder.Folder
+import com.tdtu.finalproject.model.topic.Topic
+import com.tdtu.finalproject.utils.CustomOnItemClickListener
+import com.tdtu.finalproject.viewmodel.HomeDataViewModel
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -17,11 +26,14 @@ private const val ARG_PARAM2 = "param2"
  * Use the [SearchFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class SearchFragment : Fragment() {
+class SearchFragment : Fragment(), CustomOnItemClickListener{
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
     private var searchFragmentBinding: FragmentSearchBinding? = null
+    private lateinit var homeDataViewModel: HomeDataViewModel
+    private var topicAdapter: TopicAdapter? = null
+    private lateinit var originalTopicsList: List<Topic>
     private val binding get() = searchFragmentBinding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,12 +44,49 @@ class SearchFragment : Fragment() {
         }
     }
 
+    private fun initVM(){
+        originalTopicsList = ArrayList()
+        homeDataViewModel = ViewModelProvider(requireActivity())[HomeDataViewModel::class.java]
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.searchBar.text.clear()
+        binding.searchBar.clearFocus()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false)
+        searchFragmentBinding = FragmentSearchBinding.inflate(inflater, container, false)
+        initVM()
+        homeDataViewModel.getPublicTopicsList().observe(viewLifecycleOwner){topicList->
+            originalTopicsList = topicList
+            val mutableList = topicList.toMutableList()
+            if(topicAdapter == null || topicAdapter?.itemCount == 0){
+                topicAdapter = TopicAdapter(requireActivity(), mutableList, R.layout.topic_library_item, this)
+                binding.publicTopicRecyclerView.setHasFixedSize(true)
+                binding.publicTopicRecyclerView.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
+                binding.publicTopicRecyclerView.adapter = topicAdapter
+            }
+            else{
+                topicAdapter?.setTopics(mutableList)
+            }
+        }
+        binding.searchBar.addTextChangedListener {
+            val mutableList = originalTopicsList.toMutableList()
+            val searchText = binding.searchBar.text.toString()
+            if(searchText.isNotEmpty()){
+                val filteredList = mutableList.filter { topic -> topic.topicNameEnglish!!.contains(searchText, true) || topic.topicNameVietnamese!!.contains(searchText, true) }
+                topicAdapter?.setTopics(filteredList.toMutableList())
+            }
+            else{
+                topicAdapter?.setTopics(mutableList)
+            }
+        }
+        return binding.root
     }
 
     companion object {
@@ -58,5 +107,14 @@ class SearchFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun onTopicClick(topic: Topic) {
+        val intent = Intent(requireContext(), TopicActivity::class.java)
+        intent.putExtra("topic", topic)
+        startActivity(intent)
+    }
+
+    override fun onFolderClick(folder: Folder) {
     }
 }

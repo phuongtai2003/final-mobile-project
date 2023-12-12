@@ -8,34 +8,42 @@ import com.tdtu.finalproject.model.topic.Topic
 import com.tdtu.finalproject.model.user.User
 
 class HomeDataViewModel : ViewModel() {
-    private var user: MutableLiveData<User>? = MutableLiveData<User>()
-    private var topicsList: MutableLiveData<List<Topic>>? = MutableLiveData<List<Topic>>()
-    private var folderList: MutableLiveData<List<Folder>>? = MutableLiveData<List<Folder>>()
+    private var user: MutableLiveData<User> = MutableLiveData<User>()
+    private var topicsList: MutableLiveData<List<Topic>> = MutableLiveData<List<Topic>>()
+    private var folderList: MutableLiveData<List<Folder>> = MutableLiveData<List<Folder>>()
+    private var publicTopicsList: MutableLiveData<List<Topic>> = MutableLiveData<List<Topic>>()
 
     init {
 
     }
-    fun getUser(): LiveData<User>? {
+    fun getUser(): LiveData<User> {
         return user
     }
 
     fun setUser(user: User) {
-        this.user?.value = user
+        this.user.value = user
     }
 
-    fun getTopicsList(): LiveData<List<Topic>>?{
+    fun getTopicsList(): LiveData<List<Topic>>{
         return topicsList
     }
 
     fun setTopicsList(topicsList: List<Topic>){
-        this.topicsList?.value = topicsList
+        this.topicsList.value = topicsList
     }
 
-    fun getFolderList(): LiveData<List<Folder>>?{
+    fun getFolderList(): LiveData<List<Folder>>{
         return folderList
     }
 
     fun setFolderList(folderList: List<Folder>){
-        this.folderList?.value = folderList
+        this.folderList.value = folderList
+    }
+    fun getPublicTopicsList(): LiveData<List<Topic>>{
+        return publicTopicsList
+    }
+
+    fun setPublicTopicsList(publicTopicsList: List<Topic>){
+        this.publicTopicsList.value = publicTopicsList
     }
 }

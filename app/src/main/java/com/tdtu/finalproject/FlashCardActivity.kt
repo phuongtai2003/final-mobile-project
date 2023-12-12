@@ -75,6 +75,24 @@ class FlashCardActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Flas
             dialog.arguments = bundle
             dialog.show(supportFragmentManager, "FlashCardOptionSheet")
         }
+        binding.flashCardActivityLayout.setOnTouchListener(object : OnSwipeTouchListener(){
+            override fun onSwipeLeft() {
+                super.onSwipeLeft()
+                if(index < totalVocabularies){
+                    index++
+                    setVocabulary()
+                }
+            }
+
+            override fun onSwipeRight() {
+                super.onSwipeRight()
+                if(index > 0){
+                    index--
+                    setVocabulary()
+                }
+            }
+        })
+
         setVocabulary()
         binding.autoBtn.setOnClickListener {
             if(!isAutoPlayCard){
@@ -249,8 +267,12 @@ class FlashCardActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Flas
         binding.prevVocabularyBtn.isEnabled = index != 0
         binding.prevVocabularyBtn.setColorFilter(resources.getColor(if(index == 0) R.color.grey else R.color.white))
         binding.prevVocabularyBtn.setOnClickListener {
-            index--
-            setVocabulary()
+            runOnUiThread {
+                ttsEnglish.stop()
+                ttsVietnamese.stop()
+                index--
+                setVocabulary()
+            }
         }
         binding.bookmarkVocabularyBtn.setOnClickListener {
             if(!isBookmarked){
@@ -282,21 +304,12 @@ class FlashCardActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Flas
         }
 
         binding.nextVocabularyBtn.setOnClickListener {
-            Handler().postDelayed({
-                runOnUiThread {
-                    ttsEnglish.stop()
-                    ttsVietnamese.stop()
-                    if (isFront) {
-                        frontAnim.setTarget(binding.cardFrontWordView)
-                        backAnim.setTarget(binding.cardBackWordView)
-                        frontAnim.start()
-                        backAnim.start()
-                        isFront = false
-                    }
-                    index++
-                    setVocabulary()
-                }
-            }, if (isFront) 500 else 0)
+            runOnUiThread {
+                ttsEnglish.stop()
+                ttsVietnamese.stop()
+                index++
+                setVocabulary()
+            }
         }
 
         vocabularies[index].apply {
@@ -366,23 +379,6 @@ class FlashCardActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Flas
                 }
             }
         }
-        binding.flashCardActivityLayout.setOnTouchListener(object : OnSwipeTouchListener(){
-            override fun onSwipeLeft() {
-                super.onSwipeLeft()
-                if(index < totalVocabularies){
-                    index++
-                    setVocabulary()
-                }
-            }
-
-            override fun onSwipeRight() {
-                super.onSwipeRight()
-                if(index > 0){
-                    index--
-                    setVocabulary()
-                }
-            }
-        })
         if(isAutoPlayCard){
             lifecycleScope.launch {
                 if(index != 0){

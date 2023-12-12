@@ -2,6 +2,7 @@ package com.tdtu.finalproject.utils
 
 import android.app.Dialog
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.Gravity
@@ -9,11 +10,14 @@ import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
 import com.tdtu.finalproject.R
 import com.tdtu.finalproject.model.quizzes.Quiz
+import com.tdtu.finalproject.model.user.User
 import com.tdtu.finalproject.model.vocabulary.Vocabulary
 
 class Utils {
@@ -177,7 +181,13 @@ class Utils {
             val windowAttribute: WindowManager.LayoutParams = window.attributes
             windowAttribute.gravity = Gravity.CENTER
             window.attributes = windowAttribute
-            dialog.setCancelable(true)
+            dialog.setCancelable(false)
+
+            val closeBtn = dialog.findViewById<ImageButton>(R.id.closeBtn)
+
+            closeBtn.setOnClickListener{
+                dialog.dismiss()
+            }
 
             dialog.show()
         }
@@ -192,16 +202,22 @@ class Utils {
             val windowAttribute: WindowManager.LayoutParams = window.attributes
             windowAttribute.gravity = Gravity.CENTER
             window.attributes = windowAttribute
-            dialog.setCancelable(true)
+            dialog.setCancelable(false)
 
             val correctAnswerTxt = dialog.findViewById<TextView>(R.id.correctAnswerTxt)
             val wrongAnswerTxt = dialog.findViewById<TextView>(R.id.chosenWrongAnswerTxt)
+            val closeBtn = dialog.findViewById<ImageButton>(R.id.closeBtn)
 
             correctAnswerTxt.text = correctAnswer
             wrongAnswerTxt.text = wrongAnswer
-
+            closeBtn.setOnClickListener{
+                dialog.dismiss()
+            }
             dialog.show()
         }
 
+        fun getUserFromSharedPreferences(mContext: Context,sharedPreferences: SharedPreferences): User{
+            return Gson().fromJson(sharedPreferences.getString(mContext.getString(R.string.user_data_key), null), User::class.java)
+        }
     }
 }

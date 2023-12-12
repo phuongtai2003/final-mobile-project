@@ -1,10 +1,12 @@
 package com.tdtu.finalproject
 
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.speech.tts.TextToSpeech
+import android.util.Log
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
@@ -13,10 +15,17 @@ import androidx.core.widget.addTextChangedListener
 import com.tdtu.finalproject.databinding.ActivityTypingBinding
 import com.tdtu.finalproject.model.quizzes.Quiz
 import com.tdtu.finalproject.model.topic.Topic
+import com.tdtu.finalproject.model.vocabulary.StudyVocabulary
+import com.tdtu.finalproject.model.vocabulary.StudyVocabularyRequest
 import com.tdtu.finalproject.model.vocabulary.Vocabulary
+import com.tdtu.finalproject.repository.DataRepository
 import com.tdtu.finalproject.utils.Language
 import com.tdtu.finalproject.utils.StudyMode
 import com.tdtu.finalproject.utils.Utils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import java.util.Locale
 import kotlin.random.Random
 
@@ -37,10 +46,13 @@ class TypingActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private lateinit var quizzesList: List<Quiz>
     private lateinit var answersCorrectness: MutableList<Boolean>
     private lateinit var chosenAnswers: MutableList<String>
+    private lateinit var bookmarkedVocabularies : List<Vocabulary>
     private var instantFeedback = false
     private var isClickable = true
     private lateinit var studyMode: StudyMode
     private var currentAnswerMode = false
+    private lateinit var dataRepository: DataRepository
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,9 +70,12 @@ class TypingActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         topic = intent.getParcelableExtra("topic")!!
         instantFeedback = intent.getBooleanExtra("instantFeedBack", false)
         studyMode = intent.getSerializableExtra("studyMode") as StudyMode
-        quizzesList = Utils.generateQuizzes(vocabulariesList, shuffled)
+        bookmarkedVocabularies = intent.getParcelableArrayListExtra<Vocabulary>("bookmarkedVocabularies")!!
+        quizzesList = Utils.generateQuizzes(vocabulariesList, shuffled).subList(0, totalQuestions)
         answersCorrectness = MutableList(quizzesList.size){false}
         chosenAnswers = MutableList(quizzesList.size){""}
+        dataRepository = DataRepository.getInstance()
+        sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_key), MODE_PRIVATE)
 
         generateQuestionView()
 
@@ -100,19 +115,59 @@ class TypingActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private fun generateQuestionView(){
         if(questionCount > totalQuestions){
-            val feedBackIntent = Intent(this, FeedbackActivity::class.java)
-            feedBackIntent.putExtra("studyLanguage", studyLanguage)
-            feedBackIntent.putExtra("answerByDefinition", answerByDefinition)
-            feedBackIntent.putExtra("answerByVocabulary", answerByVocabulary)
-            feedBackIntent.putExtra("questionByDefinition", questionByDefinition)
-            feedBackIntent.putExtra("questionByVocabulary", questionByVocabulary)
-            feedBackIntent.putExtra("vocabularies", ArrayList(vocabulariesList))
-            feedBackIntent.putExtra("answersCorrectness", ArrayList(answersCorrectness))
-            feedBackIntent.putExtra("chosenAnswers", ArrayList(chosenAnswers))
-            feedBackIntent.putExtra("quizzes", ArrayList(quizzesList))
-            feedBackIntent.putExtra("topic", topic)
-            feedBackIntent.putExtra("studyMode", studyMode)
-            startActivity(feedBackIntent)
+            val scope = CoroutineScope(Dispatchers.Main)
+            scope.launch {
+                val isOwnedTopic = topic.ownerId?.id == Utils.getUserFromSharedPreferences(this@TypingActivity,sharedPreferences).id
+                if(isOwnedTopic){
+                    val studyJob = async {
+                        dataRepository.studyTopicForUser(sharedPreferences.getString(getString(R.string.token_key), null)!!, topic.id!!).exceptionally {
+                            runOnUiThread {
+                                Log.d("USER TAG", "generateQuestionView: " + it.message)
+                                Utils.showSnackBar(binding.root, it.message!!)
+                            }
+                            null
+                        }
+                    }
+                    studyJob.await()
+                }
+                val studyVocabularies = mutableListOf<StudyVocabulary>()
+                for(i in quizzesList.indices){
+                    if(answersCorrectness[i]){
+                        val vocabulary = quizzesList[i].correctAnswer!!
+                        val studyVocabularyRequest = StudyVocabulary(vocabulary.id!!, 1)
+                        studyVocabularies.add(studyVocabularyRequest)
+                    }
+                }
+                val job = async {
+                    dataRepository.studyVocabulary(
+                        sharedPreferences.getString(
+                            getString(R.string.token_key),
+                            ""
+                        )!!, StudyVocabularyRequest(studyVocabularies)
+                    ).exceptionally {
+                        runOnUiThread {
+                            Utils.showSnackBar(binding.root, it.message!!)
+                        }
+                        null
+                    }
+                }
+                job.await()
+            }.invokeOnCompletion {
+                val feedBackIntent = Intent(this, FeedbackActivity::class.java)
+                feedBackIntent.putExtra("studyLanguage", studyLanguage)
+                feedBackIntent.putExtra("answerByDefinition", answerByDefinition)
+                feedBackIntent.putExtra("answerByVocabulary", answerByVocabulary)
+                feedBackIntent.putExtra("questionByDefinition", questionByDefinition)
+                feedBackIntent.putExtra("questionByVocabulary", questionByVocabulary)
+                feedBackIntent.putExtra("vocabularies", ArrayList(vocabulariesList))
+                feedBackIntent.putExtra("answersCorrectness", ArrayList(answersCorrectness))
+                feedBackIntent.putExtra("chosenAnswers", ArrayList(chosenAnswers))
+                feedBackIntent.putExtra("quizzes", ArrayList(quizzesList))
+                feedBackIntent.putExtra("topic", topic)
+                feedBackIntent.putExtra("studyMode", studyMode)
+                feedBackIntent.putExtra("bookmarkedVocabularies", ArrayList(bookmarkedVocabularies))
+                startActivity(feedBackIntent)
+            }
             return
         }
         binding.answerTxt.setText("")

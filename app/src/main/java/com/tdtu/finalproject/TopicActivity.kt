@@ -22,6 +22,12 @@ import com.tdtu.finalproject.utils.OnTopicDialogListener
 import com.tdtu.finalproject.utils.StudyMode
 import com.tdtu.finalproject.utils.Utils
 import com.tdtu.finalproject.viewmodel.TopicViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 
@@ -31,6 +37,7 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
     private lateinit var dataRepository: DataRepository
     private lateinit var topic: Topic
     private lateinit var vocabulariesList: List<Vocabulary>
+    private lateinit var originalVocabulariesList: List<Vocabulary>
     private lateinit var bookmarkedVocabulariesList: List<Vocabulary>
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var vocabulariesAdapter: VocabularyFlashCardAdapter
@@ -57,12 +64,17 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
             val bottomSheet = TopicBottomSheet()
             val bundle = Bundle()
             bundle.putParcelable("topic", topic)
+            val user = Utils.getUserFromSharedPreferences(this, sharedPreferences)
+            val isYourTopic = topic.ownerId!!.id == user.id
+            bundle.putBoolean("isYourTopic", isYourTopic)
             bottomSheet.arguments = bundle
             bottomSheet.show(supportFragmentManager, "topicBottomSheet")
         }
         binding.vocabularyCountTxt.text = topic.vocabularyCount.toString() + " " + getString(R.string.vocabulary)
         binding.topicNameEnglishTxt.text = topic.topicNameEnglish
         binding.topicNameVietnameseTxt.text = topic.topicNameVietnamese
+        topicViewModel = ViewModelProvider(this)[TopicViewModel::class.java]
+        topicViewModel.setVocabulariesList(ArrayList())
         initViewModel()
         binding.returnBtn.setOnClickListener {
             finish()
@@ -72,6 +84,7 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
             intent.putExtra("topic", topic)
             intent.putExtra("studyMode", StudyMode.Quiz)
             intent.putParcelableArrayListExtra("vocabularies", ArrayList(vocabulariesList))
+            intent.putParcelableArrayListExtra("bookmarkedVocabularies", ArrayList(bookmarkedVocabulariesList))
             startActivity(intent)
         }
         binding.learnByTypingBtn.setOnClickListener {
@@ -79,6 +92,7 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
             intent.putExtra("topic", topic)
             intent.putExtra("studyMode", StudyMode.Typing)
             intent.putParcelableArrayListExtra("vocabularies", ArrayList(vocabulariesList))
+            intent.putParcelableArrayListExtra("bookmarkedVocabularies", ArrayList(bookmarkedVocabulariesList))
             startActivity(intent)
         }
         binding.learnByFlashCardBtn.setOnClickListener {
@@ -90,7 +104,7 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
         }
         editTopicVocabulariesResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
             if(it.resultCode == RESULT_OK && data != null){
-                val currentVocabList = vocabulariesList
+                val currentVocabList = ArrayList(vocabulariesList)
                 val returnResult = it.data?.getParcelableArrayListExtra<Vocabulary>("vocabularies")
                 val titleEnglishResult = it.data?.getStringExtra("titleEnglish")
                 val titleVietnameseResult = it.data?.getStringExtra("titleVietnamese")
@@ -100,51 +114,74 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
                     binding.fullScreenProgressBar.visibility = View.VISIBLE
                     val newVocabulariesList = returnResult - currentVocabList
                     val deletedVocabulariesList = currentVocabList - returnResult
-                    val matchingVocabulariesList = currentVocabList.intersect(returnResult)
-                    for (vocab in newVocabulariesList){
-                        dataRepository.addVocabularyToTopic(topic.id!!, sharedPreferences.getString(getString(R.string.token_key), null)!!, vocab).exceptionally {error->
-                            runOnUiThread {
-                                Utils.showDialog(Gravity.CENTER, error.message!!.toString(), this)
+                    val matchingVocabulariesList = returnResult.intersect(currentVocabList)
+
+                    val scope = CoroutineScope(Dispatchers.Main)
+                    scope.launch{
+                        val addVocabJobs = newVocabulariesList.map { vocab ->
+                            scope.async {
+                                dataRepository.addVocabularyToTopic(topic.id!!, sharedPreferences.getString(getString(R.string.token_key), null)!!, vocab)
+                                    .exceptionally { error ->
+                                        runOnUiThread {
+                                            Utils.showDialog(Gravity.CENTER, error.message!!.toString(), this@TopicActivity)
+                                        }
+                                        null
+                                    }
                             }
-                            null
                         }
-                    }
-                    for(vocab in deletedVocabulariesList){
-                        dataRepository.deleteVocabularyFromTopic(topic.id!!, sharedPreferences.getString(getString(R.string.token_key), null)!!, vocab.id!!).exceptionally {error->
-                            runOnUiThread {
-                                Utils.showDialog(Gravity.CENTER, error.message!!.toString(), this)
+                        val addVocabResults = addVocabJobs.awaitAll()
+                        val deleteVocabJobs = deletedVocabulariesList.map { vocab ->
+                            async {
+                                dataRepository.deleteVocabularyFromTopic(topic.id!!, sharedPreferences.getString(getString(R.string.token_key), null)!!, vocab.id!!)
+                                    .exceptionally { error ->
+                                        runOnUiThread {
+                                            Utils.showDialog(Gravity.CENTER, error.message!!.toString(), this@TopicActivity)
+                                        }
+                                        null
+                                    }
                             }
-                            null
                         }
-                    }
-                    for (vocab in matchingVocabulariesList){
-                        dataRepository.editVocabularyInTopic(topic.id!!, sharedPreferences.getString(getString(R.string.token_key), null)!!, vocab).exceptionally {error->
-                            runOnUiThread {
-                                Utils.showDialog(Gravity.CENTER, error.message!!.toString(), this)
+                        val deleteVocabResults = deleteVocabJobs.awaitAll()
+
+                        val editVocabJobs = matchingVocabulariesList.map { vocab ->
+                            async {
+                                dataRepository.editVocabularyInTopic(topic.id!!, sharedPreferences.getString(getString(R.string.token_key), null)!!, vocab)
+                                    .exceptionally { error ->
+                                        runOnUiThread {
+                                            Utils.showDialog(Gravity.CENTER, error.message!!.toString(), this@TopicActivity)
+                                        }
+                                        null
+                                    }
                             }
-                            null
                         }
-                    }
-                    dataRepository.updateTopic(topic.id!!, sharedPreferences.getString(getString(R.string.token_key), null)!!, Topic(null, titleEnglishResult, titleVietnameseResult, 0, false, 0, 0, topicDescriptionEnglishResult, topicDescriptionVietnameseResult, null, null, null, null, null, false)).thenAcceptAsync {res->
-                        if(res == null){
-                            runOnUiThread {
-                                Utils.showDialog(Gravity.CENTER, getString(R.string.update_topic_failed), this)
+
+                        val editVocabResults = editVocabJobs.awaitAll()
+
+                        val updateJob = async {
+                            dataRepository.updateTopic(topic.id!!, sharedPreferences.getString(getString(R.string.token_key), null)!!, Topic(null, titleEnglishResult, titleVietnameseResult, 0, false, 0, 0, topicDescriptionEnglishResult, topicDescriptionVietnameseResult, null, null, null, null, null, false)).thenAcceptAsync {res->
+                                Log.d("USER TAG", "onCreate: " + res)
+                                if(res == null){
+                                    runOnUiThread {
+                                        Utils.showDialog(Gravity.CENTER, getString(R.string.update_topic_failed), this@TopicActivity)
+                                    }
+                                    return@thenAcceptAsync
+                                }
+                            }.exceptionally {error->
+                                runOnUiThread {
+                                    Utils.showDialog(Gravity.CENTER, error.message!!.toString(), this@TopicActivity)
+                                }
+                                null
                             }
-                            return@thenAcceptAsync
                         }
-                    }.exceptionally {error->
+                        updateJob.await()
                         runOnUiThread {
-                            Utils.showDialog(Gravity.CENTER, error.message!!.toString(), this)
+                            initViewModel()
+                            binding.fullScreenProgressBar.visibility = View.GONE
+                            binding.topicNameEnglishTxt.text = titleEnglishResult
+                            binding.topicNameVietnameseTxt.text = titleVietnameseResult
                         }
-                        null
-                    }
-                    runOnUiThread {
-                        binding.fullScreenProgressBar.visibility = View.GONE
-                        topicViewModel.setVocabulariesList(returnResult)
-                        binding.vocabularyCountTxt.text = returnResult.size.toString() + " " + getString(R.string.vocabulary)
-                        binding.topicNameEnglishTxt.text = titleEnglishResult
-                        binding.topicNameVietnameseTxt.text = titleVietnameseResult
-                        initViewModel()
+                    }.invokeOnCompletion {
+                        scope.cancel()
                     }
                 }
             }
@@ -154,38 +191,63 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
                 val folders = it.data?.getParcelableArrayListExtra<Folder>("folders")
                 if(!folders.isNullOrEmpty()){
                     binding.fullScreenProgressBar.visibility = View.VISIBLE
-                    runOnUiThread {
-                        for (folder in folders){
-                            dataRepository.addTopicToFolder(folder.id!!, topic.id!!, sharedPreferences.getString(getString(R.string.token_key), null)!!).exceptionally {error->
-                                Utils.showDialog(Gravity.CENTER, error.message!!.toString(), this)
-                                null
+                    val scope = CoroutineScope(Dispatchers.Main)
+                    scope.launch {
+                        val job = scope.async {
+                            runOnUiThread {
+                                for (folder in folders){
+                                    dataRepository.addTopicToFolder(folder.id!!, topic.id!!, sharedPreferences.getString(getString(R.string.token_key), null)!!).exceptionally {error->
+                                        Utils.showDialog(Gravity.CENTER, error.message!!.toString(), this@TopicActivity)
+                                        binding.fullScreenProgressBar.visibility = View.GONE
+                                        null
+                                    }
+                                }
                             }
                         }
+                        job.await()
                         binding.fullScreenProgressBar.visibility = View.GONE
+                    }.invokeOnCompletion {
+                        scope.cancel()
                     }
                 }
+            }
+        }
+        binding.studyAllOption.setOnCheckedChangeListener { _, isChecked ->
+            if(isChecked){
+                topicViewModel.setVocabulariesList(originalVocabulariesList)
+            }
+            else{
+                topicViewModel.setVocabulariesList(bookmarkedVocabulariesList)
+            }
+        }
+        topicViewModel.getVocabularies().observe(this){items->
+            vocabulariesList = items
+            vocabulariesAdapter = VocabularyFlashCardAdapter(true, this, items, R.layout.vocabulary_flash_card_layout, ttsEnglish, ttsVietnamese)
+            binding.flashCardViewPager.adapter = vocabulariesAdapter
+            binding.flashCardViewPager.offscreenPageLimit = 3
+            binding.flashCardViewPager.clipToPadding = false
+            binding.scrollPagerIndicator.attachToPager(binding.flashCardViewPager)
+            if(items.size < 2){
+                binding.learnByTypingBtn.visibility = View.GONE
+                binding.learnByQuizBtn.visibility = View.GONE
+            }
+            else{
+                binding.learnByTypingBtn.visibility = View.VISIBLE
+                binding.learnByQuizBtn.visibility = View.VISIBLE
             }
         }
         setContentView(binding.root)
     }
 
     private fun initViewModel(){
-        topicViewModel = ViewModelProvider(this)[TopicViewModel::class.java]
-        topicViewModel.setVocabulariesList(ArrayList())
         dataRepository = DataRepository.getInstance()
         sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_key), MODE_PRIVATE)
         binding.progressBar.visibility = View.VISIBLE
         dataRepository.getVocabulariesByTopic(topic.id!!, sharedPreferences.getString(getString(R.string.token_key), null)!!).thenAcceptAsync { it ->
             runOnUiThread {
+                binding.vocabularyCountTxt.text = it.size.toString() + " " + getString(R.string.vocabulary)
                 topicViewModel.setVocabulariesList(it)
-                topicViewModel.getVocabularies().observe(this){items->
-                    vocabulariesList = items
-                    vocabulariesAdapter = VocabularyFlashCardAdapter(true, this, items, R.layout.vocabulary_flash_card_layout, ttsEnglish, ttsVietnamese)
-                    binding.flashCardViewPager.adapter = vocabulariesAdapter
-                    binding.flashCardViewPager.offscreenPageLimit = 3
-                    binding.flashCardViewPager.clipToPadding = false
-                    binding.scrollPagerIndicator.attachToPager(binding.flashCardViewPager)
-                }
+                originalVocabulariesList = ArrayList(it)
                 binding.progressBar.visibility = View.GONE
             }
         }.exceptionally {
@@ -198,6 +260,12 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
         dataRepository.getBookmarkVocabulariesInTopic(sharedPreferences.getString(getString(R.string.token_key), null)!!, topic.id!!).thenAcceptAsync {
             runOnUiThread {
                 bookmarkedVocabulariesList = it
+                if(bookmarkedVocabulariesList.isNotEmpty()){
+                    binding.studyByOptions.visibility = View.VISIBLE
+                }
+                else{
+                    binding.studyByOptions.visibility = View.GONE
+                }
             }
         }.exceptionally {
             runOnUiThread{
@@ -205,7 +273,7 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
             }
             null
         }
-        dataRepository.getUserById(topic.ownerId!!, sharedPreferences.getString(getString(R.string.token_key), null)!!).thenAcceptAsync {
+        dataRepository.getUserById(topic.ownerId!!.id, sharedPreferences.getString(getString(R.string.token_key), null)!!).thenAcceptAsync {
             runOnUiThread {
                 Picasso.get().load(it.profileImage).into(binding.topicOwnerImg)
                 binding.topicOwnerNameTxt.text = it.username
@@ -218,10 +286,12 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
         }
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onRestart() {
+        super.onRestart()
         initViewModel()
+        binding.studyAllOption.isChecked = true
     }
+
 
     override fun onInit(status: Int) {
         if(status == TextToSpeech.SUCCESS){

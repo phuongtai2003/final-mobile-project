@@ -15,6 +15,7 @@ import com.tdtu.finalproject.utils.OnTopicDialogListener
 
 class TopicBottomSheet : BottomSheetDialogFragment() {
     private lateinit var binding: TopicBottomSheetBinding
+    private var isYourTopic = false
     private lateinit var topic: Topic
     private var onTopicDialogListener: OnTopicDialogListener? = null
 
@@ -38,6 +39,7 @@ class TopicBottomSheet : BottomSheetDialogFragment() {
     ): View? {
         binding = TopicBottomSheetBinding.inflate(inflater, container, false)
         val data = arguments?.getParcelable<Topic>("topic")
+        isYourTopic = arguments?.getBoolean("isYourTopic")!!
         if(data == null)
         {
             dismiss()
@@ -64,6 +66,14 @@ class TopicBottomSheet : BottomSheetDialogFragment() {
             intent.putExtra("isEdit", false)
             startActivity(intent)
             dismiss()
+        }
+        if(!isYourTopic){
+            binding.editTopicBtn.visibility = View.GONE
+            binding.deleteTopicBtn.visibility = View.GONE
+        }
+        else{
+            binding.editTopicBtn.visibility = View.VISIBLE
+            binding.deleteTopicBtn.visibility = View.VISIBLE
         }
         return binding.root
     }

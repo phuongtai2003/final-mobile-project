@@ -147,6 +147,7 @@
             android:textColor="@color/white"
             android:text="@string/learn_by_flashcard"
             app:icon="@drawable/flashcard"
+            android:id="@+id/flashcardBtn"
             app:iconTint="@null"
             app:iconSize="40dp"
             android:layout_height="wrap_content"/>
