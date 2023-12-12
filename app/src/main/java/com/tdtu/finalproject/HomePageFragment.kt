@@ -69,6 +69,9 @@ class HomePageFragment : Fragment(), CustomOnItemClickListener {
         userViewModel.getUser().observe(viewLifecycleOwner) {
             binding.helloText.text = "${getString(R.string.hello)}, ${it.username}"
         }
+        binding.searchAllTxt.setOnClickListener {
+            onBottomNavigationChangeListener?.changeBottomNavigationItem(R.id.searchFragment)
+        }
         userViewModel.getTopicsList().observe(viewLifecycleOwner){
             val mutableList: MutableList<Topic> = it.toMutableList()
             if(mutableList.isEmpty()){

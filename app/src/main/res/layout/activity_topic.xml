@@ -44,6 +44,36 @@
                 android:layout_height="wrap_content"/>
         </LinearLayout>
 
+        <RadioGroup
+            android:id="@+id/studyByOptions"
+            android:layout_marginVertical="10dp"
+            android:layout_marginHorizontal="10dp"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+            <RadioButton
+                android:background="@drawable/radio_selector"
+                android:id="@+id/studyAllOption"
+                android:textColor="@color/white"
+                android:text="@string/study_all"
+                android:button="@android:color/transparent"
+                android:layout_width="0dp"
+                android:gravity="center"
+                android:checked="true"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"/>
+            <RadioButton
+                android:background="@drawable/radio_selector"
+                android:id="@+id/studyBookmarkOption"
+                android:textColor="@color/white"
+                android:text="@string/study_bookmark"
+                android:button="@android:color/transparent"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"/>
+        </RadioGroup>
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"

@@ -26,12 +26,12 @@ data class Topic(
     var chosen: Boolean = false
 ): Parcelable {
     override fun equals(other: Any?): Boolean {
-        if(this === other) return true
-        if (javaClass != other?.javaClass) return false
-
         if(other is Topic){
             return this.id == other.id
         }
+
+        if (javaClass != other?.javaClass) return false
+
         return super.equals(other)
     }
 

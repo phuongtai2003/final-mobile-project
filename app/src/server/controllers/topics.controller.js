@@ -62,7 +62,7 @@ const updateTopic = async (req, res) => {
     const id = req.params.id || req.query.id;
     const {topicNameEnglish, topicNameVietnamese, descriptionEnglish, descriptionVietNamese} = req.body;
     try {
-        const topic = await Topic.findByIdAndUpdate(id, {topicNameEnglish, topicNameVietnamese, descriptionEnglish, descriptionVietNamese}, {new: true});
+        const topic = await Topic.findByIdAndUpdate(id, {topicNameEnglish, topicNameVietnamese, descriptionEnglish, descriptionVietNamese}, {new: true}).populate('ownerId');
         res.status(200).json({topic});
     } catch (error) {
         res.status(500).json({ error : error.message });
@@ -255,7 +255,10 @@ const userLearnPublicTopic = async (req, res) => {
         }
 
         // Thêm topic vào danh sách của người dùng
-        await Users.findByIdAndUpdate(userId, { $push: { topicId } });
+        if(!topic.userId.includes(userId)){
+            await Topic.findByIdAndUpdate(topicId, { $push: { userId }})
+            await Users.findByIdAndUpdate(userId, { $push: { topicId: topic._id } });    
+        }
         res.status(200).json({ message: 'Topic added to user successfully'});
     } catch (error) {
         res.status(500).json({ error: error.message });

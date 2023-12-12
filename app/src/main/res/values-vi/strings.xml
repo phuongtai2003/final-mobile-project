@@ -45,7 +45,7 @@
     <string name="no_topics">Không có học phần</string>
     <string name="no_folders">Không có thư mục</string>
     <string name="no_classes">Không có lớp học</string>
-    <string name="topic_folder_classes">Học phần, Thư mục, Lớp học</string>
+    <string name="topic_folder_classes">Học phần, Thư mục</string>
     <string name="library">Thư viện</string>
     <string name="search">Tìm kiếm</string>
     <string name="add_topic">Thêm học phần</string>
@@ -139,4 +139,6 @@
     <string name="play_audio">Phát âm thanh</string>
     <string name="card_orientation">Hướng thẻ</string>
     <string name="apply">Áp dụng</string>
+    <string name="study_all">Học tất cả</string>
+    <string name="study_bookmark">Học từ đánh dấu</string>
 </resources>

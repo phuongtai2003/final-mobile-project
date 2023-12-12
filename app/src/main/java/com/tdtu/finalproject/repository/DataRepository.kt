@@ -29,6 +29,7 @@ import com.tdtu.finalproject.model.vocabulary.BookmarkVocabulariesRequest
 import com.tdtu.finalproject.model.vocabulary.GetBookmarkVocabulariesResponse
 import com.tdtu.finalproject.model.vocabulary.Vocabulary
 import com.tdtu.finalproject.model.vocabulary.GetVocabulariesByTopicResponse
+import com.tdtu.finalproject.model.vocabulary.StudyVocabularyRequest
 import com.tdtu.finalproject.utils.WrongCredentialsException
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -46,7 +47,7 @@ import java.util.concurrent.CompletableFuture
 class DataRepository {
 
     companion object{
-        private const val baseUrl: String = "http://172.168.99.98:3000/android/"
+        private const val baseUrl: String = "http://192.168.2.13:3000/android/"
         private val api = Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(GsonConverterFactory.create()).build().create(API::class.java)
         private var instance: DataRepository? = null
         fun getInstance() : DataRepository{
@@ -664,9 +665,53 @@ class DataRepository {
                     error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
                     future.completeExceptionally(Exception(error))
                 }
-
             }
             override fun onFailure(call: Call<GetTopicsResponse>, t: Throwable) {
+                future.completeExceptionally(t)
+            }
+        })
+        return future
+    }
+
+    fun studyVocabulary(token: String, studyVocabularyRequest: StudyVocabularyRequest) :CompletableFuture<Boolean> {
+        val future: CompletableFuture<Boolean> = CompletableFuture()
+        val call = api.studyVocabulary(token, studyVocabularyRequest)
+        var error: String?
+        call.enqueue(object : Callback<Message>{
+            override fun onResponse(call: Call<Message>, response: Response<Message>) {
+                if(response.code() == 200){
+                    future.complete(true)
+                }
+                else{
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
+                    future.completeExceptionally(Exception(error))
+                }
+
+            }
+            override fun onFailure(call: Call<Message>, t: Throwable) {
+                future.completeExceptionally(t)
+            }
+        })
+        return future
+    }
+    fun studyTopicForUser(token: String, topicId: String) : CompletableFuture<Boolean>{
+        val future: CompletableFuture<Boolean> = CompletableFuture()
+        val call = api.learnTopic(token, topicId)
+        var error: String?
+        call.enqueue(object : Callback<Message>{
+            override fun onResponse(call: Call<Message>, response: Response<Message>) {
+                if(response.code() == 200){
+                    future.complete(true)
+                }
+                else if(response.code() == 409){
+                    future.complete(true)
+                }
+                else{
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
+                    future.completeExceptionally(Exception(error))
+                }
+            }
+            override fun onFailure(call: Call<Message>, t: Throwable) {
                 future.completeExceptionally(t)
             }
         })

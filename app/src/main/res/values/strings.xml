@@ -45,7 +45,7 @@
     <string name="no_topics">No Topics</string>
     <string name="no_folders">No Folders</string>
     <string name="no_classes">No Classes</string>
-    <string name="topic_folder_classes">Topic, Folder, Classes</string>
+    <string name="topic_folder_classes">Topic, Folder</string>
     <string name="library">Library</string>
     <string name="search">Search</string>
     <string name="add_topic">Add Topic</string>
@@ -138,4 +138,6 @@
     <string name="play_audio">Play Audio</string>
     <string name="card_orientation">Card Orientation</string>
     <string name="apply">Apply</string>
+    <string name="study_all">Study All</string>
+    <string name="study_bookmark">Study Bookmark</string>
 </resources>

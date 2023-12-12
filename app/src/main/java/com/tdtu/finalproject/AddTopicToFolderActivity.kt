@@ -26,7 +26,7 @@ class AddTopicToFolderActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var currentUser: User
     private lateinit var adapter: ChooseTopicAdapter
-    private var currentTopics: MutableList<Topic>? = null
+    private lateinit var currentTopics: MutableList<Topic>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,20 +53,27 @@ class AddTopicToFolderActivity : AppCompatActivity() {
         else{
             currentUser = Gson().fromJson(sharedPreferences.getString(getString(R.string.user_data_key), null), User::class.java)
         }
-        currentTopics = intent.getParcelableArrayListExtra<Topic>("currentTopics")?.toMutableList()
+        currentTopics = intent.getParcelableArrayListExtra<Topic>("currentTopics")?.toMutableList()!!
+        Log.d("USER TAG", "initData: ${currentTopics}")
 
         dataRepository.getTopicsByUserId(currentUser.id, sharedPreferences.getString(getString(R.string.token_key), null)!!).thenAcceptAsync {
             runOnUiThread {
                 val mutableList = it.toMutableList()
-                if(currentTopics != null){
-                    val currentTopicIds = currentTopics!!.map { it.id }
-                    mutableList.forEach { topic ->
-                        if(currentTopicIds.contains(topic.id)){
-                            topic.chosen = true
-                        }
+                currentTopics.forEach { topic ->
+                    topic.chosen = true
+                }
+                val currentTopicIds = currentTopics.map { it.id }
+                mutableList.forEach { topic ->
+                    if(currentTopicIds.contains(topic.id)){
+                        topic.chosen = true
                     }
                 }
-                adapter  = ChooseTopicAdapter(this, mutableList, R.layout.topic_library_item, currentUser)
+                for(topic in mutableList){
+                    if(!currentTopics.contains(topic)){
+                        currentTopics.add(topic)
+                    }
+                }
+                adapter  = ChooseTopicAdapter(this, currentTopics, R.layout.topic_library_item)
                 binding.chosenTopicRecyclerView.setHasFixedSize(true)
                 binding.chosenTopicRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
                 binding.chosenTopicRecyclerView.adapter = adapter

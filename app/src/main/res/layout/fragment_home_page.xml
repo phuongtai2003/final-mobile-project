@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@color/primary_color"
     android:layout_height="match_parent"
     android:id="@+id/homePageFragment"
     tools:context=".HomePageFragment"
-    android:layout_width="match_parent"
-    >
+    android:layout_width="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
@@ -61,17 +60,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <EditText
-            android:gravity="center_vertical"
-            android:inputType="text"
+        <com.google.android.material.button.MaterialButton
+            app:backgroundTint="@null"
             android:hint="@string/topic_folder_classes"
             android:layout_marginTop="10dp"
+            android:textAlignment="textStart"
             android:textSize="18sp"
-            android:id="@+id/searchAllEdt"
-            android:drawablePadding="10dp"
-            android:paddingVertical="5dp"
-            android:drawableStart="@drawable/baseline_search_24"
-            android:paddingHorizontal="15dp"
+            android:id="@+id/searchAllTxt"
+            app:icon="@drawable/baseline_search_24"
+            app:iconTint="@color/primary_color"
             android:background="@drawable/search_view_bg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

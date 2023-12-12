@@ -128,6 +128,7 @@ class FolderDetailActivity : AppCompatActivity() , CustomOnItemClickListener, On
 
         binding.addTopicToFolderBtn.setOnClickListener {
             val intent = Intent(this, AddTopicToFolderActivity::class.java)
+            intent.putParcelableArrayListExtra("currentTopics", ArrayList())
             addTopicResultLauncher.launch(intent)
         }
 

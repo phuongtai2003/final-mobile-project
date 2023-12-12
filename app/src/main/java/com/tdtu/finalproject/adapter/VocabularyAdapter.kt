@@ -50,10 +50,10 @@ class VocabularyAdapter(private var mContext:Context, private var vocabularies: 
                     holder.vietnameseWord.setText("")
                 }
             }
-            vocabularies[position].englishWord = text.toString()
+            vocabulary.englishWord = text.toString()
         }
         holder.vietnameseWord.addTextChangedListener { editable ->
-            vocabularies[position].vietnameseWord = editable.toString()
+            vocabulary.vietnameseWord = editable.toString()
         }
         holder.englishMeaning.addTextChangedListener { editable ->
             engToVietTranslator.downloadModelIfNeeded(downloadConditions).addOnSuccessListener {
@@ -63,10 +63,10 @@ class VocabularyAdapter(private var mContext:Context, private var vocabularies: 
                     holder.vietnameseMeaning.setText("")
                 }
             }
-            vocabularies[position].englishMeaning = editable.toString()
+            vocabulary.englishMeaning = editable.toString()
         }
         holder.vietnameseMeaning.addTextChangedListener {
-            vocabularies[position].vietnameseMeaning = it.toString()
+            vocabulary.vietnameseMeaning = it.toString()
         }
 
         holder.removeVocabularyBtn.setOnClickListener{

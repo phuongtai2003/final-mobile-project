@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tdtu.finalproject.adapter.TopicAdapter
@@ -32,6 +33,7 @@ class SearchFragment : Fragment(), CustomOnItemClickListener{
     private var searchFragmentBinding: FragmentSearchBinding? = null
     private lateinit var homeDataViewModel: HomeDataViewModel
     private var topicAdapter: TopicAdapter? = null
+    private lateinit var originalTopicsList: List<Topic>
     private val binding get() = searchFragmentBinding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +45,14 @@ class SearchFragment : Fragment(), CustomOnItemClickListener{
     }
 
     private fun initVM(){
+        originalTopicsList = ArrayList()
         homeDataViewModel = ViewModelProvider(requireActivity())[HomeDataViewModel::class.java]
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.searchBar.text.clear()
+        binding.searchBar.clearFocus()
     }
 
     override fun onCreateView(
@@ -54,12 +63,24 @@ class SearchFragment : Fragment(), CustomOnItemClickListener{
         searchFragmentBinding = FragmentSearchBinding.inflate(inflater, container, false)
         initVM()
         homeDataViewModel.getPublicTopicsList().observe(viewLifecycleOwner){topicList->
+            originalTopicsList = topicList
             val mutableList = topicList.toMutableList()
             if(topicAdapter == null || topicAdapter?.itemCount == 0){
                 topicAdapter = TopicAdapter(requireActivity(), mutableList, R.layout.topic_library_item, this)
                 binding.publicTopicRecyclerView.setHasFixedSize(true)
                 binding.publicTopicRecyclerView.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
                 binding.publicTopicRecyclerView.adapter = topicAdapter
+            }
+            else{
+                topicAdapter?.setTopics(mutableList)
+            }
+        }
+        binding.searchBar.addTextChangedListener {
+            val mutableList = originalTopicsList.toMutableList()
+            val searchText = binding.searchBar.text.toString()
+            if(searchText.isNotEmpty()){
+                val filteredList = mutableList.filter { topic -> topic.topicNameEnglish!!.contains(searchText, true) || topic.topicNameVietnamese!!.contains(searchText, true) }
+                topicAdapter?.setTopics(filteredList.toMutableList())
             }
             else{
                 topicAdapter?.setTopics(mutableList)

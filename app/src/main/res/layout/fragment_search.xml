@@ -21,6 +21,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
+        <EditText
+            android:id="@+id/searchBar"
+            android:drawableStart="@drawable/baseline_search_24"
+            android:drawableTint="@color/white"
+            android:hint="@string/topic_folder_classes"
+            android:drawablePadding="15dp"
+            android:textColorHint="@color/white"
+            android:fontFamily="@font/bevietnampro_semibold"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:paddingVertical="10dp"
+            android:padding="15dp"
+            android:layout_marginHorizontal="15dp"
+            android:background="@drawable/search_bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/publicTopicRecyclerView"
             android:layout_width="match_parent"

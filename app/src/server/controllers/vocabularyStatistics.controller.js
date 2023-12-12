@@ -2,11 +2,11 @@ const {VocabularyStatistic, Vocabulary} = require('../models');
 
 const create_updateVocabularyStatistic = async (req, res) => {
     const userId = req.user.data._id;
-    const vocabStats = req.body;
+    const {vocabStats} = req.body;
 
     try {
         for (let vocabStat of vocabStats) {
-            const { vocabularyId, learningCount, learningStatus } = vocabStat;
+            const { vocabularyId, learningCount } = vocabStat;
 
             const vocab = await Vocabulary.findById(vocabularyId);
             if (!vocab) {
@@ -17,14 +17,22 @@ const create_updateVocabularyStatistic = async (req, res) => {
 
             if (stat) {
                 stat.learningCount += learningCount;
-                stat.learningStatus = learningStatus;
+                if(stat.learningCount <= 1){
+                    stat.learningStatus = 'started';
+                }
+                else if(stat.learningCount <= 5){
+                    stat.learningStatus = 'learning';
+                }
+                else{
+                    stat.learningStatus = 'memorized';
+                }
                 await stat.save();
             } else {
                 stat = new VocabularyStatistic({
                     userId,
                     vocabularyId,
                     learningCount,
-                    learningStatus
+                    learningStatus: 'started',
                 });
                 await stat.save();
             }

@@ -23,6 +23,7 @@ import com.tdtu.finalproject.model.user.UpdateUserInfoRequest
 import com.tdtu.finalproject.model.vocabulary.BookmarkVocabulariesRequest
 import com.tdtu.finalproject.model.vocabulary.GetBookmarkVocabulariesResponse
 import com.tdtu.finalproject.model.vocabulary.GetVocabulariesByTopicResponse
+import com.tdtu.finalproject.model.vocabulary.StudyVocabularyRequest
 import com.tdtu.finalproject.model.vocabulary.Vocabulary
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -96,4 +97,8 @@ interface API {
     fun getBookmarkVocabulariesInTopic(@Header("token") token: String, @Path("id") topicId: String) : Call<GetBookmarkVocabulariesResponse>
     @GET("topics/public/getPublicTopic")
     fun getPublicTopics(@Header("token") token: String) : Call<GetTopicsResponse>
+    @POST("vocabularyStatistics/")
+    fun studyVocabulary(@Header("token") token: String, @Body() request: StudyVocabularyRequest) : Call<Message>
+    @POST("topics/public/learnTopic/{id}")
+    fun learnTopic(@Header("token") token: String, @Path("id") topicId: String) : Call<Message>
 }

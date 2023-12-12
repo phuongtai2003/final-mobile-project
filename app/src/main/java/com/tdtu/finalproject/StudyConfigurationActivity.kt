@@ -25,6 +25,7 @@ class StudyConfigurationActivity : AppCompatActivity(), PromptOptionsListener {
     private var answerByVocabulary = true
     private var questionByDefinition = true
     private var questionByVocabulary = true
+    private lateinit var bookmarkedVocabularies : List<Vocabulary>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityStudyConfigurationBinding.inflate(layoutInflater)
@@ -32,6 +33,7 @@ class StudyConfigurationActivity : AppCompatActivity(), PromptOptionsListener {
         if(data != null) {
             studyMode = intent.getSerializableExtra("studyMode") as StudyMode
             vocabularies = intent.getParcelableArrayListExtra<Vocabulary>("vocabularies")!!
+            bookmarkedVocabularies = intent.getParcelableArrayListExtra<Vocabulary>("bookmarkedVocabularies")!!
             topic = data
         }
         else{
@@ -39,7 +41,7 @@ class StudyConfigurationActivity : AppCompatActivity(), PromptOptionsListener {
         }
         val adapter: ArrayAdapter<String> = ArrayAdapter<String>(this, R.layout.drop_down_item, listOf(getString(R.string.english), getString(R.string.vietnamese)))
         binding.languageSpinner.adapter = adapter
-        binding.questionCountTxt.text = getString(R.string.question_count) + " (" + topic.vocabularyCount.toString()+" max)"
+        binding.questionCountTxt.text = getString(R.string.question_count) + " (" + vocabularies.size.toString()+" max)"
         binding.topicNameEnglishTxt.text = topic.topicNameEnglish
         binding.topicNameVietnameseTxt.text = topic.topicNameVietnamese
         binding.questionCountEdt.addTextChangedListener {
@@ -48,7 +50,7 @@ class StudyConfigurationActivity : AppCompatActivity(), PromptOptionsListener {
                 try{
                     val count = value.toInt()
                     if(count > topic.vocabularyCount){
-                        binding.questionCountEdt.setText(topic.vocabularyCount.toString())
+                        binding.questionCountEdt.setText(vocabularies.size.toString())
                     }
                 }catch (e: Exception){
                     binding.questionCountEdt.setText("0")
@@ -94,7 +96,7 @@ class StudyConfigurationActivity : AppCompatActivity(), PromptOptionsListener {
                 val shuffleQuestion = binding.shuffleQuestionSwitch.isChecked
                 quizIntent.putExtra("topic", topic)
                 quizIntent.putExtra("studyLanguage", studyLanguage)
-                quizIntent.putExtra("questionCount", if(binding.questionCountEdt.text.isEmpty()) topic.vocabularyCount else binding.questionCountEdt.text.toString().toInt() )
+                quizIntent.putExtra("questionCount", if(binding.questionCountEdt.text.isEmpty()) vocabularies.size else binding.questionCountEdt.text.toString().toInt() )
                 quizIntent.putExtra("shuffleQuestion", shuffleQuestion)
                 quizIntent.putExtra("answerByDefinition", answerByDefinition)
                 quizIntent.putExtra("answerByVocabulary", answerByVocabulary)
@@ -103,6 +105,7 @@ class StudyConfigurationActivity : AppCompatActivity(), PromptOptionsListener {
                 quizIntent.putParcelableArrayListExtra("vocabularies", ArrayList(vocabularies))
                 quizIntent.putExtra("instantFeedBack", binding.instantFeedBackSwitch.isChecked)
                 quizIntent.putExtra("studyMode", studyMode)
+                quizIntent.putParcelableArrayListExtra("bookmarkedVocabularies", ArrayList(bookmarkedVocabularies))
                 startActivity(quizIntent)
             }
             else if(studyMode == StudyMode.Typing){
@@ -110,7 +113,7 @@ class StudyConfigurationActivity : AppCompatActivity(), PromptOptionsListener {
                 val shuffleQuestion = binding.shuffleQuestionSwitch.isChecked
                 typingIntent.putExtra("topic", topic)
                 typingIntent.putExtra("studyLanguage", studyLanguage)
-                typingIntent.putExtra("questionCount", if(binding.questionCountEdt.text.isEmpty()) topic.vocabularyCount else binding.questionCountEdt.text.toString().toInt() )
+                typingIntent.putExtra("questionCount", if(binding.questionCountEdt.text.isEmpty()) vocabularies.size else binding.questionCountEdt.text.toString().toInt() )
                 typingIntent.putExtra("shuffleQuestion", shuffleQuestion)
                 typingIntent.putExtra("answerByDefinition", answerByDefinition)
                 typingIntent.putExtra("answerByVocabulary", answerByVocabulary)
@@ -119,6 +122,7 @@ class StudyConfigurationActivity : AppCompatActivity(), PromptOptionsListener {
                 typingIntent.putParcelableArrayListExtra("vocabularies", ArrayList(vocabularies))
                 typingIntent.putExtra("instantFeedBack", binding.instantFeedBackSwitch.isChecked)
                 typingIntent.putExtra("studyMode", studyMode)
+                typingIntent.putParcelableArrayListExtra("bookmarkedVocabularies", ArrayList(bookmarkedVocabularies))
                 startActivity(typingIntent)
             }
         }

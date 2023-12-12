@@ -15,9 +15,10 @@ import com.tdtu.finalproject.model.folder.Folder
 import com.tdtu.finalproject.model.topic.Topic
 import com.tdtu.finalproject.model.user.User
 import com.tdtu.finalproject.repository.DataRepository
+import com.tdtu.finalproject.utils.OnDialogConfirmListener
 import com.tdtu.finalproject.utils.Utils
 
-class AddTopicFolderActivity : AppCompatActivity() {
+class AddTopicFolderActivity : AppCompatActivity(), OnDialogConfirmListener {
     private lateinit var binding: ActivityAddTopicFolderBinding
     private lateinit var topic: Topic
     private lateinit var sharedPreferences: SharedPreferences
@@ -38,7 +39,7 @@ class AddTopicFolderActivity : AppCompatActivity() {
             topic = data
         }
         binding.addFolderBtn.setOnClickListener {
-
+            Utils.showCreateFolderDialog(Gravity.CENTER, this, this)
         }
         binding.returnBtn.setOnClickListener {
             finish()
@@ -97,5 +98,64 @@ class AddTopicFolderActivity : AppCompatActivity() {
             }
             null
         }
+    }
+
+    override fun onCreateFolderDialogConfirm(
+        folderNameEnglish: String,
+        folderNameVietnamese: String
+    ) {
+        dataRepository.createFolder(folderNameEnglish, folderNameVietnamese, sharedPreferences.getString(getString(R.string.token_key), null)!!).thenAcceptAsync {
+            dataRepository.getFolderByUser(
+                user.id,
+                sharedPreferences.getString(getString(R.string.token_key), "")!!
+            ).thenAcceptAsync {
+                folderList = it.toMutableList()
+                dataRepository.getFoldersByTopic(
+                    topic.id!!,
+                    sharedPreferences.getString(getString(R.string.token_key), null)!!
+                ).thenAcceptAsync { usersFolders ->
+                    if (usersFolders.isNotEmpty()) {
+                        for (folder in folderList) {
+                            for (userFolder in usersFolders) {
+                                if (folder.id == userFolder.id) {
+                                    folder.isChosen = true
+                                }
+                            }
+                        }
+                    }
+                    runOnUiThread {
+                        adapter =
+                            ChooseFolderAdapter(this, folderList, R.layout.folder_library_item, user)
+                        binding.folderRecyclerView.setHasFixedSize(true)
+                        binding.folderRecyclerView.layoutManager =
+                            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+                        binding.folderRecyclerView.adapter = adapter
+                    }
+                }.exceptionally {
+                    runOnUiThread {
+                        Utils.showDialog(Gravity.CENTER, it.message!!.toString(), this)
+                    }
+                    null
+                }
+            }.exceptionally {
+                runOnUiThread {
+                    Utils.showDialog(Gravity.CENTER, it.message!!.toString(), this)
+                }
+                null
+            }
+        }.exceptionally {
+            runOnUiThread {
+                Utils.showDialog(Gravity.CENTER, it.message!!.toString(), this)
+            }
+            null
+        }
+    }
+
+    override fun onAddTopicToFolderDialogConfirm() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onDeleteFolderDialogConfirm() {
+        TODO("Not yet implemented")
     }
 }
