@@ -8,6 +8,7 @@ const foldersRouter = require('./folders.router');
 const bookmarkVocabulariesRouter = require('./bookmarkVocabulary.router');
 const learningStatisticsRouter = require('./learningStatistics.router');
 const vocabularyStatisticsRouter = require('./vocabularyStatistics.router');
+const achievementsRouter = require('./achievement.router');
 
 rootRouter.use('/users', usersRouter);
 rootRouter.use('/topics', topicsRouter);
@@ -16,5 +17,6 @@ rootRouter.use('/folders', foldersRouter);
 rootRouter.use('/bookmarkVocabularies', bookmarkVocabulariesRouter);
 rootRouter.use('/learningStatistics', learningStatisticsRouter);
 rootRouter.use('/vocabularyStatistics', vocabularyStatisticsRouter);
+rootRouter.use('/achievements', achievementsRouter);
 
 module.exports = rootRouter;

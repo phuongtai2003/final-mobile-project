@@ -160,6 +160,23 @@ const getUserById = async (req, res) =>{
     }
 }
 
+const addAchieveToUser = async (req, res) => {
+    const achieveId = req.query.achieveId || req.params.achieveId;
+    const userId = req.user._id;
+    try {
+        const user = await Users.findById(userId);
+        if(!user){
+            res.status(404).json({error: "User not found"});
+            return;
+        }
+        user.achievementId.push(achieveId);
+        await user.save();
+        res.status(200).json({message: "Add achievement to user successfully", user});
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
 module.exports = {
     createUser,
     login,
@@ -169,5 +186,6 @@ module.exports = {
     uploadImage,
     passwordRecovery,
     getAllUsers,
-    getUserById
+    getUserById,
+    addAchieveToUser
 };

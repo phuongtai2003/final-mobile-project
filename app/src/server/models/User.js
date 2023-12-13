@@ -12,7 +12,8 @@ const UserSchema = new Schema({
     vocabularyStatisticId: [{ type: Schema.Types.ObjectId, ref: 'VocabularyStatistic' }],
     folderId: [{ type: Schema.Types.ObjectId, ref: 'Folder' }],
     learningStatisticsId: [{ type: Schema.Types.ObjectId, ref: 'LearningStatistics' }],
-    topicId : [{ type: Schema.Types.ObjectId, ref: 'Topic' }]
+    topicId : [{ type: Schema.Types.ObjectId, ref: 'Topic' }],
+    achievementId: [{ type: Schema.Types.ObjectId, ref: 'Achievement' }],
 });
 
 const User = mongoose.model('User', UserSchema);

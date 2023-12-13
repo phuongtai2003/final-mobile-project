@@ -6,7 +6,7 @@ const {Users} = require('../models');
 const {uploadImg} = require('../middlewares/upload/uploadImage');
 const {isCreated, isExistId, validateInput, isExistEmail, isCreatedUsername} = require('../middlewares/validation/validation');
 const {authentication} = require('../middlewares/authentication/authenticate');
-const { createUser,
+const { createUser, addAchieveToUser,
         login,
         updatePremium,
         changePassword,
@@ -34,5 +34,7 @@ usersRouter.put('/profiles/change-profile-image/:id', authentication, isExistId(
 usersRouter.get("/", getAllUsers);
 // get user by id (tested)
 usersRouter.get("/:id", isExistId(Users), getUserById);
+// create achievement (tested)
+usersRouter.post('/achievement/:achieveId', authentication, addAchieveToUser);
 
 module.exports = usersRouter;
