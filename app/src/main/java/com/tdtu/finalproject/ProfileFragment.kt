@@ -83,7 +83,7 @@ class ProfileFragment : Fragment() {
         homeDataViewModel = ViewModelProvider(requireActivity())[HomeDataViewModel::class.java]
         sharedPref = requireActivity().getSharedPreferences(getString(R.string.shared_preferences_key), Context.MODE_PRIVATE);
 
-        homeDataViewModel.getUser()?.observe(viewLifecycleOwner) {
+        homeDataViewModel.getUser().observe(viewLifecycleOwner) {
             if (it != null) {
                 binding.profileUsername.text = it.username
                 Picasso.get().load(Uri.parse(it.profileImage)).into(binding.profileImage)
@@ -120,9 +120,9 @@ class ProfileFragment : Fragment() {
             val temp : User? = data.getParcelableExtra(getString(R.string.user_data_key))
             if(temp != null){
                 homeDataViewModel.setUser(temp)
-                binding.profileUsername.text = homeDataViewModel.getUser()?.value?.username
-                sharedPref.edit().putString(getString(R.string.user_data_key), Gson().toJson(homeDataViewModel.getUser()?.value)).apply()
-                Picasso.get().load(Uri.parse(homeDataViewModel.getUser()?.value?.profileImage)).into(binding.profileImage)
+                binding.profileUsername.text = homeDataViewModel.getUser().value?.username
+                sharedPref.edit().putString(getString(R.string.user_data_key), Gson().toJson(homeDataViewModel.getUser().value)).apply()
+                Picasso.get().load(Uri.parse(homeDataViewModel.getUser().value?.profileImage)).into(binding.profileImage)
             }
         }
     }

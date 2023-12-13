@@ -24,7 +24,6 @@ const updateLearningStatistic = async (req, res) => {
             let learningPercentage = 0;
             let learnedVocabularies = 0;
             for(let statistics of vocabStats){
-                console.log(statistics.statistic);
                 if(statistics.statistic.learningCount <= 1){
                     learningPercentage += 0;
                 }
@@ -63,7 +62,19 @@ const getProcessLearning = async (req, res) => {
     }
 }
 
+const getAllStatisticsForTopic = async (req, res) => {
+    const {topicId} = req.params;
+    try {
+        const learningStatistic = await LearningStatistics.find({topicId}).populate("userId");
+        return res.status(200).json({learningStatistic});
+    }
+    catch(error){
+        return res.status(500).json({error: error.message})
+    }
+}
+
 module.exports = {
     updateLearningStatistic,
-    getProcessLearning
+    getProcessLearning,
+    getAllStatisticsForTopic
 }
