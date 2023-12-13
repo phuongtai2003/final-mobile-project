@@ -22,7 +22,7 @@ const sendEmail = (email, password, res) => {
         from: userMail,
         to: email,
         subject: 'Password recovery',
-        text: `Your password is: ${password}`
+        text: `Your password is: "${password}"`
     };
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {

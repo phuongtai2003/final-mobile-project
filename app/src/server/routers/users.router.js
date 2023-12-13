@@ -21,7 +21,7 @@ usersRouter.post('/register', validateInput(['email', 'password', 'username', 'a
 // login (tested)
 usersRouter.post('/login', validateInput(['email', 'password']), login);
 // password recovery (tested)
-usersRouter.post('/recover-password', authentication, validateInput(['email']), isExistEmail(Users), passwordRecovery);
+usersRouter.post('/recover-password', validateInput(['email']), isExistEmail(Users), passwordRecovery);
 // update to premium (tested)
 usersRouter.put('/profiles/update-premium/:id', authentication, isExistId(Users), updatePremium);
 // change password (tested)
