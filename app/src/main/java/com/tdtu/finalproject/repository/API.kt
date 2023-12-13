@@ -15,8 +15,10 @@ import com.tdtu.finalproject.model.topic.GetTopicByFolderResponse
 import com.tdtu.finalproject.model.topic.GetTopicByIdResponse
 import com.tdtu.finalproject.model.topic.Topic
 import com.tdtu.finalproject.model.topic.UpdateLearningStatisticsRequest
+import com.tdtu.finalproject.model.user.ChangePasswordRequest
 import com.tdtu.finalproject.model.user.LoginRequest
 import com.tdtu.finalproject.model.user.LoginResponse
+import com.tdtu.finalproject.model.user.RecoverPasswordRequest
 import com.tdtu.finalproject.model.user.UpdateUserResponse
 import com.tdtu.finalproject.model.user.RegisterRequest
 import com.tdtu.finalproject.model.user.RegisterResponse
@@ -104,4 +106,8 @@ interface API {
     fun learnTopic(@Header("token") token: String, @Path("id") topicId: String) : Call<Message>
     @PUT("learningStatistics/topic/{topicId}/progress")
     fun updateTopicProgress(@Header("token") token: String, @Path("topicId") topicId: String, @Body() updateLearningStatisticsRequest: UpdateLearningStatisticsRequest) : Call<Message>
+    @POST("users/recover-password")
+    fun recoverPassword(@Body() recoverPasswordRequest: RecoverPasswordRequest) : Call<Message>
+    @PUT("users/profiles/password/{id}")
+    fun changePassword(@Header("token") token: String,@Path("id") userId: String, @Body() changePasswordRequest: ChangePasswordRequest) : Call<Message>
 }

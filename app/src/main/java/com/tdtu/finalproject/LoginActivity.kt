@@ -10,6 +10,7 @@ import android.view.View
 import com.google.gson.Gson
 import com.tdtu.finalproject.databinding.ActivityLoginBinding
 import com.tdtu.finalproject.repository.DataRepository
+import com.tdtu.finalproject.utils.ResetPasswordConfirmListener
 import com.tdtu.finalproject.utils.Utils
 import com.tdtu.finalproject.utils.WrongCredentialsException
 
@@ -27,6 +28,27 @@ class LoginActivity : AppCompatActivity() {
 
         binding.returnBtn.setOnClickListener{
             finish()
+        }
+
+        binding.forgetPasswordTV.setOnClickListener{
+            Utils.showResetPasswordDialog(Gravity.CENTER, this, object : ResetPasswordConfirmListener{
+                override fun onConfirm(email: String) {
+                    dataRepo.recoverPassword(email).thenAcceptAsync {
+                        runOnUiThread {
+                            Utils.showSnackBar(binding.root, it)
+                        }
+                    }.exceptionally {
+                        runOnUiThread {
+                            Utils.showSnackBar(binding.root, it.message.toString())
+                        }
+                        null
+                    }
+                }
+
+                override fun changePassword(oldPassword: String, newPassword: String) {
+
+                }
+            })
         }
 
         binding.loginButton.setOnClickListener{

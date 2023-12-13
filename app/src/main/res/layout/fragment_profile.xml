@@ -63,7 +63,7 @@
         android:textColor="@color/secondary_color"
         android:textStyle="bold"
         android:textSize="20sp"
-        android:text="@string/bookmark_topic"
+        android:text="@string/achievements"
         android:paddingHorizontal="10dp"
         android:paddingVertical="15dp"
         app:icon="@drawable/baseline_menu_book_24"

@@ -141,4 +141,10 @@
     <string name="apply">Áp dụng</string>
     <string name="study_all">Học tất cả</string>
     <string name="study_bookmark">Học từ đánh dấu</string>
+    <string name="achievements">Thành tựu</string>
+    <string name="reset_password">Đặt lại mật khẩu</string>
+    <string name="change_password">Đổi mật khẩu</string>
+    <string name="new_password">Mật khẩu mới</string>
+    <string name="change_password_text">Nhập mật khẩu cũ và mới của bạn bên dưới để đổi mật khẩu.</string>
+    <string name="reset_password_text">Vui lòng nhập email của bạn để đặt lại mật khẩu</string>
 </resources>

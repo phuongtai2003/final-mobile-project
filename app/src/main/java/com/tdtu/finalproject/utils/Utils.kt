@@ -10,9 +10,11 @@ import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.tdtu.finalproject.R
@@ -125,6 +127,83 @@ class Utils {
                     return@setOnClickListener
                 }
                 onDialogConfirmListener.onCreateFolderDialogConfirm(folderNameEnglish, folderNameVietnamese)
+                dialog.dismiss()
+            }
+            dialog.show()
+        }
+        fun showResetPasswordDialog(gravity: Int, mContext: Context, resetPasswordConfirmListener: ResetPasswordConfirmListener){
+
+            val dialog = Dialog(mContext)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.forget_password_dialog)
+
+            val window = dialog.window ?: return
+
+            window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT)
+            window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            val windowAttribute: WindowManager.LayoutParams = window.attributes
+            windowAttribute.gravity = gravity
+            window.attributes = windowAttribute
+            dialog.setCancelable(true)
+
+            val acceptBtn = dialog.findViewById<MaterialButton>(R.id.acceptBtn)
+            val cancelBtn = dialog.findViewById<MaterialButton>(R.id.cancelBtn)
+            val emailEdt = dialog.findViewById<EditText>(R.id.emailField)
+
+            cancelBtn.setOnClickListener{
+                dialog.dismiss()
+            }
+
+            acceptBtn.setOnClickListener{
+                val email = emailEdt.text.toString()
+                if(email.isEmpty()){
+                    Toast.makeText(mContext, mContext.getString(R.string.please_fill), Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                resetPasswordConfirmListener.onConfirm(email)
+                dialog.dismiss()
+            }
+            dialog.show()
+
+        }
+
+        fun showChangePasswordDialog(gravity: Int, mContext: Context, resetPasswordConfirmListener: ResetPasswordConfirmListener){
+            val dialog = Dialog(mContext)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.change_password_dialog)
+
+            val window = dialog.window ?: return
+
+            window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT)
+            window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            val windowAttribute: WindowManager.LayoutParams = window.attributes
+            windowAttribute.gravity = gravity
+            window.attributes = windowAttribute
+            dialog.setCancelable(true)
+
+            val acceptBtn = dialog.findViewById<MaterialButton>(R.id.acceptBtn)
+            val cancelBtn = dialog.findViewById<MaterialButton>(R.id.cancelBtn)
+            val passwordEdt = dialog.findViewById<EditText>(R.id.oldPasswordEdt)
+            val newPasswordEdt = dialog.findViewById<EditText>(R.id.newPasswordEdt)
+            val confirmedPasswordEdt = dialog.findViewById<EditText>(R.id.confirmedPasswordEdt)
+
+            cancelBtn.setOnClickListener{
+                dialog.dismiss()
+            }
+
+            acceptBtn.setOnClickListener{
+                val password = passwordEdt.text.toString()
+                val newPassword = newPasswordEdt.text.toString()
+                val confirmedPassword = confirmedPasswordEdt.text.toString()
+                if(password.isEmpty() || newPassword.isEmpty() || confirmedPassword.isEmpty()){
+                    Toast.makeText(mContext, mContext.getString(R.string.please_fill), Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                else if(newPassword != confirmedPassword){
+                    Toast.makeText(mContext, mContext.getString(R.string.password_not_match), Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                resetPasswordConfirmListener.changePassword(password, newPassword)
                 dialog.dismiss()
             }
             dialog.show()
