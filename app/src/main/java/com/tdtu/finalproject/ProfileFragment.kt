@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +16,9 @@ import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import com.tdtu.finalproject.databinding.FragmentProfileBinding
 import com.tdtu.finalproject.model.user.User
+import com.tdtu.finalproject.utils.OnDialogConfirmListener
 import com.tdtu.finalproject.utils.OnDrawerNavigationPressedListener
+import com.tdtu.finalproject.utils.Utils
 import com.tdtu.finalproject.viewmodel.HomeDataViewModel
 
 
@@ -37,19 +40,22 @@ class ProfileFragment : Fragment() {
     private var _binding : FragmentProfileBinding? = null
     private val UPDATE_USER_REQUEST : Int = 555
     private var onDrawerNavigationPressedListener: OnDrawerNavigationPressedListener? = null
+    private var onDialogConfirmListener: OnDialogConfirmListener? = null
     private lateinit var sharedPref : SharedPreferences
     private val binding get() = _binding!!
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if(context is OnDrawerNavigationPressedListener){
+        if(context is OnDrawerNavigationPressedListener && context is OnDialogConfirmListener){
             onDrawerNavigationPressedListener = context
+            onDialogConfirmListener = context
         }
     }
 
     override fun onDetach() {
         super.onDetach()
         onDrawerNavigationPressedListener = null
+        onDialogConfirmListener = null
     }
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -83,10 +89,18 @@ class ProfileFragment : Fragment() {
         homeDataViewModel = ViewModelProvider(requireActivity())[HomeDataViewModel::class.java]
         sharedPref = requireActivity().getSharedPreferences(getString(R.string.shared_preferences_key), Context.MODE_PRIVATE);
 
-        homeDataViewModel.getUser()?.observe(viewLifecycleOwner) {
+        homeDataViewModel.getUser().observe(viewLifecycleOwner) {
             if (it != null) {
                 binding.profileUsername.text = it.username
                 Picasso.get().load(Uri.parse(it.profileImage)).into(binding.profileImage)
+                if(it.isPremiumAccount){
+                    binding.upgradePremiumBtn.visibility = View.GONE
+                    binding.profileLevel.visibility = View.VISIBLE
+                }
+                else{
+                    binding.upgradePremiumBtn.visibility = View.VISIBLE
+                    binding.profileLevel.visibility = View.GONE
+                }
             }
         }
 
@@ -94,6 +108,11 @@ class ProfileFragment : Fragment() {
             val goToAccount = Intent(requireActivity(), AccountActivity::class.java)
             goToAccount.putExtra(getString(R.string.user_data_key), homeDataViewModel.getUser()?.value)
             startActivityForResult(goToAccount, UPDATE_USER_REQUEST)
+        }
+
+        binding.achievementsBtn.setOnClickListener {
+            val goToAchievement = Intent(requireActivity(), AchievementActivity::class.java)
+            startActivity(goToAchievement)
         }
 
         binding.logoutBtn.setOnClickListener {
@@ -110,6 +129,13 @@ class ProfileFragment : Fragment() {
         binding.openDrawerBtn.setOnClickListener {
             onDrawerNavigationPressedListener?.openDrawerFromFragment()
         }
+        binding.upgradePremiumBtn.setOnClickListener {
+            onDialogConfirmListener?.let { it1 ->
+                Utils.showUpgradePremiumDialog(Gravity.CENTER, requireActivity(),
+                    it1
+                )
+            }
+        }
 
         return binding.root
     }
@@ -120,9 +146,9 @@ class ProfileFragment : Fragment() {
             val temp : User? = data.getParcelableExtra(getString(R.string.user_data_key))
             if(temp != null){
                 homeDataViewModel.setUser(temp)
-                binding.profileUsername.text = homeDataViewModel.getUser()?.value?.username
-                sharedPref.edit().putString(getString(R.string.user_data_key), Gson().toJson(homeDataViewModel.getUser()?.value)).apply()
-                Picasso.get().load(Uri.parse(homeDataViewModel.getUser()?.value?.profileImage)).into(binding.profileImage)
+                binding.profileUsername.text = homeDataViewModel.getUser().value?.username
+                sharedPref.edit().putString(getString(R.string.user_data_key), Gson().toJson(homeDataViewModel.getUser().value)).apply()
+                Picasso.get().load(Uri.parse(homeDataViewModel.getUser().value?.profileImage)).into(binding.profileImage)
             }
         }
     }

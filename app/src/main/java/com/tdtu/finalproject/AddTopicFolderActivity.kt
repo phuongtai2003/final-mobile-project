@@ -158,4 +158,8 @@ class AddTopicFolderActivity : AppCompatActivity(), OnDialogConfirmListener {
     override fun onDeleteFolderDialogConfirm() {
         TODO("Not yet implemented")
     }
+
+    override fun onUpgradePremiumDialogConfirm() {
+        TODO("Not yet implemented")
+    }
 }

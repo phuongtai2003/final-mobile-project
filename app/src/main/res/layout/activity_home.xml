@@ -26,6 +26,7 @@
                 app:contentInsetEnd="0dp"
                 app:hideOnScroll="true"
                 app:fabAlignmentMode="center"
+                app:fabAnimationMode="slide"
                 android:id="@+id/bottomAppBar"
                 app:fabCradleRoundedCornerRadius="50dp"
                 app:fabCradleVerticalOffset="0dp">

@@ -46,7 +46,7 @@ class TopicFragment : Fragment(), CustomOnItemClickListener {
     private fun getVM() {
         homeDataViewModel = ViewModelProvider(requireActivity())[HomeDataViewModel::class.java]
         homeDataViewModel.getTopicsList().observe(viewLifecycleOwner) {
-            val mutableList = it.filter { topic -> topic.ownerId?.id == homeDataViewModel.getUser().value?.id }.toMutableList()
+            val mutableList = it.toMutableList()
             if(mutableList.isEmpty()){
                 binding.noTopicLayout.visibility = View.VISIBLE
                 binding.topicRecyclerView.visibility = View.GONE

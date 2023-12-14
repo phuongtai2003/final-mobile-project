@@ -17,11 +17,12 @@ import com.tdtu.finalproject.constants.Constant
 import com.tdtu.finalproject.databinding.ActivityAccountBinding
 import com.tdtu.finalproject.model.user.User
 import com.tdtu.finalproject.repository.DataRepository
+import com.tdtu.finalproject.utils.ResetPasswordConfirmListener
 import com.tdtu.finalproject.utils.Utils
 import java.io.File
 import java.io.FileOutputStream
 
-class AccountActivity : AppCompatActivity() {
+class AccountActivity : AppCompatActivity(), ResetPasswordConfirmListener {
     private lateinit var binding: ActivityAccountBinding
     private lateinit var schoolList : ArrayList<String>
     private lateinit var sharedPref : SharedPreferences
@@ -53,6 +54,9 @@ class AccountActivity : AppCompatActivity() {
             pickingImage.type = "image/*"
             pickingImage.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
             startActivityForResult(pickingImage, PICK_IMAGE_INTENT)
+        }
+        binding.changePassword.setOnClickListener{
+            Utils.showChangePasswordDialog(Gravity.CENTER, this, this)
         }
 
         binding.saveProfileBtn.setOnClickListener {
@@ -141,6 +145,23 @@ class AccountActivity : AppCompatActivity() {
         user = intent.getParcelableExtra(getString(R.string.user_data_key))
         if(user == null){
             finish()
+        }
+    }
+
+    override fun onConfirm(email: String) {
+
+    }
+
+    override fun changePassword(oldPassword: String, newPassword: String) {
+        dataRepo.changePassword(sharedPref.getString(getString(R.string.token_key), null)!!,user?.id!!, oldPassword, newPassword).thenAcceptAsync {
+            runOnUiThread {
+                Utils.showDialog(Gravity.CENTER, it, this)
+            }
+        }.exceptionally {
+            runOnUiThread {
+                Utils.showDialog(Gravity.CENTER, it.message!!, this)
+            }
+            null
         }
     }
 }

@@ -17,6 +17,7 @@ import com.tdtu.finalproject.utils.CustomOnItemClickListener
 import com.tdtu.finalproject.utils.OnBottomNavigationChangeListener
 import com.tdtu.finalproject.utils.OnDrawerNavigationPressedListener
 import com.tdtu.finalproject.viewmodel.HomeDataViewModel
+import kotlin.math.abs
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -36,8 +37,13 @@ class HomePageFragment : Fragment(), CustomOnItemClickListener {
     private var onBottomNavigationChangeListener: OnBottomNavigationChangeListener? = null
     private var onDrawerNavigationPressedListener: OnDrawerNavigationPressedListener? = null
     private lateinit var userViewModel :HomeDataViewModel
-    private lateinit var topicAdapter: TopicAdapter
-    private lateinit var folderAdapter: FolderAdapter
+    private var topicAdapter: TopicAdapter? = null
+    private var folderAdapter: FolderAdapter? = null
+    private val MAX_SCALE = 1f
+    private val SCALE_PERCENT = 0.8f
+    private val MIN_SCALE = SCALE_PERCENT * MAX_SCALE
+    private val MAX_ALPHA = 1.0f
+    private val MIN_ALPHA = 0.05f
 
     private val binding get() = _binding!!
 
@@ -70,7 +76,13 @@ class HomePageFragment : Fragment(), CustomOnItemClickListener {
             binding.helloText.text = "${getString(R.string.hello)}, ${it.username}"
         }
         binding.searchAllTxt.setOnClickListener {
-            onBottomNavigationChangeListener?.changeBottomNavigationItem(R.id.searchFragment)
+            onBottomNavigationChangeListener?.changeBottomNavigationItem(R.id.searchFragment, 1)
+        }
+        binding.seeAllTopicBtn.setOnClickListener {
+            onBottomNavigationChangeListener?.changeBottomNavigationItem(R.id.libraryFragment, 0)
+        }
+        binding.seeAllFoldersBtn.setOnClickListener {
+            onBottomNavigationChangeListener?.changeBottomNavigationItem(R.id.libraryFragment, 1)
         }
         userViewModel.getTopicsList().observe(viewLifecycleOwner){
             val mutableList: MutableList<Topic> = it.toMutableList()
@@ -80,13 +92,31 @@ class HomePageFragment : Fragment(), CustomOnItemClickListener {
             } else{
                 binding.topicRecyclerView.visibility = View.VISIBLE
                 binding.noTopicText.visibility = View.GONE
-                topicAdapter = TopicAdapter(requireContext(), mutableList, R.layout.topic_menu_item, this)
-                binding.topicRecyclerView.adapter = topicAdapter
-                binding.topicRecyclerView.clipToPadding = false
-                binding.topicRecyclerView.clipChildren = false
+                if(topicAdapter == null){
+                    topicAdapter = TopicAdapter(requireContext(), mutableList, R.layout.topic_menu_item, this)
+                    binding.topicRecyclerView.adapter = topicAdapter
+                    binding.topicRecyclerView.apply {
+                        clipToPadding = false
+                        clipChildren = false
+                        val screenHeight = resources.displayMetrics.heightPixels
+                        val nextItemTranslationX = 19f * screenHeight / 60
+                        setPageTransformer { view, position ->
+                            val absPosition = abs(position)
+                            view.alpha = MAX_ALPHA - (MAX_ALPHA - MIN_ALPHA) * absPosition
+                            val scale = MAX_SCALE - (MAX_SCALE - MIN_SCALE) * absPosition
+                            view.scaleY = scale
+                            view.scaleX = scale
+                            view.translationX = -position * nextItemTranslationX
+                        }
+
+                    }
+                }
+                else{
+                    topicAdapter?.setTopics(mutableList)
+                }
             }
         }
-        userViewModel.getFolderList()?.observe(viewLifecycleOwner){
+        userViewModel.getFolderList().observe(viewLifecycleOwner){
             val mutableList: MutableList<Folder> = it.toMutableList()
             if(mutableList.isEmpty()){
                 binding.folderRecyclerView.visibility = View.GONE
@@ -94,10 +124,26 @@ class HomePageFragment : Fragment(), CustomOnItemClickListener {
             } else{
                 binding.folderRecyclerView.visibility = View.VISIBLE
                 binding.noFolderText.visibility = View.GONE
-                folderAdapter = FolderAdapter(requireContext(), mutableList, R.layout.folder_menu_item, userViewModel.getUser()?.value!!, this)
-                binding.folderRecyclerView.adapter = folderAdapter
-                binding.folderRecyclerView.clipToPadding = false
-                binding.folderRecyclerView.clipChildren = false
+                if(folderAdapter == null){
+                    folderAdapter = FolderAdapter(requireContext(), mutableList, R.layout.folder_menu_item, userViewModel.getUser()?.value!!, this)
+                    binding.folderRecyclerView.adapter = folderAdapter
+                    binding.folderRecyclerView.apply {
+                        clipToPadding = false
+                        clipChildren = false
+                        val screenHeight = resources.displayMetrics.heightPixels
+                        val nextItemTranslationX = 19f * screenHeight / 60
+                        setPageTransformer { view, position ->
+                            val absPosition = abs(position)
+                            view.alpha = MAX_ALPHA - (MAX_ALPHA - MIN_ALPHA) * absPosition
+                            val scale = MAX_SCALE - (MAX_SCALE - MIN_SCALE) * absPosition
+                            view.scaleY = scale
+                            view.scaleX = scale
+                            view.translationX = -position * nextItemTranslationX
+                        }
+                    }
+                }else{
+                    folderAdapter?.setFolders(mutableList)
+                }
             }
         }
     }

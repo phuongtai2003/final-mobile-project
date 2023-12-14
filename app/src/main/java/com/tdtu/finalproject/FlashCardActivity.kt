@@ -20,7 +20,9 @@ import com.tdtu.finalproject.utils.FlashCardOptionsListener
 import com.tdtu.finalproject.utils.Language
 import com.tdtu.finalproject.utils.OnSwipeTouchListener
 import com.tdtu.finalproject.utils.Utils
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -98,14 +100,14 @@ class FlashCardActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Flas
             if(!isAutoPlayCard){
                 isAutoPlayCard = true
                 isAutoPlayAudio = true
-                setVocabulary()
                 binding.autoBtn.setImageResource(R.drawable.outline_pause_circle_24)
+                startAutoScroll()
             }
             else{
                 isAutoPlayCard = false
                 isAutoPlayAudio = false
-                setVocabulary()
                 binding.autoBtn.setImageResource(R.drawable.baseline_play_arrow_24)
+                stopAutoScroll()
             }
         }
         setContentView(binding.root)
@@ -113,6 +115,7 @@ class FlashCardActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Flas
 
     private fun setVocabulary(){
         if(index == totalVocabularies){
+            stopAutoScroll()
             finish()
             return
         }
@@ -379,8 +382,14 @@ class FlashCardActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Flas
                 }
             }
         }
-        if(isAutoPlayCard){
-            lifecycleScope.launch {
+    }
+
+    private var autoPlayJob : Job? = null
+
+
+    private fun startAutoScroll(){
+        autoPlayJob = lifecycleScope.launch {
+            while (isActive){
                 if(index != 0){
                     ttsEnglish.stop()
                     ttsVietnamese.stop()
@@ -398,6 +407,9 @@ class FlashCardActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Flas
                         frontAnim.start()
                         isFront = true
                     }
+                }
+                else{
+                    setVocabulary()
                 }
                 delay(3000)
                 if (isFront) {
@@ -418,6 +430,12 @@ class FlashCardActivity : AppCompatActivity(), TextToSpeech.OnInitListener, Flas
                 index++
                 setVocabulary()
             }
+        }
+        autoPlayJob?.start()
+    }
+    private fun stopAutoScroll(){
+        if(autoPlayJob != null){
+            autoPlayJob?.cancel()
         }
     }
 

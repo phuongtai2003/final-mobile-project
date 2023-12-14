@@ -133,6 +133,10 @@ class FolderFragment : Fragment(), OnDialogConfirmListener, CustomOnItemClickLis
 
     }
 
+    override fun onUpgradePremiumDialogConfirm() {
+        TODO("Not yet implemented")
+    }
+
     override fun onTopicClick(topic: Topic) {
     }
 

@@ -41,4 +41,8 @@ class FolderAdapter(private var mContext: Context, private var folders: MutableL
         return folders.size
     }
 
+    fun setFolders(folders: MutableList<Folder>){
+        this.folders = folders
+        notifyDataSetChanged()
+    }
 }

@@ -68,10 +68,10 @@ class FolderDetailActivity : AppCompatActivity() , CustomOnItemClickListener, On
         dataRepository = DataRepository.getInstance()
         Picasso.get().load(user.profileImage).into(binding.folderOwnerImg)
         binding.folderOwnerNameTxt.text = user.username
-        binding.folderTopicCount.text = folder!!.topicCount.toString() + " " + getString(R.string.topic)
+        binding.folderTopicCount.text = topicList.size.toString() +" " + getString(R.string.topic)
         binding.folderTitleEnglish.text = folder!!.folderNameEnglish
 
-        if(folder!!.topicCount == 0){
+        if(topicList.size == 0){
             binding.folderDetailRecyclerView.visibility = android.view.View.GONE
             binding.noTopicsInFolderLayout.visibility = android.view.View.VISIBLE
         }
@@ -179,5 +179,9 @@ class FolderDetailActivity : AppCompatActivity() , CustomOnItemClickListener, On
             }
             null
         }
+    }
+
+    override fun onUpgradePremiumDialogConfirm() {
+        TODO("Not yet implemented")
     }
 }

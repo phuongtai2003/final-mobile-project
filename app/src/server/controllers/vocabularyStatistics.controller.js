@@ -54,10 +54,12 @@ const getVocabularyStatisticByTopicId = async (req, res) => {
 
         for (let vocab of vocabularies) {
             const stat = await VocabularyStatistic.findOne({ userId, vocabularyId: vocab._id });
-            vocabStats.push({
-                vocabulary: vocab,
-                statistic: stat
-            });
+            if(stat){
+                vocabStats.push({
+                    vocabulary: vocab,
+                    statistic: stat
+                });    
+            }
         }
 
         res.status(200).json({ vocabStats });

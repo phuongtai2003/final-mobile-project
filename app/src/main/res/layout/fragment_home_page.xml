@@ -67,6 +67,7 @@
             android:textAlignment="textStart"
             android:textSize="18sp"
             android:id="@+id/searchAllTxt"
+            android:textColor="@color/primary_color"
             app:icon="@drawable/baseline_search_24"
             app:iconTint="@color/primary_color"
             android:background="@drawable/search_view_bg"

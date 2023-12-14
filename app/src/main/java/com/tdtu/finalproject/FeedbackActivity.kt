@@ -129,6 +129,7 @@ class FeedbackActivity : AppCompatActivity() {
             intent.putExtra("topic", topic)
             intent.putExtra("studyMode", studyMode)
             intent.putParcelableArrayListExtra("vocabularies", ArrayList(vocabularies))
+            intent.putParcelableArrayListExtra("bookmarkedVocabularies", ArrayList(bookmarkedVocabulariesList))
             startActivity(intent)
         }
         binding.flashcardBtn.setOnClickListener {

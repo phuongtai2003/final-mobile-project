@@ -10,11 +10,18 @@ import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
+import com.google.mlkit.common.model.DownloadConditions
+import com.google.mlkit.nl.translate.TranslateLanguage
+import com.google.mlkit.nl.translate.Translation
+import com.google.mlkit.nl.translate.TranslatorOptions
 import com.tdtu.finalproject.R
 import com.tdtu.finalproject.model.quizzes.Quiz
 import com.tdtu.finalproject.model.user.User
@@ -22,6 +29,12 @@ import com.tdtu.finalproject.model.vocabulary.Vocabulary
 
 class Utils {
     companion object{
+        private var downloadConditions = DownloadConditions.Builder().requireWifi().build()
+        private var engToVietOptions = TranslatorOptions.Builder().setSourceLanguage(
+            TranslateLanguage.ENGLISH).setTargetLanguage(
+            TranslateLanguage.VIETNAMESE).build()
+        private val engToVietTranslator = Translation.getClient(engToVietOptions)
+
         fun showSnackBar(view: View, message: String){
             val snackBar : Snackbar = Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE)
             snackBar.setAction(R.string.close) {
@@ -75,6 +88,17 @@ class Utils {
             val cancelBtn = dialog.findViewById<Button>(R.id.createFolderCancelBtn)
             val folderNameEnglishEdt = dialog.findViewById<TextView>(R.id.folderNameEdt)
             val folderNameVietnameseEdt = dialog.findViewById<TextView>(R.id.folderNameVietnameseEdt)
+
+            folderNameEnglishEdt.addTextChangedListener {text->
+                engToVietTranslator.downloadModelIfNeeded(downloadConditions).addOnSuccessListener {
+                    engToVietTranslator.translate(text.toString()).addOnSuccessListener {translatedText->
+                        folderNameVietnameseEdt.text = translatedText
+                    }.addOnFailureListener{
+                        folderNameVietnameseEdt.text = ""
+                    }
+                }
+            }
+
             cancelBtn.setOnClickListener{
                 dialog.dismiss()
             }
@@ -125,6 +149,83 @@ class Utils {
                     return@setOnClickListener
                 }
                 onDialogConfirmListener.onCreateFolderDialogConfirm(folderNameEnglish, folderNameVietnamese)
+                dialog.dismiss()
+            }
+            dialog.show()
+        }
+        fun showResetPasswordDialog(gravity: Int, mContext: Context, resetPasswordConfirmListener: ResetPasswordConfirmListener){
+
+            val dialog = Dialog(mContext)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.forget_password_dialog)
+
+            val window = dialog.window ?: return
+
+            window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT)
+            window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            val windowAttribute: WindowManager.LayoutParams = window.attributes
+            windowAttribute.gravity = gravity
+            window.attributes = windowAttribute
+            dialog.setCancelable(true)
+
+            val acceptBtn = dialog.findViewById<MaterialButton>(R.id.acceptBtn)
+            val cancelBtn = dialog.findViewById<MaterialButton>(R.id.cancelBtn)
+            val emailEdt = dialog.findViewById<EditText>(R.id.emailField)
+
+            cancelBtn.setOnClickListener{
+                dialog.dismiss()
+            }
+
+            acceptBtn.setOnClickListener{
+                val email = emailEdt.text.toString()
+                if(email.isEmpty()){
+                    Toast.makeText(mContext, mContext.getString(R.string.please_fill), Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                resetPasswordConfirmListener.onConfirm(email)
+                dialog.dismiss()
+            }
+            dialog.show()
+
+        }
+
+        fun showChangePasswordDialog(gravity: Int, mContext: Context, resetPasswordConfirmListener: ResetPasswordConfirmListener){
+            val dialog = Dialog(mContext)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.change_password_dialog)
+
+            val window = dialog.window ?: return
+
+            window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT)
+            window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            val windowAttribute: WindowManager.LayoutParams = window.attributes
+            windowAttribute.gravity = gravity
+            window.attributes = windowAttribute
+            dialog.setCancelable(true)
+
+            val acceptBtn = dialog.findViewById<MaterialButton>(R.id.acceptBtn)
+            val cancelBtn = dialog.findViewById<MaterialButton>(R.id.cancelBtn)
+            val passwordEdt = dialog.findViewById<EditText>(R.id.oldPasswordEdt)
+            val newPasswordEdt = dialog.findViewById<EditText>(R.id.newPasswordEdt)
+            val confirmedPasswordEdt = dialog.findViewById<EditText>(R.id.confirmedPasswordEdt)
+
+            cancelBtn.setOnClickListener{
+                dialog.dismiss()
+            }
+
+            acceptBtn.setOnClickListener{
+                val password = passwordEdt.text.toString()
+                val newPassword = newPasswordEdt.text.toString()
+                val confirmedPassword = confirmedPasswordEdt.text.toString()
+                if(password.isEmpty() || newPassword.isEmpty() || confirmedPassword.isEmpty()){
+                    Toast.makeText(mContext, mContext.getString(R.string.please_fill), Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                else if(newPassword != confirmedPassword){
+                    Toast.makeText(mContext, mContext.getString(R.string.password_not_match), Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                resetPasswordConfirmListener.changePassword(password, newPassword)
                 dialog.dismiss()
             }
             dialog.show()
@@ -218,6 +319,34 @@ class Utils {
 
         fun getUserFromSharedPreferences(mContext: Context,sharedPreferences: SharedPreferences): User{
             return Gson().fromJson(sharedPreferences.getString(mContext.getString(R.string.user_data_key), null), User::class.java)
+        }
+
+        fun showUpgradePremiumDialog(gravity: Int, mContext: Context, onDialogConfirmListener: OnDialogConfirmListener){
+            val dialog = Dialog(mContext)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.upgrade_premium_dialog)
+
+            val window = dialog.window ?: return
+
+            window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT)
+            window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            val windowAttribute: WindowManager.LayoutParams = window.attributes
+            windowAttribute.gravity = gravity
+            window.attributes = windowAttribute
+            dialog.setCancelable(true)
+
+            val cancelBtn = dialog.findViewById<MaterialButton>(R.id.cancelBtn)
+            val upgradeBtn = dialog.findViewById<MaterialButton>(R.id.upgradeBtn)
+
+            cancelBtn.setOnClickListener{
+                dialog.dismiss()
+            }
+
+            upgradeBtn.setOnClickListener{
+                onDialogConfirmListener.onUpgradePremiumDialogConfirm()
+                dialog.dismiss()
+            }
+            dialog.show()
         }
     }
 }

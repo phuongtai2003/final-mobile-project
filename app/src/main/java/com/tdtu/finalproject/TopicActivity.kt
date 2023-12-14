@@ -60,6 +60,8 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
         {
             topic = data
         }
+        dataRepository = DataRepository.getInstance()
+        sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_key), MODE_PRIVATE)
         binding.optionMenuBtn.setOnClickListener {
             val bottomSheet = TopicBottomSheet()
             val bundle = Bundle()
@@ -78,6 +80,11 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
         initViewModel()
         binding.returnBtn.setOnClickListener {
             finish()
+        }
+        binding.rankingBtn.setOnClickListener {
+            val intent = Intent(this, TopicRankingActivity::class.java)
+            intent.putExtra("topic", topic)
+            startActivity(intent)
         }
         binding.learnByQuizBtn.setOnClickListener {
             val intent = Intent(this, StudyConfigurationActivity::class.java)
@@ -159,7 +166,6 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
 
                         val updateJob = async {
                             dataRepository.updateTopic(topic.id!!, sharedPreferences.getString(getString(R.string.token_key), null)!!, Topic(null, titleEnglishResult, titleVietnameseResult, 0, false, 0, 0, topicDescriptionEnglishResult, topicDescriptionVietnameseResult, null, null, null, null, null, false)).thenAcceptAsync {res->
-                                Log.d("USER TAG", "onCreate: " + res)
                                 if(res == null){
                                     runOnUiThread {
                                         Utils.showDialog(Gravity.CENTER, getString(R.string.update_topic_failed), this@TopicActivity)
@@ -240,49 +246,98 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
     }
 
     private fun initViewModel(){
-        dataRepository = DataRepository.getInstance()
-        sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_key), MODE_PRIVATE)
         binding.progressBar.visibility = View.VISIBLE
-        dataRepository.getVocabulariesByTopic(topic.id!!, sharedPreferences.getString(getString(R.string.token_key), null)!!).thenAcceptAsync { it ->
-            runOnUiThread {
-                binding.vocabularyCountTxt.text = it.size.toString() + " " + getString(R.string.vocabulary)
-                topicViewModel.setVocabulariesList(it)
-                originalVocabulariesList = ArrayList(it)
-                binding.progressBar.visibility = View.GONE
-            }
-        }.exceptionally {
-            runOnUiThread{
-                Utils.showDialog(Gravity.CENTER, it.message!!.toString(), this)
-                binding.progressBar.visibility = View.GONE
-            }
-            null
-        }
-        dataRepository.getBookmarkVocabulariesInTopic(sharedPreferences.getString(getString(R.string.token_key), null)!!, topic.id!!).thenAcceptAsync {
-            runOnUiThread {
-                bookmarkedVocabulariesList = it
-                if(bookmarkedVocabulariesList.isNotEmpty()){
-                    binding.studyByOptions.visibility = View.VISIBLE
-                }
-                else{
-                    binding.studyByOptions.visibility = View.GONE
+        val scope = CoroutineScope(Dispatchers.Main)
+        scope.launch {
+            val getVocabJob = async {
+                dataRepository.getVocabulariesByTopic(
+                    topic.id!!,
+                    sharedPreferences.getString(getString(R.string.token_key), null)!!
+                ).thenAcceptAsync { it ->
+                    runOnUiThread {
+                        binding.vocabularyCountTxt.text =
+                            it.size.toString() + " " + getString(R.string.vocabulary)
+                        topicViewModel.setVocabulariesList(it)
+                        originalVocabulariesList = ArrayList(it)
+                    }
+                }.exceptionally {
+                    runOnUiThread {
+                        Utils.showDialog(Gravity.CENTER, it.message!!.toString(), this@TopicActivity)
+                    }
+                    null
                 }
             }
-        }.exceptionally {
-            runOnUiThread{
-                Utils.showDialog(Gravity.CENTER, it.message!!.toString(), this)
+            getVocabJob.await()
+            val getBookmarkedJob = async {
+                dataRepository.getBookmarkVocabulariesInTopic(sharedPreferences.getString(getString(R.string.token_key), null)!!, topic.id!!).thenAcceptAsync {
+                    runOnUiThread {
+                        bookmarkedVocabulariesList = it
+                        if(bookmarkedVocabulariesList.isNotEmpty()){
+                            binding.studyByOptions.visibility = View.VISIBLE
+                        }
+                        else{
+                            binding.studyByOptions.visibility = View.GONE
+                        }
+                    }
+                }.exceptionally {
+                    runOnUiThread{
+                        Utils.showDialog(Gravity.CENTER, it.message!!.toString(), this@TopicActivity)
+                    }
+                    null
+                }
             }
-            null
-        }
-        dataRepository.getUserById(topic.ownerId!!.id, sharedPreferences.getString(getString(R.string.token_key), null)!!).thenAcceptAsync {
+            getBookmarkedJob.await()
+
+            val getUserDataJob = async {
+                dataRepository.getUserById(topic.ownerId!!.id, sharedPreferences.getString(getString(R.string.token_key), null)!!).thenAcceptAsync {
+                    runOnUiThread {
+                        Picasso.get().load(it.profileImage).into(binding.topicOwnerImg)
+                        binding.topicOwnerNameTxt.text = it.username
+                    }
+                }.exceptionally {
+                    runOnUiThread{
+                        Utils.showDialog(Gravity.CENTER, it.message!!.toString(), this@TopicActivity)
+                    }
+                    null
+                }
+            }
+            getUserDataJob.await()
+            Utils.getUserFromSharedPreferences(this@TopicActivity, sharedPreferences).let {
+                user->
+                val job = async {
+                    if (topic.userId?.contains(user.id) == true) {
+                        dataRepository.getTopicStatisticsByUser(sharedPreferences.getString(getString(R.string.token_key), null)!!, topic.id!!, user.id).thenAcceptAsync {
+                            runOnUiThread {
+                                binding.userStatisticsLayout.visibility = View.VISIBLE
+                                binding.topicLearningCountTxt.text = "${getString(R.string.learning_count)}: ${it.learningCount}"
+                                binding.vocabulariesLearnedTxt.text = "${getString(R.string.vocabularies_learned)}: ${it.vocabLearned}"
+                                val hours = it.learningTime / 3600
+                                val minutes = (it.learningTime % 3600) / 60
+                                val remainingSeconds = it.learningTime % 60
+                                binding.timeLearnedTxt.text = "${getString(R.string.time_learned)}: ${String.format("%02d:%02d:%02d", hours, minutes, remainingSeconds)}"
+                                val percentage = (it.learningPercentage * 100).toInt()
+                                binding.progressTxt.text = "$percentage%"
+                                binding.progressIndicator.progress = percentage
+                            }
+                        }.exceptionally {
+                            runOnUiThread {
+                                Utils.showDialog(Gravity.CENTER, it.message!!.toString(), this@TopicActivity)
+                            }
+                            null
+                        }
+                    } else {
+                        runOnUiThread {
+                            binding.userStatisticsLayout.visibility = View.GONE
+                        }
+                    }
+                }
+                job.await()
+            }
+        }.invokeOnCompletion {
+            scope.cancel()
             runOnUiThread {
-                Picasso.get().load(it.profileImage).into(binding.topicOwnerImg)
-                binding.topicOwnerNameTxt.text = it.username
+                binding.progressBar.visibility = View.GONE
             }
-        }.exceptionally {
-            runOnUiThread{
-                Utils.showDialog(Gravity.CENTER, it.message!!.toString(), this)
-            }
-            null
         }
     }
 

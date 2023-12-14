@@ -6,9 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.speech.tts.TextToSpeech
-import android.util.Log
 import android.view.Gravity
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import com.tdtu.finalproject.databinding.ActivityQuizBinding
 import com.tdtu.finalproject.model.quizzes.Quiz
 import com.tdtu.finalproject.model.topic.Topic
@@ -19,6 +19,7 @@ import com.tdtu.finalproject.repository.DataRepository
 import com.tdtu.finalproject.utils.Language
 import com.tdtu.finalproject.utils.StudyMode
 import com.tdtu.finalproject.utils.Utils
+import com.tdtu.finalproject.viewmodel.StudyViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -51,11 +52,13 @@ class QuizActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var currentAnswerMode = false
     private lateinit var dataRepository: DataRepository
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var studyViewModel: StudyViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityQuizBinding.inflate(layoutInflater)
         ttsEnglish = TextToSpeech(this, this)
         ttsVietnamese = TextToSpeech(this, this)
+        studyViewModel = ViewModelProvider(this)[StudyViewModel::class.java]
         dataRepository = DataRepository.getInstance()
         sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_key), MODE_PRIVATE)
         studyLanguage = intent.getSerializableExtra("studyLanguage") as Language
@@ -95,6 +98,7 @@ class QuizActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun initView(){
+        studyViewModel.startTimer()
         if(vocabulariesList.size == 2){
             binding.answer4Btn.visibility = View.GONE
             binding.answer3Btn.visibility = View.GONE
@@ -119,6 +123,7 @@ class QuizActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private fun showQuestion(){
         if(questionCount > totalQuestions){
+            val second = studyViewModel.seconds.value!!
             val scope = CoroutineScope(Dispatchers.Main)
             scope.launch {
                 val isOwnedTopic = topic.ownerId?.id == Utils.getUserFromSharedPreferences(this@QuizActivity,sharedPreferences).id
@@ -126,7 +131,6 @@ class QuizActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                     val studyJob = async {
                         dataRepository.studyTopicForUser(sharedPreferences.getString(getString(R.string.token_key), null)!!, topic.id!!).exceptionally {
                             runOnUiThread {
-                                Log.d("USER TAG", "showQuestion: " + it.message)
                                 Utils.showSnackBar(binding.root, it.message!!)
                             }
                             null
@@ -156,6 +160,15 @@ class QuizActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                     }
                 }
                 job.await()
+                val updateLearningJob = async {
+                    dataRepository.updateLearningStatisticTopic(sharedPreferences.getString(getString(R.string.token_key), null)!!, topic.id!!,second ).exceptionally {
+                        runOnUiThread {
+                            Utils.showSnackBar(binding.root, it.message!!)
+                        }
+                        null
+                    }
+                }
+                updateLearningJob.await()
             }.invokeOnCompletion {
                 scope.cancel()
                 val feedBackIntent = Intent(this, FeedbackActivity::class.java)

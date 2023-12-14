@@ -3,12 +3,13 @@
     <string name="user_data_key">USERDATA</string>
     <string name="shared_preferences_key">SHAREDPREFKEY</string>
     <string name="token_key">TOKENKEY</string>
-    <string name="app_name">Final Project</string>
+    <string name="app_name">3T</string>
     <string name="sign_up">Đăng kí miễn phí</string>
     <string name="log_in">Hoặc đăng nhập</string>
     <string name="login_with_username">Đăng nhập bằng tên người dùng</string>
     <string name="login_with_email">Đăng nhập bằng email</string>
     <string name="username">Tên người dùng</string>
+    <string name="learners">Người học</string>
     <string name="password">Mật khẩu</string>
     <string name="login">Đăng nhập</string>
     <string name="forget_password">Quên <b><font color="#4156FF">mật khẩu</font></b>?</string>
@@ -21,6 +22,7 @@
     <string name="save_key">Lưu</string>
     <string name="policy_string">Với việc đăng kí tài khoản, tôi chấp nhận\n các <b>chính sách bảo mật</b> và <b>điều khoản dịch vụ</b> của 3T</string>
     <string name="profile">Hồ sơ</string>
+    <string name="ranking">Bảng xếp hạng</string>
     <string name="hello">Xin Chào</string>
     <string name="collection">Bộ sưu tập</string>
     <string name="competition">Thi đấu</string>
@@ -141,4 +143,28 @@
     <string name="apply">Áp dụng</string>
     <string name="study_all">Học tất cả</string>
     <string name="study_bookmark">Học từ đánh dấu</string>
+    <string name="achievements">Thành tựu</string>
+    <string name="reset_password">Đặt lại mật khẩu</string>
+    <string name="change_password">Đổi mật khẩu</string>
+    <string name="new_password">Mật khẩu mới</string>
+    <string name="change_password_text">Nhập mật khẩu cũ và mới của bạn bên dưới để đổi mật khẩu.</string>
+    <string name="reset_password_text">Vui lòng nhập email của bạn để đặt lại mật khẩu</string>
+    <string name="learning_count">Số lần học</string>
+    <string name="vocabularies_learned">Từ vựng đã học</string>
+    <string name="time_learned">Thời gian học</string>
+    <string name="rank">Xếp hạng</string>
+    <string name="sort_by_time_learned">Sắp xếp theo thời gian học</string>
+    <string name="sort_by_learning_count">Sắp xếp theo số lần học</string>
+    <string name="sort_by_progress">Sắp xếp theo tiến độ</string>
+    <string name="empty_ranking">Chưa có ai học học phần này</string>
+    <string name="sort_by_vocabulary_learned">Sắp xếp theo từ vựng đã học</string>
+    <string name="learn_and_test">Học và kiểm tra</string>
+    <string name="learn_and_test_text">Học và kiểm tra kiến thức của bạn với các bài kiểm tra ngẫu nhiên</string>
+    <string name="customized_sets">Tạo bộ từ vựng</string>
+    <string name="customized_sets_text">Tạo bộ từ vựng của riêng bạn và học chúng</string>
+    <string name="upgrade_premium_success">Nâng cấp tài khoản thành công</string>
+    <string name="premium_account">Tài khoản Premium</string>
+    <string name="user_statistics">Thống kê người học</string>
+    <string name="obtained">Đã đạt được</string>
+    <string name="not_owned">Không sở hữu</string>
 </resources>

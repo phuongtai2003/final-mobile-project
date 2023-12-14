@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/sortByTimeLearned"
+        android:title="@string/sort_by_time_learned"/>
+
+    <item android:id="@+id/sortByLearningCount"
+        android:title="@string/sort_by_learning_count"/>
+
+    <item android:id="@+id/sortByProgress"
+        android:title="@string/sort_by_progress"/>
+
+    <item android:id="@+id/sortByVocabularyLearned"
+        android:title="@string/sort_by_vocabulary_learned"/>
+</menu>
