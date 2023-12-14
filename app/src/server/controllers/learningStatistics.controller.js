@@ -73,8 +73,19 @@ const getAllStatisticsForTopic = async (req, res) => {
     }
 }
 
+const getUserStatisticForTopic = async (req, res)=>{
+    const {topicId, userId} = req.params;
+    try{
+        const learningStatistic = await LearningStatistics.findOne({topicId, userId});
+        return res.status(200).json({learningStatistic});
+    }catch(error){
+        return res.status(500).json({error : error.message});
+    }
+}
+
 module.exports = {
     updateLearningStatistic,
     getProcessLearning,
-    getAllStatisticsForTopic
+    getAllStatisticsForTopic,
+    getUserStatisticForTopic
 }

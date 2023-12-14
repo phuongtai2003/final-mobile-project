@@ -13,6 +13,7 @@ data class LoginResponse(
 data class User(
     @SerializedName("_id")
     val id: String,
+    val achievementId: List<String>,
     val email: String,
     val username: String,
     val profileImage: String,
@@ -28,6 +29,7 @@ data class User(
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
+        mutableListOf<String>().apply{ parcel.readList(this, Any::class.java.classLoader)},
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
@@ -47,6 +49,7 @@ data class User(
 
     override fun writeToParcel(p0: Parcel, p1: Int) {
         p0.writeString(id)
+        p0.writeList(achievementId)
         p0.writeString(email)
         p0.writeString(username)
         p0.writeString(profileImage)

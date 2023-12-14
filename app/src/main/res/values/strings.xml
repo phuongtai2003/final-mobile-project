@@ -2,7 +2,7 @@
     <string name="user_data_key">USERDATA</string>
     <string name="shared_preferences_key">SHAREDPREFKEY</string>
     <string name="token_key">TOKENKEY</string>
-    <string name="app_name">Final Project</string>
+    <string name="app_name">3T</string>
     <string name="sign_up">Sign up for free</string>
     <string name="log_in">Or Login</string>
     <string name="login_with_username">Login With Username</string>
@@ -10,6 +10,7 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
+    <string name="learners">Learners</string>
     <string name="forget_password">Forget <b><font color="#4156FF">password</font></b>?</string>
     <string name="signup">Sign Up</string>
     <string name="confirmed_password">Confirmed Password</string>
@@ -144,6 +145,21 @@
     <string name="reset_password">Reset your password</string>
     <string name="change_password">Change Password</string>
     <string name="new_password">New Password</string>
+    <string name="ranking">Ranking</string>
+    <string name="learning_count">Learning Count</string>
+    <string name="rank">Rank</string>
+    <string name="sort_by_time_learned">Sort By Time Learned</string>
+    <string name="sort_by_learning_count">Sort By Learning Count</string>
+    <string name="sort_by_progress">Sort By Progress</string>
+    <string name="sort_by_vocabulary_learned">Sort By Vocabulary Learned</string>
+    <string name="vocabularies_learned">Vocabularies Learned</string>
+    <string name="time_learned">Time Learned</string>
+    <string name="empty_ranking">No one has learned this topic</string>
+    <string name="learn_and_test">Learn and Test</string>
+    <string name="learn_and_test_text">Create custom quizzes and tests for faster learning</string>
+    <string name="customized_sets">Customized Sets</string>
+    <string name="upgrade_premium_success">Upgrade Premium Successfully</string>
+    <string name="customized_sets_text">Create custom sets of flashcards to study and test yourself on</string>
     <string name="change_password_text">Enter your old and new password below to change your password.</string>
     <string name="reset_password_text">Enter your email address below and we will send you a link to reset your password.</string>
 </resources>

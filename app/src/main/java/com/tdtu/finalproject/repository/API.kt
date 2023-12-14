@@ -4,10 +4,10 @@ import com.tdtu.finalproject.model.common.Message
 import com.tdtu.finalproject.model.folder.AddTopicToFolderResponse
 import com.tdtu.finalproject.model.folder.CreateFolderRequest
 import com.tdtu.finalproject.model.folder.CreateFolderResponse
-import com.tdtu.finalproject.model.folder.Folder
 import com.tdtu.finalproject.model.folder.GetFolderByUserResponse
 import com.tdtu.finalproject.model.folder.UpdateFolderRequest
 import com.tdtu.finalproject.model.folder.UpdateFolderResponse
+import com.tdtu.finalproject.model.learning_statistics.GetLearningStatisticsResponse
 import com.tdtu.finalproject.model.topic.GetTopicsResponse
 import com.tdtu.finalproject.model.topic.CreateTopicRequest
 import com.tdtu.finalproject.model.topic.CreateTopicResponse
@@ -110,4 +110,8 @@ interface API {
     fun recoverPassword(@Body() recoverPasswordRequest: RecoverPasswordRequest) : Call<Message>
     @PUT("users/profiles/password/{id}")
     fun changePassword(@Header("token") token: String,@Path("id") userId: String, @Body() changePasswordRequest: ChangePasswordRequest) : Call<Message>
+    @GET("learningStatistics/topic/{topicId}")
+    fun getTopicStatistics(@Path("topicId") topicId: String) : Call<GetLearningStatisticsResponse>
+    @PUT("users/profiles/update-premium/{id}")
+    fun updatePremium(@Header("token") token: String,@Path("id") userId: String) : Call<LoginResponse>
 }

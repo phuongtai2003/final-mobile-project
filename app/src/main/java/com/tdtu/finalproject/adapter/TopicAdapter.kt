@@ -20,6 +20,7 @@ class TopicAdapter(private var mContext: Context, private var topics: MutableLis
         val topicTermsCount: TextView = itemView.findViewById(R.id.termsCount)
         val topicOwnerImg: ShapeableImageView = itemView.findViewById(R.id.topicOwnerImg)
         val topicOwnerNameTxt: TextView = itemView.findViewById(R.id.topicOwnerNameTxt)
+        val learnerCount : TextView = itemView.findViewById(R.id.learnerCount)
     }
 
     fun getTopics(): MutableList<Topic>{
@@ -48,6 +49,7 @@ class TopicAdapter(private var mContext: Context, private var topics: MutableLis
         holder.topicNameTxt.text = topic.topicNameEnglish
         holder.topicTermsCount.text = topic.vocabularyCount.toString() + " " + mContext.getString(R.string.vocabulary)
         holder.topicOwnerNameTxt.text = topic.ownerId?.username
+        holder.learnerCount.text = topic.userId?.size.toString() + " " + mContext.getString(R.string.learners)
         Picasso.get().load(topic.ownerId?.profileImage).into(holder.topicOwnerImg)
     }
 }

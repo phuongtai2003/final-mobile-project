@@ -14,6 +14,8 @@ import com.tdtu.finalproject.model.folder.Folder
 import com.tdtu.finalproject.model.folder.GetFolderByUserResponse
 import com.tdtu.finalproject.model.folder.UpdateFolderRequest
 import com.tdtu.finalproject.model.folder.UpdateFolderResponse
+import com.tdtu.finalproject.model.learning_statistics.GetLearningStatisticsResponse
+import com.tdtu.finalproject.model.learning_statistics.LearningStatistic
 import com.tdtu.finalproject.model.topic.GetTopicByFolderResponse
 import com.tdtu.finalproject.model.topic.GetTopicByIdResponse
 import com.tdtu.finalproject.model.topic.Topic
@@ -50,7 +52,7 @@ import java.util.concurrent.CompletableFuture
 class DataRepository {
 
     companion object{
-        private const val baseUrl: String = "http://192.168.1.70:3000/android/"
+        private const val baseUrl: String = "http://192.168.1.5:3000/android/"
         private val api = Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(GsonConverterFactory.create()).build().create(API::class.java)
         private var instance: DataRepository? = null
         fun getInstance() : DataRepository{
@@ -777,6 +779,50 @@ class DataRepository {
                 }
             }
             override fun onFailure(call: Call<Message>, t: Throwable) {
+                future.completeExceptionally(t)
+            }
+        })
+        return future
+    }
+    fun getLearningStatisticsForTopic(topicId: String) : CompletableFuture<List<LearningStatistic>>{
+        val future: CompletableFuture<List<LearningStatistic>> = CompletableFuture()
+        val call = api.getTopicStatistics(topicId)
+        var error: String?
+        call.enqueue(object : Callback<GetLearningStatisticsResponse>{
+            override fun onResponse(call: Call<GetLearningStatisticsResponse>, response: Response<GetLearningStatisticsResponse>) {
+                if(response.code() == 200){
+                    future.complete(response.body()?.learningStatistic)
+                }
+                else if(response.code() == 404){
+                    future.complete(ArrayList())
+                }
+                else{
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
+                    future.completeExceptionally(Exception(error))
+                }
+            }
+            override fun onFailure(call: Call<GetLearningStatisticsResponse>, t: Throwable) {
+                future.completeExceptionally(t)
+            }
+        })
+        return future
+    }
+    fun updatePremium(token: String, userId: String) : CompletableFuture<User> {
+        val future: CompletableFuture<User> = CompletableFuture()
+        val call = api.updatePremium(token, userId)
+        var error: String?
+        call.enqueue(object : Callback<LoginResponse>{
+            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                if(response.code() == 200){
+                    future.complete(response.body()?.user)
+                }
+                else{
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
+                    future.completeExceptionally(Exception(error))
+                }
+
+            }
+            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                 future.completeExceptionally(t)
             }
         })

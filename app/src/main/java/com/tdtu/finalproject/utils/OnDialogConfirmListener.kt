@@ -6,4 +6,5 @@ interface OnDialogConfirmListener {
     fun onCreateFolderDialogConfirm(folderNameEnglish: String, folderNameVietnamese: String)
     fun onAddTopicToFolderDialogConfirm()
     fun onDeleteFolderDialogConfirm()
+    fun onUpgradePremiumDialogConfirm()
 }

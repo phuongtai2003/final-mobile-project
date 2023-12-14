@@ -13,6 +13,7 @@
         android:background="@color/primary_color"
         tools:context=".TopicActivity">
         <LinearLayout
+            android:paddingBottom="15dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -210,6 +211,17 @@
                 android:text="@string/learn_by_typing"
                 android:layout_height="wrap_content"/>
 
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:paddingHorizontal="15dp"
+                android:textColor="@color/white"
+                android:id="@+id/rankingBtn"
+                android:layout_marginTop="15dp"
+                app:backgroundTint="@null"
+                android:background="@drawable/register_btn"
+                android:layout_marginHorizontal="15dp"
+                android:text="@string/ranking"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
         <ProgressBar
             android:id="@+id/fullScreenProgressBar"

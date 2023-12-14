@@ -3,6 +3,7 @@ package com.tdtu.finalproject
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -140,6 +141,17 @@ class LibraryFragment : Fragment() {
             }
         })
         return binding.root
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if(!hidden){
+            val args = arguments
+            if(args != null){
+                val tabIndex = args.getInt("tabIndex")
+                binding.pagesLayoutList.setCurrentItem(tabIndex, true)
+            }
+        }
     }
 
     companion object {

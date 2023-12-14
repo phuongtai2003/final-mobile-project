@@ -79,6 +79,11 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
         binding.returnBtn.setOnClickListener {
             finish()
         }
+        binding.rankingBtn.setOnClickListener {
+            val intent = Intent(this, TopicRankingActivity::class.java)
+            intent.putExtra("topic", topic)
+            startActivity(intent)
+        }
         binding.learnByQuizBtn.setOnClickListener {
             val intent = Intent(this, StudyConfigurationActivity::class.java)
             intent.putExtra("topic", topic)
@@ -159,7 +164,6 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
 
                         val updateJob = async {
                             dataRepository.updateTopic(topic.id!!, sharedPreferences.getString(getString(R.string.token_key), null)!!, Topic(null, titleEnglishResult, titleVietnameseResult, 0, false, 0, 0, topicDescriptionEnglishResult, topicDescriptionVietnameseResult, null, null, null, null, null, false)).thenAcceptAsync {res->
-                                Log.d("USER TAG", "onCreate: " + res)
                                 if(res == null){
                                     runOnUiThread {
                                         Utils.showDialog(Gravity.CENTER, getString(R.string.update_topic_failed), this@TopicActivity)

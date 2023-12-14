@@ -9,8 +9,10 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
 import androidx.core.view.GravityCompat
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
@@ -25,6 +27,8 @@ import com.tdtu.finalproject.utils.OnDialogConfirmListener
 import com.tdtu.finalproject.utils.OnDrawerNavigationPressedListener
 import com.tdtu.finalproject.utils.Utils
 import com.tdtu.finalproject.viewmodel.HomeDataViewModel
+import kotlin.math.log
+
 class HomeActivity : AppCompatActivity(), OnBottomNavigationChangeListener, OnDrawerNavigationPressedListener, OnDialogConfirmListener {
     private lateinit var binding: ActivityHomeBinding
     private lateinit var sharedPref : SharedPreferences
@@ -43,7 +47,6 @@ class HomeActivity : AppCompatActivity(), OnBottomNavigationChangeListener, OnDr
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
 
         sharedPref = getSharedPreferences(getString(R.string.shared_preferences_key), Context.MODE_PRIVATE)
         if(sharedPref.getString(getString(R.string.user_data_key), null) == null){
@@ -161,13 +164,39 @@ class HomeActivity : AppCompatActivity(), OnBottomNavigationChangeListener, OnDr
         }
     }
 
-    override fun changeBottomNavigationItem(itemIndex: Int) {
-        binding.bottomNavbar.selectedItemId = when(itemIndex){
-            R.id.homePageFragment -> R.id.homeActionItem
-            R.id.profileFragment -> R.id.profileActionItem
-            R.id.libraryFragment -> R.id.libraryActionItem
-            R.id.searchFragment -> R.id.searchActionItem
-            else -> R.id.homeActionItem
+    override fun changeBottomNavigationItem(itemIndex: Int, tabIndex: Int) {
+        when(itemIndex){
+            R.id.homePageFragment -> {
+                fragmentManager.beginTransaction().hide(activeFragment).show(homeFragment).commit()
+                activeFragment = homeFragment
+                binding.bottomNavbar.selectedItemId = R.id.homeActionItem
+            }
+            R.id.profileFragment -> {
+                fragmentManager.beginTransaction().hide(activeFragment).show(profileFragment).commit()
+                activeFragment = profileFragment
+                binding.bottomNavbar.selectedItemId = R.id.profileActionItem
+            }
+            R.id.libraryFragment ->{
+                val bundle = Bundle()
+                bundle.putInt("tabIndex", tabIndex)
+                libraryFragment.arguments = bundle
+                fragmentManager.beginTransaction().hide(activeFragment).show(libraryFragment).commit()
+                activeFragment = libraryFragment
+                binding.bottomNavbar.selectedItemId = R.id.libraryActionItem
+            }
+            R.id.searchFragment ->{
+                val bundle = Bundle()
+                bundle.putInt("tabIndex", tabIndex)
+                searchFragment.arguments = bundle
+                fragmentManager.beginTransaction().hide(activeFragment).show(searchFragment).commit()
+                activeFragment = searchFragment
+                binding.bottomNavbar.selectedItemId = R.id.searchActionItem
+            }
+            else->{
+                fragmentManager.beginTransaction().hide(activeFragment).show(homeFragment).commit()
+                activeFragment = homeFragment
+                binding.bottomNavbar.selectedItemId = R.id.homeActionItem
+            }
         }
     }
 
@@ -231,5 +260,21 @@ class HomeActivity : AppCompatActivity(), OnBottomNavigationChangeListener, OnDr
 
     override fun onDeleteFolderDialogConfirm() {
 
+    }
+
+    override fun onUpgradePremiumDialogConfirm() {
+        dataRepository.updatePremium(sharedPref.getString(getString(R.string.token_key), null)!!, userViewModel.getUser().value!!.id).thenAccept {
+            sharedPref.edit().putString(getString(R.string.user_data_key), Gson().toJson(it)).apply()
+            runOnUiThread {
+                Utils.showDialog(Gravity.CENTER, getString(R.string.upgrade_premium_success), this)
+                userViewModel.setUser(it)
+                checkInternetConnection()
+            }
+        }.exceptionally {
+            runOnUiThread {
+                Utils.showDialog(Gravity.CENTER, it.message.toString(), this)
+            }
+            null
+        }
     }
 }

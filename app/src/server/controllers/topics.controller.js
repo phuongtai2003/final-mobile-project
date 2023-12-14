@@ -27,12 +27,17 @@ const getAllTopics = async (req, res) => {
 const getTopicsByUserId = async (req, res) => {
     const userId = req.params.id || req.query.id;
     try {
-        const topics = await Topic.find({ userId }).populate('ownerId').exec();
+        const topics = await Topic.find({}).populate('ownerId').exec();
+        const topicsWithMatchingUserId = topics.filter(topic => {
+            const res = topic.ownerId != null && topic.ownerId._id.equals(userId);
+            return topic.userId.includes(userId) || res;
+        });
+        
         if(topics.length === 0){
             res.status(404).json({error: "Topics not found"});
             return;
         }
-        res.status(200).json({topics});
+        res.status(200).json({"topics" : topicsWithMatchingUserId});
     } catch (error) {
         res.status(500).json({ error : error.message });
     }
@@ -178,7 +183,7 @@ const importCSV = async (req, res) => {
             descriptionVietnamese,
             vocabularyCount: vocabularyList.length,
             isPublic,
-            userId: [userId],
+            userId: [],
             ownerId :userId
         });
         for (let i = 0; i < vocabularyList.length; i++) {
@@ -257,7 +262,7 @@ const userLearnPublicTopic = async (req, res) => {
         // Thêm topic vào danh sách của người dùng
         if(!topic.userId.includes(userId)){
             await Topic.findByIdAndUpdate(topicId, { $push: { userId }})
-            await Users.findByIdAndUpdate(userId, { $push: { topicId: topic._id } });    
+            await Users.findByIdAndUpdate(userId, { $push: { topicId: topic._id } });
         }
         res.status(200).json({ message: 'Topic added to user successfully'});
     } catch (error) {
