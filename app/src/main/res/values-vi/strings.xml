@@ -163,4 +163,8 @@
     <string name="customized_sets">Tạo bộ từ vựng</string>
     <string name="customized_sets_text">Tạo bộ từ vựng của riêng bạn và học chúng</string>
     <string name="upgrade_premium_success">Nâng cấp tài khoản thành công</string>
+    <string name="premium_account">Tài khoản Premium</string>
+    <string name="user_statistics">Thống kê người học</string>
+    <string name="obtained">Đã đạt được</string>
+    <string name="not_owned">Không sở hữu</string>
 </resources>

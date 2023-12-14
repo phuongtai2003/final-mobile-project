@@ -93,6 +93,14 @@ class ProfileFragment : Fragment() {
             if (it != null) {
                 binding.profileUsername.text = it.username
                 Picasso.get().load(Uri.parse(it.profileImage)).into(binding.profileImage)
+                if(it.isPremiumAccount){
+                    binding.upgradePremiumBtn.visibility = View.GONE
+                    binding.profileLevel.visibility = View.VISIBLE
+                }
+                else{
+                    binding.upgradePremiumBtn.visibility = View.VISIBLE
+                    binding.profileLevel.visibility = View.GONE
+                }
             }
         }
 
@@ -100,6 +108,11 @@ class ProfileFragment : Fragment() {
             val goToAccount = Intent(requireActivity(), AccountActivity::class.java)
             goToAccount.putExtra(getString(R.string.user_data_key), homeDataViewModel.getUser()?.value)
             startActivityForResult(goToAccount, UPDATE_USER_REQUEST)
+        }
+
+        binding.achievementsBtn.setOnClickListener {
+            val goToAchievement = Intent(requireActivity(), AchievementActivity::class.java)
+            startActivity(goToAchievement)
         }
 
         binding.logoutBtn.setOnClickListener {

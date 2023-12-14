@@ -222,6 +222,92 @@
                 android:layout_marginHorizontal="15dp"
                 android:text="@string/ranking"
                 android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:layout_marginHorizontal="15dp"
+                android:orientation="vertical"
+                android:id="@+id/userStatisticsLayout"
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:fontFamily="@font/bevietnampro_semibold"
+                    android:text="@string/user_statistics"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_marginTop="15dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:textSize="16sp"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:id="@+id/topicLearningCountTxt"
+                            android:text="Learned"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:layout_marginTop="15dp"
+                            android:id="@+id/vocabulariesLearnedTxt"
+                            android:text="Learned"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:id="@+id/timeLearnedTxt"
+                            android:layout_marginTop="15dp"
+                            android:text="@string/ranking"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <ProgressBar
+                            android:id="@+id/progressIndicator"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:indeterminateOnly="false"
+                            android:progress="20"
+                            android:progressDrawable="@drawable/feedback_progress_bar"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/progressTxt"
+                            android:textColor="@color/white"
+                            android:fontFamily="@font/bevietnampro_semibold"
+                            android:textSize="16sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="20%"
+                            android:textAlignment="center"
+                            app:layout_constraintBottom_toBottomOf="@+id/progressIndicator"
+                            app:layout_constraintEnd_toEndOf="@+id/progressIndicator"
+                            app:layout_constraintStart_toStartOf="@+id/progressIndicator"
+                            app:layout_constraintTop_toTopOf="@+id/progressIndicator" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </LinearLayout>
+
+            </LinearLayout>
         </LinearLayout>
         <ProgressBar
             android:id="@+id/fullScreenProgressBar"

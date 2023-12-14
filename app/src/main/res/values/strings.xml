@@ -159,7 +159,11 @@
     <string name="learn_and_test_text">Create custom quizzes and tests for faster learning</string>
     <string name="customized_sets">Customized Sets</string>
     <string name="upgrade_premium_success">Upgrade Premium Successfully</string>
+    <string name="premium_account">Premium Account</string>
+    <string name="user_statistics">User Statistics</string>
     <string name="customized_sets_text">Create custom sets of flashcards to study and test yourself on</string>
+    <string name="obtained">Obtained</string>
+    <string name="not_owned">Not Owned</string>
     <string name="change_password_text">Enter your old and new password below to change your password.</string>
     <string name="reset_password_text">Enter your email address below and we will send you a link to reset your password.</string>
 </resources>

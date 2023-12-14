@@ -25,8 +25,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="33">
         <activity
-            android:name=".TopicRankingActivity"
+            android:name=".AchievementActivity"
             android:exported="false" />
+        <activity
+            android:name=".TopicRankingActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".FlashCardActivity"
             android:exported="false"

@@ -60,6 +60,8 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
         {
             topic = data
         }
+        dataRepository = DataRepository.getInstance()
+        sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_key), MODE_PRIVATE)
         binding.optionMenuBtn.setOnClickListener {
             val bottomSheet = TopicBottomSheet()
             val bundle = Bundle()
@@ -244,8 +246,6 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
     }
 
     private fun initViewModel(){
-        dataRepository = DataRepository.getInstance()
-        sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_key), MODE_PRIVATE)
         binding.progressBar.visibility = View.VISIBLE
         val scope = CoroutineScope(Dispatchers.Main)
         scope.launch {
@@ -302,6 +302,37 @@ class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicD
                 }
             }
             getUserDataJob.await()
+            Utils.getUserFromSharedPreferences(this@TopicActivity, sharedPreferences).let {
+                user->
+                val job = async {
+                    if (topic.userId?.contains(user.id) == true) {
+                        dataRepository.getTopicStatisticsByUser(sharedPreferences.getString(getString(R.string.token_key), null)!!, topic.id!!, user.id).thenAcceptAsync {
+                            runOnUiThread {
+                                binding.userStatisticsLayout.visibility = View.VISIBLE
+                                binding.topicLearningCountTxt.text = "${getString(R.string.learning_count)}: ${it.learningCount}"
+                                binding.vocabulariesLearnedTxt.text = "${getString(R.string.vocabularies_learned)}: ${it.vocabLearned}"
+                                val hours = it.learningTime / 3600
+                                val minutes = (it.learningTime % 3600) / 60
+                                val remainingSeconds = it.learningTime % 60
+                                binding.timeLearnedTxt.text = "${getString(R.string.time_learned)}: ${String.format("%02d:%02d:%02d", hours, minutes, remainingSeconds)}"
+                                val percentage = (it.learningPercentage * 100).toInt()
+                                binding.progressTxt.text = "$percentage%"
+                                binding.progressIndicator.progress = percentage
+                            }
+                        }.exceptionally {
+                            runOnUiThread {
+                                Utils.showDialog(Gravity.CENTER, it.message!!.toString(), this@TopicActivity)
+                            }
+                            null
+                        }
+                    } else {
+                        runOnUiThread {
+                            binding.userStatisticsLayout.visibility = View.GONE
+                        }
+                    }
+                }
+                job.await()
+            }
         }.invokeOnCompletion {
             scope.cancel()
             runOnUiThread {

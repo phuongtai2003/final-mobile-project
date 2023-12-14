@@ -1,5 +1,6 @@
 package com.tdtu.finalproject.repository
 
+import com.tdtu.finalproject.model.achievement.GetAllAchievementResponse
 import com.tdtu.finalproject.model.common.Message
 import com.tdtu.finalproject.model.folder.AddTopicToFolderResponse
 import com.tdtu.finalproject.model.folder.CreateFolderRequest
@@ -7,6 +8,7 @@ import com.tdtu.finalproject.model.folder.CreateFolderResponse
 import com.tdtu.finalproject.model.folder.GetFolderByUserResponse
 import com.tdtu.finalproject.model.folder.UpdateFolderRequest
 import com.tdtu.finalproject.model.folder.UpdateFolderResponse
+import com.tdtu.finalproject.model.learning_statistics.GetLearningStatisticsByUser
 import com.tdtu.finalproject.model.learning_statistics.GetLearningStatisticsResponse
 import com.tdtu.finalproject.model.topic.GetTopicsResponse
 import com.tdtu.finalproject.model.topic.CreateTopicRequest
@@ -114,4 +116,8 @@ interface API {
     fun getTopicStatistics(@Path("topicId") topicId: String) : Call<GetLearningStatisticsResponse>
     @PUT("users/profiles/update-premium/{id}")
     fun updatePremium(@Header("token") token: String,@Path("id") userId: String) : Call<LoginResponse>
+    @GET("learningStatistics/topic/{topicId}/user/{userId}")
+    fun getTopicStatisticsByUser(@Header("token") token: String,@Path("topicId") topicId: String, @Path("userId") userId: String) : Call<GetLearningStatisticsByUser>
+    @GET("achievements/")
+    fun getAchievements(@Header("token") token: String) : Call<GetAllAchievementResponse>
 }

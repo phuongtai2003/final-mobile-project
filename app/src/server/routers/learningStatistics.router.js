@@ -12,6 +12,6 @@ learningStatisticsRouter.put("/topic/:topicId/progress", authentication, updateL
 // get learning statistics of users in a topic
 learningStatisticsRouter.get("/topic/:topicId", getAllStatisticsForTopic)
 // get user learning statistics for topic
-learningStatisticsRouter.get("/topic/:topicId/user/userId",authentication, getUserStatisticForTopic);
+learningStatisticsRouter.get("/topic/:topicId/user/:userId",authentication, getUserStatisticForTopic);
 
 module.exports = learningStatisticsRouter;
