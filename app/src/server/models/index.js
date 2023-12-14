@@ -7,6 +7,7 @@ const TopicInFolder = require('./TopicInFolder');
 const Vocabulary = require('./Vocabulary');
 const VocabularyStatistic = require('./VocabularyStatistic');
 const BookmarkTopic = require('./BookmarkTopic');
+const Achievement = require('./Achievement');
 
 module.exports = {
     Users,
@@ -17,5 +18,6 @@ module.exports = {
     TopicInFolder,
     Vocabulary,
     VocabularyStatistic,
-    BookmarkTopic
+    BookmarkTopic,
+    Achievement
 };
