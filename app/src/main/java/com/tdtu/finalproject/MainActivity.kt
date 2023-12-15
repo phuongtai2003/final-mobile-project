@@ -3,10 +3,11 @@ package com.tdtu.finalproject
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.gson.Gson
@@ -14,8 +15,9 @@ import com.tdtu.finalproject.adapter.IntroAdapter
 import com.tdtu.finalproject.databinding.ActivityMainBinding
 import com.tdtu.finalproject.model.common.PageViewItem
 import com.tdtu.finalproject.model.user.UserInfo
+import java.util.Locale
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
     private lateinit var binding : ActivityMainBinding
     private lateinit var introList: ArrayList<PageViewItem>
     private lateinit var adapter: IntroAdapter
@@ -25,8 +27,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        sharedPref = getSharedPreferences(getString(R.string.shared_preferences_key), Context.MODE_PRIVATE)
         initPageViewer()
-
         binding.loginBtn.setOnClickListener{
             val loginIntent: Intent = Intent(this, LoginActivity::class.java)
             startActivity(loginIntent)
@@ -36,11 +38,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(registerIntent)
         }
 
-        sharedPref = getSharedPreferences(getString(R.string.shared_preferences_key), Context.MODE_PRIVATE)
         val userJson : String? = sharedPref.getString(getString(R.string.user_data_key), null)
         if(userJson != null && Gson().fromJson(userJson, UserInfo::class.java) != null){
             val homeScreen: Intent = Intent(this, HomeActivity::class.java)
-            homeScreen.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            homeScreen.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(homeScreen)
         }
     }
@@ -48,10 +49,10 @@ class MainActivity : AppCompatActivity() {
     private fun initPageViewer(){
         handler = Handler(Looper.myLooper()!!)
         introList = ArrayList()
-        introList.add(PageViewItem(R.drawable.intro_image, "Quizlet is a web tool and a mobile app that boosts students learning through several study tools that include flashcards and game-based quizzes"))
-        introList.add(PageViewItem(R.drawable.intro_image1, "Quizlet is a web tool and a mobile app that boosts students learning through several study tools that include flashcards and game-based quizzes"))
-        introList.add(PageViewItem(R.drawable.intro_image2, "Quizlet is a web tool and a mobile app that boosts students learning through several study tools that include flashcards and game-based quizzes"))
-        introList.add(PageViewItem(R.drawable.intro_image3, "Quizlet is a web tool and a mobile app that boosts students learning through several study tools that include flashcards and game-based quizzes"))
+        introList.add(PageViewItem(R.drawable.intro_image, getString(R.string.intro_one)))
+        introList.add(PageViewItem(R.drawable.intro_image1, getString(R.string.intro_two)))
+        introList.add(PageViewItem(R.drawable.intro_image2, getString(R.string.intro_three)))
+        introList.add(PageViewItem(R.drawable.intro_image3, getString(R.string.intro_four)))
 
         adapter = IntroAdapter(this, R.layout.page_view_item, introList)
 
@@ -114,7 +115,6 @@ class MainActivity : AppCompatActivity() {
                 binding.indicator3.setImageResource((R.color.primary_color))
                 binding.indicator4.setImageResource((R.color.white))
             }
-
         }
     }
 }

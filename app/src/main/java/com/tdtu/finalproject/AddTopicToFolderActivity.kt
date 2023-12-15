@@ -20,7 +20,7 @@ import com.tdtu.finalproject.utils.Utils
 import com.tdtu.finalproject.viewmodel.HomeDataViewModel
 import kotlin.math.log
 
-class AddTopicToFolderActivity : AppCompatActivity() {
+class AddTopicToFolderActivity : BaseActivity() {
     private lateinit var binding: ActivityAddTopicToFolderBinding
     private lateinit var dataRepository: DataRepository
     private lateinit var sharedPreferences: SharedPreferences

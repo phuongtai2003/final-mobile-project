@@ -21,7 +21,7 @@ import com.tdtu.finalproject.model.user.User
 import com.tdtu.finalproject.repository.DataRepository
 import com.tdtu.finalproject.utils.Utils
 
-class AddTopicActivity : AppCompatActivity() {
+class AddTopicActivity : BaseActivity() {
     private var downloadConditions = DownloadConditions.Builder().requireWifi().build()
     private var engToVietOptions = TranslatorOptions.Builder().setSourceLanguage(TranslateLanguage.ENGLISH).setTargetLanguage(
         TranslateLanguage.VIETNAMESE).build()

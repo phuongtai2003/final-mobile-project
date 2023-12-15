@@ -15,7 +15,7 @@ import com.tdtu.finalproject.utils.Language
 import com.tdtu.finalproject.utils.PromptOptionsListener
 import com.tdtu.finalproject.utils.StudyMode
 
-class StudyConfigurationActivity : AppCompatActivity(), PromptOptionsListener {
+class StudyConfigurationActivity : BaseActivity(), PromptOptionsListener {
     private lateinit var binding: ActivityStudyConfigurationBinding
     private lateinit var topic: Topic
     private lateinit var vocabularies: List<Vocabulary>

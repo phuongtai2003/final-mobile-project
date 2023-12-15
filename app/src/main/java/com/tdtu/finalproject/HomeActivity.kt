@@ -9,17 +9,16 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.edit
 import androidx.core.view.GravityCompat
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
 import com.tdtu.finalproject.databinding.ActivityHomeBinding
-import com.tdtu.finalproject.model.topic.Topic
 import com.tdtu.finalproject.model.user.User
 import com.tdtu.finalproject.repository.DataRepository
 import com.tdtu.finalproject.utils.OnBottomNavigationChangeListener
@@ -27,9 +26,8 @@ import com.tdtu.finalproject.utils.OnDialogConfirmListener
 import com.tdtu.finalproject.utils.OnDrawerNavigationPressedListener
 import com.tdtu.finalproject.utils.Utils
 import com.tdtu.finalproject.viewmodel.HomeDataViewModel
-import kotlin.math.log
 
-class HomeActivity : AppCompatActivity(), OnBottomNavigationChangeListener, OnDrawerNavigationPressedListener, OnDialogConfirmListener {
+class HomeActivity : BaseActivity(), OnBottomNavigationChangeListener, OnDrawerNavigationPressedListener, OnDialogConfirmListener {
     private lateinit var binding: ActivityHomeBinding
     private lateinit var sharedPref : SharedPreferences
     private lateinit var userViewModel: HomeDataViewModel
@@ -42,11 +40,23 @@ class HomeActivity : AppCompatActivity(), OnBottomNavigationChangeListener, OnDr
     private lateinit var dataRepository: DataRepository
     private lateinit var connectivityReceiver: BroadcastReceiver
     private val REQUEST_INTERNET_PERMISSION = 2
+    private lateinit var launchSettingsForResult: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        launchSettingsForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if(it.resultCode == RESULT_OK){
+                val intent = intent
+                overridePendingTransition(0, 0)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                finish()
+                overridePendingTransition(0, 0)
+                startActivity(intent)
+            }
+        }
 
         sharedPref = getSharedPreferences(getString(R.string.shared_preferences_key), Context.MODE_PRIVATE)
         if(sharedPref.getString(getString(R.string.user_data_key), null) == null){
@@ -109,6 +119,11 @@ class HomeActivity : AppCompatActivity(), OnBottomNavigationChangeListener, OnDr
                         apply()
                     }
                     backtoIntro()
+                    true
+                }
+                R.id.settingsBtn ->{
+                    val settingsIntent = Intent(this, SettingsActivity::class.java)
+                    launchSettingsForResult.launch(settingsIntent)
                     true
                 }
                 else -> {

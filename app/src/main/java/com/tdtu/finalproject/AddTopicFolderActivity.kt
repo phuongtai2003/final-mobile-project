@@ -18,7 +18,7 @@ import com.tdtu.finalproject.repository.DataRepository
 import com.tdtu.finalproject.utils.OnDialogConfirmListener
 import com.tdtu.finalproject.utils.Utils
 
-class AddTopicFolderActivity : AppCompatActivity(), OnDialogConfirmListener {
+class AddTopicFolderActivity : BaseActivity(), OnDialogConfirmListener {
     private lateinit var binding: ActivityAddTopicFolderBinding
     private lateinit var topic: Topic
     private lateinit var sharedPreferences: SharedPreferences

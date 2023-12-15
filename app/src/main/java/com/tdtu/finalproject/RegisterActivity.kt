@@ -12,7 +12,7 @@ import com.tdtu.finalproject.repository.DataRepository
 import com.tdtu.finalproject.utils.Utils
 
 
-class RegisterActivity : AppCompatActivity() {
+class RegisterActivity : BaseActivity() {
     private lateinit var binding: ActivityRegisterBinding
     private lateinit var schoolList: ArrayList<String>
     private val dataRepo = DataRepository.getInstance()

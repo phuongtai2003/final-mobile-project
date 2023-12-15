@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 import kotlin.random.Random
 
-class QuizActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
+class QuizActivity : BaseActivity(), TextToSpeech.OnInitListener {
     private lateinit var binding: ActivityQuizBinding
     private lateinit var topic: Topic
     private var questionCount = 1

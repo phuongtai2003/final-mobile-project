@@ -3,8 +3,10 @@ package com.tdtu.finalproject
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import com.google.gson.Gson
@@ -14,7 +16,7 @@ import com.tdtu.finalproject.utils.ResetPasswordConfirmListener
 import com.tdtu.finalproject.utils.Utils
 import com.tdtu.finalproject.utils.WrongCredentialsException
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : BaseActivity() {
     private lateinit var binding: ActivityLoginBinding
     private val dataRepo = DataRepository.getInstance()
     private lateinit var sharedPref : SharedPreferences
@@ -22,7 +24,6 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         overridePendingTransition(R.anim.fadein, R.anim.fadeout)
         binding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
         sharedPref = getSharedPreferences(getString(R.string.shared_preferences_key), Context.MODE_PRIVATE)
 
@@ -83,5 +84,6 @@ class LoginActivity : AppCompatActivity() {
                 null
             }
         }
+        setContentView(binding.root)
     }
 }

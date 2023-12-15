@@ -57,9 +57,9 @@
         android:layout_width="wrap_content"
         app:menu="@menu/navigation_drawer"
         android:id="@+id/drawerNavigation"
-        app:itemIconTint="@color/primary_color"
-        app:itemTextColor="@color/primary_color"
-        android:background="@color/white"
+        app:itemIconTint="@color/white"
+        app:itemTextColor="@color/white"
+        android:background="@color/dark_color"
         android:layout_gravity="start"
         android:layout_height="match_parent"/>
 

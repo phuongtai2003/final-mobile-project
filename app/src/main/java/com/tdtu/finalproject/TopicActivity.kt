@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 
 
-class TopicActivity : AppCompatActivity(), TextToSpeech.OnInitListener, OnTopicDialogListener {
+class TopicActivity : BaseActivity(), TextToSpeech.OnInitListener, OnTopicDialogListener {
     private lateinit var binding: ActivityTopicBinding
     private lateinit var topicViewModel: TopicViewModel
     private lateinit var dataRepository: DataRepository
