@@ -18,7 +18,7 @@ import com.tdtu.finalproject.utils.Language
 import com.tdtu.finalproject.utils.StudyMode
 import com.tdtu.finalproject.utils.Utils
 
-class FeedbackActivity : AppCompatActivity() {
+class FeedbackActivity : BaseActivity() {
     private lateinit var binding: ActivityFeedbackBinding
     private lateinit var studyLanguage: Language
     private var answerByDefinition = true

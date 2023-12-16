@@ -38,6 +38,8 @@ import com.tdtu.finalproject.model.vocabulary.GetBookmarkVocabulariesResponse
 import com.tdtu.finalproject.model.vocabulary.Vocabulary
 import com.tdtu.finalproject.model.vocabulary.GetVocabulariesByTopicResponse
 import com.tdtu.finalproject.model.vocabulary.StudyVocabularyRequest
+import com.tdtu.finalproject.model.vocabulary_statistics.GetVocabularyStatisticsTopicResponse
+import com.tdtu.finalproject.model.vocabulary_statistics.StatisticResponse
 import com.tdtu.finalproject.utils.WrongCredentialsException
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -55,7 +57,7 @@ import java.util.concurrent.CompletableFuture
 class DataRepository {
 
     companion object{
-        private const val baseUrl: String = "http://192.168.1.6:3000/android/"
+        private const val baseUrl: String = "http://172.31.98.36:3000/android/"
         private val api = Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(GsonConverterFactory.create()).build().create(API::class.java)
         private var instance: DataRepository? = null
         fun getInstance() : DataRepository{
@@ -871,6 +873,27 @@ class DataRepository {
 
             }
             override fun onFailure(call: Call<GetAllAchievementResponse>, t: Throwable) {
+                future.completeExceptionally(t)
+            }
+        })
+        return future
+    }
+
+    fun getVocabularyStatisticsByTopic(token: String, topicId: String) : CompletableFuture<List<StatisticResponse>> {
+        val future: CompletableFuture<List<StatisticResponse>> = CompletableFuture()
+        val call = api.getVocabularyStatistics(token, topicId)
+        var error: String?
+        call.enqueue(object : Callback<GetVocabularyStatisticsTopicResponse>{
+            override fun onResponse(call: Call<GetVocabularyStatisticsTopicResponse>, response: Response<GetVocabularyStatisticsTopicResponse>) {
+                if(response.code() == 200){
+                    future.complete(response.body()?.vocabStats)
+                }
+                else{
+                    error = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java).error
+                    future.completeExceptionally(Exception(error))
+                }
+            }
+            override fun onFailure(call: Call<GetVocabularyStatisticsTopicResponse>, t: Throwable) {
                 future.completeExceptionally(t)
             }
         })

@@ -28,7 +28,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
-class FolderDetailActivity : AppCompatActivity() , CustomOnItemClickListener, OnDialogConfirmListener{
+class FolderDetailActivity : BaseActivity() , CustomOnItemClickListener, OnDialogConfirmListener{
     private lateinit var binding: ActivityFolderDetailBinding
     private var folder: Folder? = null
     private lateinit var sharedPreferences: SharedPreferences

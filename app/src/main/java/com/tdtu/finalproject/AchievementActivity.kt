@@ -9,11 +9,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tdtu.finalproject.adapter.AchievementAdapter
 import com.tdtu.finalproject.databinding.ActivityAchievementBinding
+import com.tdtu.finalproject.model.achievement.Achievement
 import com.tdtu.finalproject.repository.DataRepository
 import com.tdtu.finalproject.utils.Utils
 import com.tdtu.finalproject.viewmodel.AchievementViewModel
 
-class AchievementActivity : AppCompatActivity() {
+class AchievementActivity : BaseActivity(), AchievementAdapter.OnAchievementClickListener {
     private lateinit var binding: ActivityAchievementBinding
     private lateinit var dataRepository: DataRepository
     private lateinit var sharedPreferences: SharedPreferences
@@ -30,7 +31,7 @@ class AchievementActivity : AppCompatActivity() {
         achievementViewModel = ViewModelProvider(this)[AchievementViewModel::class.java]
         achievementViewModel.getAchievementList().observe(this){
             if(it != null){
-                achievementAdapter = AchievementAdapter(this, it, R.layout.achievement_item_layout)
+                achievementAdapter = AchievementAdapter(this, it, R.layout.achievement_item_layout, this)
                 binding.achievementList.layoutManager = GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
                 binding.achievementList.setHasFixedSize(true)
                 binding.achievementList.adapter = achievementAdapter
@@ -47,5 +48,13 @@ class AchievementActivity : AppCompatActivity() {
             null
         }
         setContentView(binding.root)
+    }
+
+    override fun onAchievementClick(achievement: Achievement) {
+        val achievementBottomSheet = AchievementBottomSheet()
+        val bundle = Bundle()
+        bundle.putParcelable("achievement", achievement)
+        achievementBottomSheet.arguments = bundle
+        achievementBottomSheet.show(supportFragmentManager, "achievementBottomSheet")
     }
 }

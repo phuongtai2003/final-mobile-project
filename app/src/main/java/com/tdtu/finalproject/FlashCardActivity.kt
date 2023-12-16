@@ -26,7 +26,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.util.Locale
 
-class FlashCardActivity : AppCompatActivity(), TextToSpeech.OnInitListener, FlashCardOptionsListener {
+class FlashCardActivity : BaseActivity(), TextToSpeech.OnInitListener, FlashCardOptionsListener {
     private lateinit var binding: ActivityFlashCardBinding
     private lateinit var ttsEnglish: TextToSpeech
     private lateinit var ttsVietnamese: TextToSpeech

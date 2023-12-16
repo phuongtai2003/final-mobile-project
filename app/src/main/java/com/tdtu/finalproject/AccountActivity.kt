@@ -22,7 +22,7 @@ import com.tdtu.finalproject.utils.Utils
 import java.io.File
 import java.io.FileOutputStream
 
-class AccountActivity : AppCompatActivity(), ResetPasswordConfirmListener {
+class AccountActivity : BaseActivity(), ResetPasswordConfirmListener {
     private lateinit var binding: ActivityAccountBinding
     private lateinit var schoolList : ArrayList<String>
     private lateinit var sharedPref : SharedPreferences

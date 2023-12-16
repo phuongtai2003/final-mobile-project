@@ -2,6 +2,7 @@
     <string name="user_data_key">USERDATA</string>
     <string name="shared_preferences_key">SHAREDPREFKEY</string>
     <string name="token_key">TOKENKEY</string>
+    <string name="language_key">LANGUAGEKEY</string>
     <string name="app_name">3T</string>
     <string name="sign_up">Sign up for free</string>
     <string name="log_in">Or Login</string>
@@ -164,6 +165,17 @@
     <string name="customized_sets_text">Create custom sets of flashcards to study and test yourself on</string>
     <string name="obtained">Obtained</string>
     <string name="not_owned">Not Owned</string>
+    <string name="understand">Understand</string>
+    <string name="settings">Settings</string>
+    <string name="invalid_file_type">Invalid File Type</string>
+    <string name="vocabulary_statistic">Vocabulary Statistic</string>
+    <string name="proficient">Proficient</string>
+    <string name="learning">Learning</string>
+    <string name="not_learned">Not Learned</string>
+    <string name="intro_one">3T is a web tool and a mobile app that boosts students learning through several study tools that include flashcards and game-based quizzes.</string>
+    <string name="intro_two">3T: Elevate learning with flashcards and game-based quizzes on our web and mobile app.</string>
+    <string name="intro_three">3T: Your go-to web and mobile app for enhanced learning, featuring dynamic study tools like flashcards and game-based quizzes.</string>
+    <string name="intro_four">Empower your learning with 3T: The web and mobile app redefining education through flashcards and game-based quizzes.</string>
     <string name="change_password_text">Enter your old and new password below to change your password.</string>
     <string name="reset_password_text">Enter your email address below and we will send you a link to reset your password.</string>
 </resources>

@@ -11,11 +11,14 @@ import com.squareup.picasso.Picasso
 import com.tdtu.finalproject.R
 import com.tdtu.finalproject.model.achievement.Achievement
 
-class AchievementAdapter(private var mContext: Context, private var achievementList: List<Achievement>, private var layout: Int) : RecyclerView.Adapter<AchievementAdapter.ViewHolder>(){
+class AchievementAdapter(private var mContext: Context, private var achievementList: List<Achievement>, private var layout: Int, private var onAchievementClickListener: OnAchievementClickListener) : RecyclerView.Adapter<AchievementAdapter.ViewHolder>(){
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val achievementImage: ImageView = itemView.findViewById(R.id.achievementImage)
         val achievementName: TextView = itemView.findViewById(R.id.achievementName)
         val achievementObtained: TextView = itemView.findViewById(R.id.achievementObtained)
+    }
+    interface OnAchievementClickListener{
+        fun onAchievementClick(achievement: Achievement)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -32,6 +35,9 @@ class AchievementAdapter(private var mContext: Context, private var achievementL
         Picasso.get().load(achievement.image).into(holder.achievementImage)
         holder.achievementName.text = achievement.name
         holder.achievementObtained.text = mContext.getString(R.string.obtained)
+        holder.itemView.setOnClickListener {
+            onAchievementClickListener.onAchievementClick(achievement)
+        }
     }
 
 }

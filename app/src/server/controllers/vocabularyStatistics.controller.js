@@ -47,7 +47,7 @@ const create_updateVocabularyStatistic = async (req, res) => {
 
 const getVocabularyStatisticByTopicId = async (req, res) => {
     const userId = req.user.data._id;
-    const topicId = req.params.id || req.query.id;
+    const topicId = req.params.topicId || req.query.topicId;
     try {
         const vocabularies = await Vocabulary.find({ topicId: topicId });
         const vocabStats = [];

@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 import kotlin.random.Random
 
-class TypingActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
+class TypingActivity : BaseActivity(), TextToSpeech.OnInitListener {
     private lateinit var binding: ActivityTypingBinding
     private lateinit var topic: Topic
     private var questionCount = 1

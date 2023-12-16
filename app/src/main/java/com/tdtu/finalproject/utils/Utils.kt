@@ -2,9 +2,14 @@ package com.tdtu.finalproject.utils
 
 import android.app.Dialog
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.SharedPreferences
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
+import android.os.LocaleList
 import android.view.Gravity
 import android.view.View
 import android.view.Window
@@ -16,6 +21,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.internal.ContextUtils
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.mlkit.common.model.DownloadConditions
@@ -26,6 +32,7 @@ import com.tdtu.finalproject.R
 import com.tdtu.finalproject.model.quizzes.Quiz
 import com.tdtu.finalproject.model.user.User
 import com.tdtu.finalproject.model.vocabulary.Vocabulary
+import java.util.Locale
 
 class Utils {
     companion object{

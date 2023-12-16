@@ -79,4 +79,18 @@ class VocabularyAdapter(private var mContext:Context, private var vocabularies: 
     override fun getItemCount(): Int {
         return vocabularies.size
     }
+
+    fun getVocabularies(): ArrayList<Vocabulary> {
+        return vocabularies
+    }
+
+    fun setVocabularies(vocabularies: ArrayList<Vocabulary>) {
+        this.vocabularies = vocabularies
+        notifyItemRangeChanged(0, vocabularies.size)
+    }
+
+    fun addVocabularies(vocabularies: ArrayList<Vocabulary>) {
+        this.vocabularies.addAll(vocabularies)
+        notifyItemRangeInserted(this.vocabularies.size, vocabularies.size)
+    }
 }
