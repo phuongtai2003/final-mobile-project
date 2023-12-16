@@ -167,6 +167,11 @@
     <string name="not_owned">Not Owned</string>
     <string name="understand">Understand</string>
     <string name="settings">Settings</string>
+    <string name="invalid_file_type">Invalid File Type</string>
+    <string name="vocabulary_statistic">Vocabulary Statistic</string>
+    <string name="proficient">Proficient</string>
+    <string name="learning">Learning</string>
+    <string name="not_learned">Not Learned</string>
     <string name="intro_one">3T is a web tool and a mobile app that boosts students learning through several study tools that include flashcards and game-based quizzes.</string>
     <string name="intro_two">3T: Elevate learning with flashcards and game-based quizzes on our web and mobile app.</string>
     <string name="intro_three">3T: Your go-to web and mobile app for enhanced learning, featuring dynamic study tools like flashcards and game-based quizzes.</string>

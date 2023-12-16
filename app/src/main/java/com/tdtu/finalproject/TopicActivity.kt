@@ -242,6 +242,42 @@ class TopicActivity : BaseActivity(), TextToSpeech.OnInitListener, OnTopicDialog
                 binding.learnByQuizBtn.visibility = View.VISIBLE
             }
         }
+        topicViewModel.getStatistics().observe(this){
+            items ->
+            if(items.isEmpty()){
+                binding.vocabularyStatisticLayout.visibility = View.GONE
+                binding.learnedVocabularyTxt.visibility = View.GONE
+            }
+            else{
+                binding.vocabularyStatisticLayout.visibility = View.VISIBLE
+                binding.learnedVocabularyTxt.visibility = View.VISIBLE
+                var notLearnedWords = 0
+                var learnedWords = 0
+                var proficientWord = 0
+                items.map {
+                    if(it.statistic.learningCount <= 1){
+                        notLearnedWords++
+                    }
+                    else if(it.statistic.learningCount <= 5){
+                        learnedWords++
+                    }
+                    else{
+                        proficientWord++
+                    }
+                }
+                if(vocabulariesList.size > (notLearnedWords + learnedWords + proficientWord)){
+                    notLearnedWords += vocabulariesList.size - (notLearnedWords + learnedWords + proficientWord)
+                }
+                val percentageLearned = (learnedWords.toDouble() / vocabulariesList.size.toDouble()) * 100
+                val percentageProficient = (proficientWord.toDouble() / vocabulariesList.size.toDouble()) * 100
+                binding.statisticIndicator.progress = percentageLearned.toInt()
+                binding.statisticIndicator.secondaryProgress = percentageLearned.toInt() + percentageProficient.toInt()
+
+                binding.proficientText.text = "${getString(R.string.proficient)}: $proficientWord"
+                binding.learningText.text = "${getString(R.string.learning)}: $learnedWords"
+                binding.notLearningText.text = "${getString(R.string.not_learned)}: $notLearnedWords"
+            }
+        }
         setContentView(binding.root)
     }
 
@@ -332,6 +368,28 @@ class TopicActivity : BaseActivity(), TextToSpeech.OnInitListener, OnTopicDialog
                     }
                 }
                 job.await()
+                val getStatisticJob = async {
+                    dataRepository.getVocabularyStatisticsByTopic(sharedPreferences.getString(getString(R.string.token_key), null)!!, topic.id!!).thenAcceptAsync {
+                        runOnUiThread {
+                            if(it.isEmpty()){
+                                binding.vocabularyStatisticLayout.visibility = View.GONE
+                                binding.learnedVocabularyTxt.visibility = View.GONE
+                                topicViewModel.setStatisticsList(ArrayList())
+                            }
+                            else{
+                                binding.vocabularyStatisticLayout.visibility = View.VISIBLE
+                                binding.learnedVocabularyTxt.visibility = View.VISIBLE
+                                topicViewModel.setStatisticsList(it)
+                            }
+                        }
+                    }.exceptionally {
+                        runOnUiThread {
+                            Utils.showDialog(Gravity.CENTER, it.message!!.toString(), this@TopicActivity)
+                        }
+                        null
+                    }
+                }
+                getStatisticJob.await()
             }
         }.invokeOnCompletion {
             scope.cancel()

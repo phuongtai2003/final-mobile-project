@@ -19,9 +19,6 @@ const getAllAchievement = async (req, res) => {
     }
 };
 
-const addAchivementForUser = async(req, res) =>{
-
-}
 
 module.exports = {
     createAchievement,

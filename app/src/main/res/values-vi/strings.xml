@@ -169,9 +169,14 @@
     <string name="obtained">Đã đạt được</string>
     <string name="understand">Đã hiểu</string>
     <string name="settings">Cài đặt</string>
+    <string name="invalid_file_type">Định dạng tập tin không hợp lệ</string>
     <string name="not_owned">Không sở hữu</string>
     <string name="intro_one">3T: Nền tảng học tập trực tuyến với các công cụ học tập động như flashcard và trắc nghiệm.</string>
     <string name="intro_two">3T: Nâng tầm học tập với ứng dụng web và di động định nghĩa lại giáo dục thông qua flashcard và trắc nghiệm.</string>
     <string name="intro_three">3T: Tăng cường trải nghiệm học tập với ứng dụng web và di động định nghĩa lại giáo dục thông qua flashcard và trắc nghiệm.</string>
     <string name="intro_four">Thay đổi cách học của bạn với 3T.</string>
+    <string name="vocabulary_statistic">Thống kê từ vựng</string>
+    <string name="proficient">Thành thạo</string>
+    <string name="learning">Đang học</string>
+    <string name="not_learned">Chưa học</string>
 </resources>

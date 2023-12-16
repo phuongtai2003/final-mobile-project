@@ -30,6 +30,7 @@ import com.tdtu.finalproject.model.vocabulary.GetBookmarkVocabulariesResponse
 import com.tdtu.finalproject.model.vocabulary.GetVocabulariesByTopicResponse
 import com.tdtu.finalproject.model.vocabulary.StudyVocabularyRequest
 import com.tdtu.finalproject.model.vocabulary.Vocabulary
+import com.tdtu.finalproject.model.vocabulary_statistics.GetVocabularyStatisticsTopicResponse
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.Body
@@ -120,4 +121,6 @@ interface API {
     fun getTopicStatisticsByUser(@Header("token") token: String,@Path("topicId") topicId: String, @Path("userId") userId: String) : Call<GetLearningStatisticsByUser>
     @GET("achievements/")
     fun getAchievements(@Header("token") token: String) : Call<GetAllAchievementResponse>
+    @GET("vocabularyStatistics/topics/{topicId}")
+    fun getVocabularyStatistics(@Header("token") token: String,@Path("topicId") topicId: String) : Call<GetVocabularyStatisticsTopicResponse>
 }
