@@ -6,4 +6,5 @@ interface OnTopicDialogListener {
     fun onSaveToFolder()
     fun onDeleteTopic()
     fun onEditTopic()
+    fun exportTopic()
 }

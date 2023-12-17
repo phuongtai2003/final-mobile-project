@@ -179,4 +179,7 @@
     <string name="proficient">Thành thạo</string>
     <string name="learning">Đang học</string>
     <string name="not_learned">Chưa học</string>
+    <string name="export_to_csv">Xuất ra CSV</string>
+    <string name="export_to_csv_success">Xuất ra CSV thành công</string>
+    <string name="export_to_csv_failed">Xuất ra CSV thất bại</string>
 </resources>

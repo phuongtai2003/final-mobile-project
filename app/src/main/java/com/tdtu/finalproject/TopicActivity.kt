@@ -28,6 +28,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import java.io.OutputStreamWriter
 import java.util.Locale
 
 
@@ -45,6 +46,8 @@ class TopicActivity : BaseActivity(), TextToSpeech.OnInitListener, OnTopicDialog
     private var ttsVietnamese: TextToSpeech? = null
     private lateinit var addTopicToFolderResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var editTopicVocabulariesResultLauncher: ActivityResultLauncher<Intent>
+    private lateinit var exportToCsvResultLauncher : ActivityResultLauncher<Intent>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +62,36 @@ class TopicActivity : BaseActivity(), TextToSpeech.OnInitListener, OnTopicDialog
         else
         {
             topic = data
+        }
+        exportToCsvResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+            if(it.resultCode == RESULT_OK){
+                val uri = it.data?.data
+                if(uri != null){
+                    try{
+                        val outputStream = contentResolver.openOutputStream(uri)
+                        val outputStreamWriter = OutputStreamWriter(outputStream, "UTF-8")
+                        val stringBuilder = StringBuilder()
+                        stringBuilder.append("English,Vietnamese,English Meaning,Vietnamese Meaning\n")
+                        for(vocab in vocabulariesList){
+                            stringBuilder.append("${vocab.englishWord},${vocab.vietnameseWord},${vocab.englishMeaning},${vocab.vietnameseMeaning}\n")
+                        }
+                        outputStreamWriter.write(stringBuilder.toString())
+                        outputStreamWriter.close()
+                        outputStream?.close()
+                        runOnUiThread {
+                            Utils.showDialog(
+                                Gravity.CENTER, getString(
+                                    R.string.export_to_csv_success), this)
+                        }
+                    }catch (e: Exception){
+                        runOnUiThread {
+                            Utils.showDialog(
+                                Gravity.CENTER, getString(
+                                    R.string.export_to_csv_failed), this)
+                        }
+                    }
+                }
+            }
         }
         dataRepository = DataRepository.getInstance()
         sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_key), MODE_PRIVATE)
@@ -462,5 +495,13 @@ class TopicActivity : BaseActivity(), TextToSpeech.OnInitListener, OnTopicDialog
         intent.putExtra("topic", topic)
         intent.putExtra("isEdit", true)
         editTopicVocabulariesResultLauncher.launch(intent)
+    }
+
+    override fun exportTopic() {
+        val intent= Intent(Intent.ACTION_CREATE_DOCUMENT)
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+        intent.type = "text/csv"
+        intent.putExtra(Intent.EXTRA_TITLE, topic.topicNameEnglish + ".csv")
+        exportToCsvResultLauncher.launch(intent)
     }
 }

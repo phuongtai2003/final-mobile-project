@@ -172,6 +172,9 @@
     <string name="proficient">Proficient</string>
     <string name="learning">Learning</string>
     <string name="not_learned">Not Learned</string>
+    <string name="export_to_csv">Export To CSV</string>
+    <string name="export_to_csv_success">Export To CSV Successfully</string>
+    <string name="export_to_csv_failed">Export To CSV Failed</string>
     <string name="intro_one">3T is a web tool and a mobile app that boosts students learning through several study tools that include flashcards and game-based quizzes.</string>
     <string name="intro_two">3T: Elevate learning with flashcards and game-based quizzes on our web and mobile app.</string>
     <string name="intro_three">3T: Your go-to web and mobile app for enhanced learning, featuring dynamic study tools like flashcards and game-based quizzes.</string>

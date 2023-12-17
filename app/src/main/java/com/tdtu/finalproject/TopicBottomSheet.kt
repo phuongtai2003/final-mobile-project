@@ -60,6 +60,10 @@ class TopicBottomSheet : BottomSheetDialogFragment() {
             onTopicDialogListener?.onEditTopic()
             dismiss()
         }
+        binding.exportTopicToCsvBtn.setOnClickListener {
+            onTopicDialogListener?.exportTopic()
+            dismiss()
+        }
         binding.saveAndEditTopicBtn.setOnClickListener {
             val intent = Intent(context, AddTopicActivity::class.java)
             intent.putExtra("topic", topic)
